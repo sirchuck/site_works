@@ -36,6 +36,14 @@ class siteworks_startup
 		$this->tool = new siteworks_tools($this);
 		register_shutdown_function(array($this, 'handle_shutdown'));
 		if( array_key_exists('default', $this->dbc) ){
+			$tmp = ( !isset($this->dbc['default']['hostname']) || $this->dbc['default']['hostname'] == '') ? 'Default Database Hostname Missing<br>' : '';
+			$tmp = ( !isset($this->dbc['default']['username']) || $this->dbc['default']['username'] == '') ? $tmp . 'Default Database Username Missing<br>' : $tmp;
+			$tmp = ( !isset($this->dbc['default']['password']) || $this->dbc['default']['password'] == '') ? $tmp . 'Default Database Password Missing<br>' : $tmp;
+			$tmp = ( !isset($this->dbc['default']['database']) || $this->dbc['default']['database'] == '') ? $tmp . 'Default Database Database name Missing<br>' : $tmp;
+			$tmp = ( !isset($this->dbc['default']['dbtype']) || $this->dbc['default']['dbtype'] == '') ? $tmp . 'Default Database dbtype Missing<br>' : $tmp;
+			if($tmp!=''){
+				die('You need to set up your database in the server configuration file.<br><br>'.$tmp);
+			}
 			$this->odb = new siteworks_dbc((object)$this->dbc['default'],$this);
 			$this->dbo['default'] = $this->odb;
 		}else{die('You must have a default database connection for administration.');}

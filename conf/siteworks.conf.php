@@ -99,18 +99,16 @@ class siteworks_config extends siteworks_startup
 
     // The siteworks URI needs some path information.
     public $cPaths = array(
-        // Web Server Public Address: http://www.MySite.com/site_works/public (Normally your Nginx Root Dir)
-         'subdomain'       => 'www'
-        ,'domain'          => 'MySite'
-        ,'tld'             => 'com'
-        ,'base_dir'        => 'site_works'
-        ,'public_dir'      => 'public'
+        // Web Server Public Address: http(s)://www.MySite.com/site_works/public (Normally your Nginx Root Dir)
+         'subdomain'       => 'www'                  // Website Subdomain
+        ,'domain'          => 'MySite'               // Site Domain Name
+        ,'tld'             => 'com'                  // Top-Level Domain
 
-        // Asset Web Server Address: http(s)://assets.MySite.com/public_path (If different than above you won't have to send cookies to assests)
-        ,'subdomain_a'     => 'assets'
-        ,'domain_a'        => 'MySite'
-        ,'tld_a'           => 'com'
-        ,'base_dir_a'      => 'site_works/public'
+        // Asset Web Server Address: http(s)://assets.MySite.com/public_path
+        ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
+        ,'domain_a'        => 'MySite'               // Asset Site Domain Name
+        ,'tld_a'           => 'com'                  // Asset Top-Level Domain
+        ,'base_dir_a'      => 'site_works/public'    // Asset direct base path
     );
 
 

@@ -15,8 +15,6 @@ namespace SiteWorks{
 		if(file_exists($tmp)){
 			require_once($tmp);
 		} else {
-			if (!is_dir(SITEWORKS_DOCUMENT_ROOT.'/private')){mkdir(SITEWORKS_DOCUMENT_ROOT.'/private',0775,true);}
-			if (!is_dir(SITEWORKS_DOCUMENT_ROOT.'/public')){mkdir(SITEWORKS_DOCUMENT_ROOT.'/public',0775,true);}
 			file_put_contents($tmp,file_get_contents(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/site_conf.txt'));
 			die('This server was missing its server specific config file, I tried adding it with defaults at: ' . $tmp . '<br>'
 				. 'Make sure php (usually www-data) has write access to the following folders:<br><br>'

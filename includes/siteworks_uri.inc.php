@@ -48,13 +48,13 @@ class siteworks_uri
 		$this->root_url     = ( $_s->secure ) ? $this->root_url_s : $this->root_url_n ;
 		
 		// Base gets you to your site folder http://www.example.com/siteworks
-		$base_url = ( $_s->cPaths['base_dir'] != '' ) ? $_s->cPaths['base_dir'] : '' ;
+		$base_url = 'site_works';
 		$this->base_url_n   = 'http://'  . $root_url . '/' . $base_url ;
 		$this->base_url_s   = 'https://' . $root_url . '/' . $base_url ;
 		$this->base_url     = ( $_s->secure ) ? $this->base_url_s : $this->base_url_n ;
 		
 		// Public gets you to your sites public folder http://www.example.com/siteworks/public
-		$public_url = ( $_s->cPaths['public_dir'] != '' ) ? $_s->cPaths['public_dir'] : '' ;
+		$public_url = 'public' ;
 		$this->public_url_n   = 'http://'  . $root_url . '/' . $base_url . '/' . $public_url ;
 		$this->public_url_s   = 'https://' . $root_url . '/' . $base_url . '/' . $public_url ;
 		$this->public_url     = ( $_s->secure ) ? $this->public_url_s : $this->public_url_n ;
@@ -74,8 +74,7 @@ class siteworks_uri
 		$this->asset->css_vendor  = $this->asset_url . '/assets/css/vendor';
 
 		$uri = $_SERVER['DOCUMENT_URI'];
-		$this->fixeduri = trim(str_replace([$_s->cPaths['base_dir'] . '/' . $_s->cPaths['public_dir'],$_s->cPaths['base_dir']],'',trim($uri, '/') ), '/' );
-
+		$this->fixeduri = trim(str_replace(['site_works/public','site_works'],'',trim($uri, '/')), '/');
 		$params = explode('/', $this->fixeduri);
 		if(!isset($params[0])){$params[0]=$_s->_s->default_module;}
 		if( isset( $_s->routes[ $params[0] ] ) ){ $params[0] = $_s->routes[ $params[0] ]; }
