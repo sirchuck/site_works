@@ -330,26 +330,33 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		} // End if debug mode
 		$this->uri = new siteworks_uri($this);
 
-/*
-		$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->admin['sw_language'] . '/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js';
+
+		$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js';
 		if(!file_exists( $tmp )){
-			foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->admin['sw_language'] ,1,true) as $v){
-				$tmp2 = explode("_",$v);
-				if($tmp2[0] == 'siteworks'){
-					$tmp3 = explode('.',$tmp2[2]);
-					$this->admin['sw_version'] = $tmp3[0];
-					$radmin->f['sw_version']['value'] = $tmp3[0];
-					$radmin->updateData();
+			$hold_printSQL = $this->printSQL;
+			$this->printSQL = false;
+			$radmin = new t_site_works_admin(1,$this->odb);
+			$this->admin['sw_version'] = $radmin->f['sw_version']['value'];
+			$this->admin['sw_language'] = $radmin->f['sw_language']['value'];
+			$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js';
+			if(!file_exists( $tmp )){
+				foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default',1,true) as $v){
+					$tmp2 = explode("_",$v['name']);
+					if($tmp2[0] == 'siteworks'){
+						$tmp3 = explode('.',$tmp2[2]);
+						$this->admin['sw_version'] = $tmp3[0];
+						$radmin->f['sw_version']['value'] = $tmp3[0];
+						$radmin->updateData();
+					}
 				}
+				die('The sw_version we have in the admin database table does not match the siteworks javascript asset file.<br>
+					' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default/' . $this->admin['sw_language'] . '/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js<br>
+					We attempted to update the database with the new sw_verison, reloading this page may fix the problem.<br>
+					If not, you may need to manually change the default database admin table to reflect your current sw_version. 
+				');
 			}
-			die('The framework could not find the javascript site attribute, you may need to fix the admin table in the siteworks database.<br>
-				' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->admin['sw_language'] . '/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js<br>
-				We attempted to update the database with the new sw_verison, reloading this page may fix the problem.
-			');
+			$this->printSQL = $hold_printSQL;
 		}
-*/
-
-
 
 
 		if($this->debugMode){
