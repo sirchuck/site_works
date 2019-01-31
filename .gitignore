@@ -5,4 +5,5 @@
 # You can change the ignore for your servers
 # But to keep this master repository clean they are omitted.
 /private/
-/public/
+/public/assets/css/siteworks/
+/public/assets/js/siteworks/
