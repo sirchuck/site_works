@@ -1,0 +1,6 @@
+<?php
+// Do not change the index.php file, change includes/templates/site_index.txt instead.
+// After changing the file, remember to reload twice as the first time just writes the file but serves you the old one.
+
+require_once('../site_works.php');
+?>
