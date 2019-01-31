@@ -30,8 +30,8 @@ class t_site_works_lang extends siteworks_db_tools
         switch ($sqlName) {
 
         	// Set up your queries here that can be called by name. Example below
-	        case 'pullByLanguage':
-	            $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_language` = "' . $this->odb->dbClean( $this->f['sw_language']['value'] ) . '"';
+	        case 'GET_FIRST_KEY':
+	            $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_lang_key` = 1';
 			break;
 
 	    default:

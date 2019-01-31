@@ -77,8 +77,8 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($db_load){
 			$radmin = new t_site_works_admin(1,$this->odb);
 			if( (int)$radmin->f['sw_admin_key']['value'] !== 1 ){
-					$this->odb->q("CREATE TABLE IF NOT EXISTS `site_works`.`site_works_admin` ( `sw_admin_key` TINYINT(1) UNSIGNED NOT NULL, `sw_version` CHAR(40) NOT NULL , `sw_language` CHAR(40) NOT NULL , PRIMARY KEY (`sw_admin_key`)) ENGINE = InnoDB;");
-					$this->odb->q("INSERT INTO `site_works`.`site_works_admin` (`sw_admin_key`,`sw_version`,`sw_language`) VALUES (1,'0','english');");
+					$this->odb->q("CREATE TABLE IF NOT EXISTS `site_works`.`site_works_admin` ( `sw_admin_key` TINYINT(1) UNSIGNED NOT NULL, `sw_version` CHAR(40) NOT NULL , PRIMARY KEY (`sw_admin_key`)) ENGINE = InnoDB;");
+					$this->odb->q("INSERT INTO `site_works`.`site_works_admin` (`sw_admin_key`,`sw_version`) VALUES (1,'0');");
 					die('site_works_admin table was created with default values in the default database. Change the values as needed, sw_admin_key must be set to 1.');
 			}
 			$this->admin = null;
@@ -339,16 +339,15 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		$this->uri = new siteworks_uri($this);
 
 
-		$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js';
+		$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js';
 		if(!file_exists( $tmp )){
 			$hold_printSQL = $this->printSQL;
 			$this->printSQL = false;
 			$radmin = new t_site_works_admin(1,$this->odb);
 			$this->admin['sw_version'] = $radmin->f['sw_version']['value'];
-			$this->admin['sw_language'] = $radmin->f['sw_language']['value'];
-			$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js';
+			$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js';
 			if(!file_exists( $tmp )){
-				foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default',1,true) as $v){
+				foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme,1,true) as $v){
 					$tmp2 = explode("_",$v['name']);
 					if($tmp2[0] == 'siteworks'){
 						$tmp3 = explode('.',$tmp2[2]);
@@ -358,7 +357,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					}
 				}
 				die('The sw_version we have in the admin database table does not match the siteworks javascript asset file.<br>
-					' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/default/' . $this->admin['sw_language'] . '/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js<br>
+					' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js<br>
 					We attempted to update the database with the new sw_verison, reloading this page may fix the problem.<br>
 					If not, you may need to manually change the default database admin table to reflect your current sw_version. 
 				');

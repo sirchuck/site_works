@@ -16,7 +16,6 @@ class t_site_works_admin extends siteworks_db_tools
 		$this->f = Array(
 			 'sw_admin_key'               => array( 'value' => 0    , 'error' => null) // Key Field
 		    ,'sw_version'                 => array( 'value' => null , 'error' => null) // SiteWorks Version Number
-		    ,'sw_language'                => array( 'value' => null , 'error' => null) // SiteWorks Default Language
 	    );
 
 		if($id > 0)
@@ -28,8 +27,8 @@ class t_site_works_admin extends siteworks_db_tools
         switch ($sqlName) {
 
         	// Set up your queries here that can be called by name.
-	        case 'pullByLanguage':
-	            $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_language` = "' . $this->odb->dbClean( $this->f['sw_language']['value'] ) . '"';
+	        case 'pullByVersion':
+	            $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->dbClean( $this->f['sw_version']['value'] ) . '"';
 			break;
 
 	    default:
