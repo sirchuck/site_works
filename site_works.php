@@ -24,8 +24,13 @@ namespace SiteWorks{
 				. '2) ' . SITEWORKS_DOCUMENT_ROOT . '/private<br>'
 				. '3) ' . SITEWORKS_DOCUMENT_ROOT . '/public<br><br>'
 				. 'Example commands:<br><br>'
+				. 'Config folder so we can write your defult config:<br>'
 				. 'sudo chmod -R 775 site_work/conf<br>'
 				. 'sudo chgrp -R www-data site_work/conf<br><br>'
+				. 'sudo chmod -R 775 site_work/private<br>'
+				. 'sudo chgrp -R www-data site_work/private<br><br>'
+				. 'sudo chmod -R 775 site_work/public<br>'
+				. 'sudo chgrp -R www-data site_work/public<br><br>'
 				. 'Once you finish setting up your servers config file, just refresh this page.<br>');
 		}
 	}
