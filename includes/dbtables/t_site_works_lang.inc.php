@@ -18,9 +18,7 @@ class t_site_works_lang extends siteworks_db_tools
 			,'sw_lang_keep'               => array( 'value' => 0    , 'error' => null) // If true, it will not be removed by automated system.
 		    ,'sw_lang_category'           => array( 'value' => null , 'error' => null) // SiteWorks Language Category|key|option name
 		    ,'sw_origional'               => array( 'value' => null , 'error' => null) // This will be the developers text
-		    ,'english'                    => array( 'value' => null , 'error' => null) // This is the language field for English
-		    ,'french'                     => array( 'value' => null , 'error' => null) // Add new language fields when neccessary
-		    ,'spanish'                    => array( 'value' => null , 'error' => null) // Add new language fields when neccessary
+		    ,'english'                    => array( 'value' => null , 'error' => null) // Default Lang - add more as neccessary.
 	    );
 
 		if($id > 0)

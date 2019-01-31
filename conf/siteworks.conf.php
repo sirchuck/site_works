@@ -102,14 +102,14 @@ class siteworks_config extends siteworks_startup
         // Web Server Public Address: http://www.MySite.com/site_works/public (Normally your Nginx Root Dir)
          'subdomain'       => 'www'
         ,'domain'          => 'MySite'
-        ,'tdl'             => 'com'
+        ,'tld'             => 'com'
         ,'base_dir'        => 'site_works'
         ,'public_dir'      => 'public'
 
         // Asset Web Server Address: http(s)://assets.MySite.com/public_path (If different than above you won't have to send cookies to assests)
         ,'subdomain_a'     => 'assets'
         ,'domain_a'        => 'MySite'
-        ,'tdl_a'           => 'com'
+        ,'tld_a'           => 'com'
         ,'base_dir_a'      => 'site_works/public'
     );
 

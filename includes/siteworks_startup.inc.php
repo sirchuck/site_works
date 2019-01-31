@@ -105,8 +105,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			}
 		}
 
-
-
 		// Handle Database setup and management
 		if($this->debugMode){
 			if(strrpos($_SERVER['DOCUMENT_URI'], 'ajax_') !== false || strrpos($_SERVER['DOCUMENT_URI'], 'iframe_') !== false || strrpos($_SERVER['DOCUMENT_URI'], 'script_') !== false){$this->css_js_minify = false;}
@@ -121,9 +119,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 
 			$this->site_works_db_classes = scandir( SITEWORKS_DOCUMENT_ROOT . '/includes/dbtables' );
 			$tmp = scandir( SITEWORKS_DOCUMENT_ROOT . '/dev/dbtables' );
-			foreach($tmp as $v){ if($v != '.' && $v != '..'){ $this->site_works_db_classes[] = $v; } }
+			foreach($tmp as $v){ if( substr($v, 0, 1) != '.' ){ $this->site_works_db_classes[] = $v; } }
 			foreach($this->site_works_db_classes as $k => $v){
-				if($v == '.' || $v == '..'){ unset($this->site_works_db_classes[$k]); } else {
+				if( substr($v, 0, 1) == '.' ){ unset($this->site_works_db_classes[$k]); } else {
 					unset($farray);
 					$farray = array();
 					$this->site_works_db_classes[$k] = array('value'=>explode('.',$v,2)[0],'f'=>$farray,'primary'=>'');
@@ -136,7 +134,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					$this->site_works_db_classes[$k]['f'] = $farray;
 				}
 			}
-
 
 			// Pull all tables from all databases then match them up.
 			$check_site_works_db_classes=[];
@@ -217,7 +214,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				}
 				if(!$foundTable){ $db_info_out .= 'Table: [' . preg_replace('/t_/','',$v['value'],1) . '] (MISSING) in ' . $sh[2] . "\n";}
 			}
-			if($db_info_out != ''){ $this->tool->dmsg("\n     -+-+- Database Errors -+-+-\n".$db_info_out);die('You have a database missmatch, please check your ./debug_server output.'); }
+			if($db_info_out != ''){ $this->tool->dmsg("\n     [c_light_red]-+-+- Database Errors -+-+-[c_clear]\n".$db_info_out);die('You have a database missmatch, please check your ./debug_server output.'); }
 
 			// Build Language Files
 			$r = new t_site_works_lang(0,$this->odb);
@@ -238,7 +235,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					file_put_contents($new_path.$v['name'],$f,775);
 				}
 			}
-
 
 			// CSS
 			$tmp = '';
@@ -334,6 +330,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		} // End if debug mode
 		$this->uri = new siteworks_uri($this);
 
+/*
 		$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->admin['sw_language'] . '/siteworks_' . $this->admin['sw_language'] . '_' . $this->admin['sw_version'] . '.js';
 		if(!file_exists( $tmp )){
 			foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->admin['sw_language'] ,1,true) as $v){
@@ -350,7 +347,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				We attempted to update the database with the new sw_verison, reloading this page may fix the problem.
 			');
 		}
-
+*/
 
 
 
@@ -384,7 +381,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($this->debugMode && $this->showPHPErrors_debug){
 			$e = error_get_last();
 			if($e == ''){
-				$this->tool->dmsg("\n".'[c_light_green]    No Errors  - America, Hell Yeah!'."\n",false,false);
+				$this->tool->dmsg("\n".'[c_light_green]    No PHP Errors  - America, Hell Yeah!'."\n",false,false);
 			}else{
 				$this->tool->dmsg("\n\n".'[c_light_red]************   E R R O R S   ************', false, false);
 				$this->tool->dmsg('[c_white][File] '.$e['file'], false, false);

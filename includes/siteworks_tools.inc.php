@@ -45,7 +45,7 @@ class siteworks_tools
         $path = realpath($dir);
         if(!is_dir($path.DIRECTORY_SEPARATOR.$value)) {
             if($ftype==0 || $ftype == 1){ $results[] = array('path'=>$path.DIRECTORY_SEPARATOR,'name'=>$value); }
-        } else if($value != "." && $value != "..") {
+        } else if( substr($value, 0, 1) != '.' ) {
           if($recursive){ $this->listFiles($path.DIRECTORY_SEPARATOR.$value,$ftype,$recursive,$results); }
           if($ftype==0 || $ftype == 2){$results[] = array('path'=>$path.DIRECTORY_SEPARATOR,'name'=>$value); }
         }
