@@ -434,7 +434,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($this->debugMode){
 			$this->console[] = ($this->debugMode)?'Debug Mode: ON':'Debug Mode: OFF';
 		}
-		$this->out['header']['favicon'] = (isset($this->out['header']['favicon']) && $this->out['header']['favicon'] != '')? $this->out['header']['favicon'] : '<link rel="shortcut icon" type="image/png" href="' . $this->uri->asset_url . '/favicon.ico"/>';
+		$this->out['header']['favicon'] = (isset($this->out['header']['favicon']) && $this->out['header']['favicon'] != '')? $this->out['header']['favicon'] : '<link rel="shortcut icon" type="image/png" href="' . $this->uri->public_url . '/siteworks_favicon.ico"/>';
 
 		$_SESSION['theme'] = (isset($_SESSION['theme']) && $_SESSION['theme'] != '') ? $_SESSION['theme'] : $this->theme;
 		$_SESSION['language'] = (isset($_SESSION['language']) && $_SESSION['language'] != '') ? $_SESSION['language'] : $this->language;

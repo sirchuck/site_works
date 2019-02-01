@@ -188,7 +188,8 @@ class sw_admin_ajax extends _s
             $o[] = 'All your code should go in the Dev directory.';
             $o[] = 'ajaxs/scripts/iframs/controllers are all the same except controllers get extra output like <html> tags and console output.';
             $o[] = 'models with the same name as controller are automatically loaded when the class is loaded';
-            $o[] = 'Output arrays: $this->out[\' header / title / meta / css / js / body / footer \'] and $this->console[] = "Message for Console";';
+            $o[] = 'Output arrays: $this->_out[\' header / title / meta / css / js / body / footer \'] and $this->_console[] = "Message for Console";';
+            $o[] = 'Your favicon is a special output case: $this->_out[\'header\'][\'favicon\'] if you do not set it, we use siteworks_favicon.ico';
 
             $o[] = 'You have access to the admin and memory siteworks database tables as well with $this->admin array and $this->mem array.';
 

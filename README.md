@@ -122,6 +122,8 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_out['js'][]
     $this->_out['body'][]
     $this->_out['footer'][]
+    The favicon is a special part of the header output, you can set it like this:
+    $this->_out['header']['favicon'] = '<link rel="shortcut icon" type="image/png" href="https://path_to/favicon.ico"/>';
 
     I listed the above in the order they will print out. Each is an array of it's own so you can append to any of them
     during the setup of your code like this:
@@ -362,7 +364,7 @@ PHP, MySQL, Javascript, and CSS framework
             - views
               - template.view.php
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
-    everything else shoudl be safe. You should replace the favicon.ico with yours.
+    everything else shoudl be safe.
 
 # dbtables
     dbtables are the class object represention of one of your database tables
@@ -439,3 +441,66 @@ PHP, MySQL, Javascript, and CSS framework
         $r->f['sw_admin_key']['value']
     Need to access a field error?
         $r->f['sw_admin_key']['error']
+
+# Important $_SESSION variables
+    Sometimes the framework needs to get some information from your user.
+    To do that we use session variables that you can control, usually when you create a login scheme for your user.
+    $_SESSION['is_loggedin'] - (booleen) this is used to decide if I should even bother looking at your admin_level. 
+        Set it to true if your user is logged in, and false if not
+    $_SESSION['admin_level'] - (int) This is the level we test against to see if your user has access to moduals and controllers.
+        You can set a number directly, or you can use the config files enumerated array: admin_level_options
+        Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
+    $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
+    $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
+
+# Tell me about the Language Feature!
+    The selling point of this framework for some developers will be the easy way to handle sites that need multipul langauges.
+    When you are busy writing code, you do not always have access to the boss to tell you what specific words to use for differnt things.
+    Now you can write your code and use [__My Words__]
+    Encaplulating your text in bracket underscore undercore will on your next page load trigger site_works to:
+        1) Check the site_works_lang database to see if it already exists
+            a) If it does, we leave the text but set it to useable. sw_lang_keep = 0
+            b) If it does not, we insert it into the sw_origional, and english fields.
+        2) Check all other encapulated text, and mark whatever is not found as ready for deletion. sw_lang_keep = 3
+        3) If the system things you are in php it will rewrite your dev code to the private code as $this->_s->tool->getText(6) which would be the key of the inserted text.
+        4) If it thinks javascript, getText(6), or {__6__} if it needs to run through the javascript page parcer because you put the text in $this->_out['body'][] for example.
+    System generated language always has a sw_lang_category of nothing, if you want to add options for select dropdowns for example, just give it a category
+    then you will have access to it in your javascript file as an array.
+    You can force specific text to never change its keep value by force keeping it by setting sw_lang_keep to 1
+    Once the developers text is in the database, your boss, or your interpreter can change the value for the language they want
+    and it will be pulled for the user based on $_SESSION['language'].
+    The string just to the left of your [__WORDS__] determins what to use:
+    Possible triggers for php are: . ( and =
+    Possible triggers for js are: + ( and = NOTE: if you write js code outside of your js file you might want to use the + to force the javascript call.
+    The default is to use {__words__}.
+      Ex: $w = $w . [__This is Where the Developers Words go__];  That turns into $w = $w . $this->_s->tool->getText(6); in the rebuilt private code.
+      js Ex: $w = '' + [__My Javascript text__]; Turns into $w = '' + getText(6);
+      As long as your in a js file you could do $w = [__My Words Here__] and the system will get the right getText() version
+      Ex: $w = '[__My Words__]'; Will become $w = '{__6__}'; Then that will be auto-parsed by the js on page load.
+
+# Tool Time - what cool executable toys are you giving us?
+    ifind
+        This is a linux only app, you can install it /usr/bin/ifind if you want to run it without typing the ./
+        - Usage
+            ./ifind 'My Word\'s go here'
+        - What does it do?
+            This will search and report on any match of words you give it starting in the directory you type it.
+    debug_server
+        This is a linux only app, you can install it /usr/bin/debug_server if you want to run it without typing the ./
+        - Usage
+            ./debug_server      - To listen on default port 9200
+            ./debug_server 5555 - To listen on port 5555
+        - What does it do?
+            This just sits and waits for data strings, then it prints them to the terminal.
+            You can tell it to print colors using the [c_COLOR] format
+               Color Options:
+               [c_clear]          [c_black]          [c_red]
+               [c_green]          [c_orange]         [c_blue]
+               [c_purple]         [c_cyan]           [c_light_gray]
+               [c_gray]           [c_light_red]      [c_light_green]
+               [c_yellow]         [c_light_blue]     [c_light_purple]
+               [c_light_cyan]     [c_white]
+    debug_server.exe
+        This is the windows version of the linux debug_server app, colors probably will not work.
+
+- site_works Author: Frost Cinderstorm (FrostCandy)
