@@ -24,7 +24,6 @@ class siteworks_startup
 	// console will print to the webpages console.
 	public $console = [];
 
-	// APCu Array
 	public $admin = [];
 	public $mem   = [];
 

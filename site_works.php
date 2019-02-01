@@ -43,21 +43,27 @@ namespace{
 		public $_uri = null;                    // URI vars - modual/controller/method/pass_var/pass_vars[]
 		public $_odb = null;                    // Database odb is the default database
 		public $_dbo = null;                    // Database array dbo['default']
-		public $_out = null;                    // The output array [header/meta/css/js/body/footer]
+		public $_out = null;                    // The output array [header/title/meta/css/js/body/footer]
+		public $_console = null;                // The console output array
 		public $_m = null;                      // The default modual that gets loaded with the same name as Controller
 		public $_p = array();                   // The Pass array to share variables between Controller Moduals and Views
+		public $_admin = null;                  // The site_works admin array
+		public $_mem = null;                    // The site_works mem array
 
 	    public function __construct(){
 	    }
 	    public function site_works_prefetch(&$_s,$model=false){
-	    	$this->_s 	   = $_s;
-			$this->_tool   =& $this->_s->tool;
-			$this->_uri    =& $this->_s->uri;
-			$this->_odb    =& $this->_s->odb;
-			$this->_dbo    =& $this->_s->dbo;
-			$this->_dbo    =& $this->_s->dbo;
-			$this->_out    =& $this->_s->out;
-			$this->_p      =& $this->_s->p;
+	    	$this->_s 	       = $_s;
+			$this->_tool       =& $this->_s->tool;
+			$this->_uri        =& $this->_s->uri;
+			$this->_odb        =& $this->_s->odb;
+			$this->_dbo        =& $this->_s->dbo;
+			$this->_dbo        =& $this->_s->dbo;
+			$this->_out        =& $this->_s->out;
+			$this->_console    =& $this->_s->console;
+			$this->_p          =& $this->_s->p;
+			$this->_admin      =& $this->_s->admin;
+			$this->_mem        =& $this->_s->mem;
 
 			// If your controller has the same name as a module we'll load it automaticaly into $this->_model for you to play with.
 			if($model && $_s->uri->load_the_model){
@@ -92,7 +98,7 @@ namespace{
 	    }
 	    public function load_model($path=false){
 	    	// Models are classes with access to the framework. Model cars becomes $this->_m_cars->your_function();
-	    	if( $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $this->_uri->module . '/models/' . (($path) ? $path : $this->_s->uri->model) . '.model.php') ){
+	    	if( $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $this->_uri->module . '/models/' . (($path) ? $path : $this->_s->uri->controller) . '.model.php') ){
 	    		$tmp = '_m_'.$path;
 	    		$tmp2 = $path . '_model';
 				try{ $this->$tmp = new $tmp2; $this->$tmp->site_works_prefetch($this->_s,false); }catch(Exception $e){unset($e);}

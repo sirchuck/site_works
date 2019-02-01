@@ -26,7 +26,7 @@ class siteworks_tools
       try{
         $fp=@fsockopen($this->_s->debug_server, $this->_s->debug_server_port, $errno, $errstr, 30);
         if(!$this->_s->allowDebugColors){
-          $s_pattern = ['[c_black]','[c_red]','[c_green]','[c_orange]','[c_blue]','[c_purple]','[c_cyan]','[c_light_gray]','[c_gray]','[c_light_red]','[c_light_green]','[c_yellow]','[c_light_blue]','[c_light_purple]','[c_light_cyan]','[c_white]'];
+          $s_pattern = ['[c_clear]','[c_black]','[c_red]','[c_green]','[c_orange]','[c_blue]','[c_purple]','[c_cyan]','[c_light_gray]','[c_gray]','[c_light_red]','[c_light_green]','[c_yellow]','[c_light_blue]','[c_light_purple]','[c_light_cyan]','[c_white]'];
           $s = str_replace($s_pattern, '', $s);
         }
         if (!$fp) { $this->_s->console[] = "You are calling dmsg() in debug mode, but your ./debug_server is not accessable. - $errstr ($errno)"; } else { fwrite($fp,(($showArray)?$this->trace(1)."-> ":'').print_r($s,true).(($showline)?"\n__________________________________________":'') . "\0"); fclose($fp); }

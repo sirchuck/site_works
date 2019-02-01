@@ -113,11 +113,329 @@ PHP, MySQL, Javascript, and CSS framework
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
 
+# The site_works output array
+    You can type echo like usual to output data, but you need more. You need some control over your output right?
+    $this->_out['header'][]
+    $this->_out['title'][]
+    $this->_out['meta'][]
+    $this->_out['css'][]
+    $this->_out['js'][]
+    $this->_out['body'][]
+    $this->_out['footer'][]
 
+    I listed the above in the order they will print out. Each is an array of it's own so you can append to any of them
+    during the setup of your code like this:
+    $this->_out['body'][] = 'Some new text to be appended to the array';
 
+    You may want to provide some keys of your own if you want to manipulate the order later.
+    $this->_out['body'][20] = '20';
+    $this->_out['body'][30] = '30';
+    $this->_out['body'][10] = '10';
+    ksort($this->_out['body']);
 
-    // You could set things like meta tags or load jquery here or in yoru personal server
-    // Example: $this->out['meta'][] = '<meta property="og:title" content="OG EXAMPLE META YOUR TITLE" />';
-    // Example: $this->out['js'][] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
+    Not enough? You want to write to the browser console too? Ok.
+    $this->_console[] = 'This will print to the browsers console window.';
 
+# Scope: What sorts of things can I access and how?
+    $this->_s      This is the entire site_works object. You can access everything in it from here.
+        Well, everything except your database credentials, I remove them after connections are made for added security.
+        An use example:
+        $this->_s->tool->dmsg("This will print something to the debug_server");
+    Aliases
 
+    $this->_tool   This is an alias for $this->_s->tool for faster typing
+        $this->_tool->trace(int)
+            Look Away, you should not need this, the framework uses it to help handle error reporting in the debug_server app
+        $this->_tool->dmsg(string, showArray(bool), showline(bool))
+            Ok, this part is fun :)
+            This will print the string you send to the debug_server app you have running.
+            showArray - (default true) This adds a trace to your output so you know where in the code it was enacted.
+            showline - (default true) Adds a __________________________________ after the output for readablity
+            If you enabled colors in your config, and your terminal supports it:
+               Example:
+               $this->_tool->dmsg('Hello, [c_red] this will be in red, and [c_clear] this will be back to normal',false,false);
+               Use the [c_COLOR] text in your string when you want to change colors. We automatically clear the color choice at the end of yoru line for you.
+               Color Options:
+               [c_clear]          [c_black]          [c_red]
+               [c_green]          [c_orange]         [c_blue]
+               [c_purple]         [c_cyan]           [c_light_gray]
+               [c_gray]           [c_light_red]      [c_light_green]
+               [c_yellow]         [c_light_blue]     [c_light_purple]
+               [c_light_cyan]     [c_white]
+        $this->_tool->listFiles($dir,$ftype=0,$recursive=true)
+            Dir is your path to the folder you want to start listing files from.
+            ftype 0 returns an array of files and folders
+            ftype 1 returns an array of files only
+            ftype 2 returns an array of folders only
+            recursive means it will dig down into subfolders if true
+            - ignore the last array if you look at the code, that's to handle the recursion bit.
+        $this->_tool->delTree($dir,$include_dir_folder=true)
+            Delete an entire folder ( that we have permission to )
+            You can choose to leave the root folder of your path by setting the second parameter to false
+        $this->_tool->removeFile(string)
+           Send it a path to a file, and it will remove it if possible.
+        $this->_tool->buildText($match, $replace, $is_javascript)
+           Look Away, nothign to see here. Yes, you have access to it, but I can't see you would ever use it.
+        $this->_tool->getText(index, $language)
+            Returns the text for the provided language from the siteworks_lang database.
+        $this->_tool->cleanHTML(string)
+            This is supposed to remove XSS injecton from a html string. You probably won't use it in your code.
+        $this->_tool->p_r($array)
+            This lets you pretty print your arrays to the browser by encapsulating your array in 'pre' tags.
+
+    $this->_uri
+        $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly
+        Your URI will have this structure:
+            www.MySite.com/modual/controller/method/pass_var/pass_vars
+            If modual is not found, we supply the default modual you gave us in your config file.
+            If the controller is not found, we supply the name of the modual provided.
+            If the method is not provided, we supply the name of the controller.
+            pass_var gives you the first URI segment that didn't match one of the above
+            pass_vars is an array of every segment past the pass_var segment
+            This means URL's like the following will all get you to http://www.MySite.com/template/template/template/my_pass_var/pvar_array_sub1/pvar_array_sub2
+            1) http://www.MySite.com/template/template/template/my_pass_var/pvar_array_sub1/pvar_array_sub2
+            2) http://www.MySite.com/my_pass_var/pvar_array_sub1/pvar_array_sub2
+            3) http://www.MySite.com/template/my_pass_var/pvar_array_sub1/pvar_array_sub2
+            4) http://www.MySite.com/template/template/my_pass_var/pvar_array_sub1/pvar_array_sub2
+        $this->_uri->module - This is the modual segment of the URI
+        $this->_uri->controller - This is the controller segment of the URI
+        $this->_uri->method - This is the method segment of the URI
+        $this->_uri->pass_var - This is the pass_var segment of the URI
+        $this->_uri->pass_vars - This is the pass_vars segment of the URI
+        $this->_uri->root_url - http(s)://subdomain.your_site.tld
+        $this->_uri->base_url - http(s)://subdomain.your_site.tld/site_works (Note our Nginx just pushes this to our public folder)
+        $this->_uri->public_url - http(s)://subdomain.your_site.tld/site_works/public
+        For root, base and public you can add a _n or a _s to the property to pull the secure or non_secure versions
+            Example: $this->_uri->public_url_s will force the secure https version of the domain.
+        $this->_uri->asset_url is built from the asset parts you gave us in the config. You can use the _s and _n to force secureness
+        $this->_uri->asset
+            This just gives you a quick way to plug in your asset path to images, documents and so on:
+            $this->_uri->asset->images - http(s)://asset_subdomain.MyAssetSite.asset_tld/site_works/public/assets/images
+            Notice the siteworks/public has been added. so if you use a real second server for assets make sure you build the path properly.
+            ** Special Notice: Your assets will be served from your asset server, 
+            ** but you still need to keep anything generated by siteworks on the site servers for framework operations.
+            $this->_uri->asset->images     - asset_site + /site_works/public/assets/images
+            $this->_uri->asset->documents  - asset_site + /site_works/public/assets/documents
+            $this->_uri->asset->js         - asset_site + /site_works/public/assets/js
+            $this->_uri->asset->css        - asset_site + /site_works/public/assets/css
+            $this->_uri->asset->js_vendor  - asset_site + /site_works/public/assets/js/vendor
+            $this->_uri->asset->css_vendor - asset_site + /site_works/public/assets/css/vendor
+            The vendor folder is just a fancy way to say third party stuff. Helping you stay organized.
+            js/siteworks and css/siteworks are the files we build with the framework
+            js and css you put in _js/vendor _css/vendor wont be touched by the framework
+            js and css files you directly put in the public folder under js/ or css/ won't be touched
+            We only overwrite the siteworks folder in the js and css directories.
+        $this->_uri->fixeduri - this removes the site_works/public from the actual url so we can pull just the usable segments. Garbage to you.
+        $this->_uri->sw_module_path - the path to your modual /var/www/html/site_works/private/moduals/tempalte;
+        $this->_uri->load_the_model - This tells the framework if it needs to autoload a model. Garbage to you
+
+    ** Special Notice - You won't usually use direct calls to _odb, you'll usually use - #The Database Table Object Class - found below
+    $this->_odb - This is the 'default' key in the config files database array. It's the connection we use for the siteworks databases.
+        Generally you won't directly use the _odb or _dbo, you'll create a new object table shown below.
+        $this->_odb->freeResult($result) - Basic Free result to save memory.
+        $this->_odb->close() - Close the database connection.
+        $this->_odb->c(string) - Clean your mysql string, General escaping
+        $this->_odb->p($sql, $values) - prepaired statments - (SQL,Value Array) like this: ('INSERT INTO table (first_name) VALUES (?)', ['Frost'])
+        $this->_odb->q($sql=false) - Run a query ('DELETE FROM table WHERE id=5')
+        $this->_odb->getInsertID($result) - Gets the last insert id from a result.
+        $this->_odb->getAffectedRows($result) - Return the number of effected rows for the result
+        $this->_odb->numRows($result) - Number of rows in the result
+        $this->_odb->fetch_assoc($result) - Return an associative array of rows for the result
+        $this->_odb->fetch_object($result) - Return a row object for the result
+
+    $this->_dbo - This is an array of _odb's, so it does exactly the same thing but you call it differntly.
+        Ex: $this->_dbo['default'] is the same thing as $this->_odb
+        This exists because some of us are dumb enough to use multipul databases on different servers :(
+        Your database server array is set in your configuration file.
+        	$this->_dbo['server_1']->q('DELETE FROM table WHERE x = y');
+        	$this->_dbo['server_2']->q('DELETE FROM table WHERE x = y');
+
+    $this->_admin - This is an array bulit from the siteworks admin database site_works_admin
+        If you installed APCu, then we cache this every $this->APCuTimeoutMinutes minutes. Otherwize we load it from the database every time.
+        Before you touch it, you have access to the following fields:
+        $this->_admin['apcu_start_time'] - The time of the last cacheing of the database table.
+        $this->_admin['sw_admin_key'] - Just the database key: should always be 1.
+        $this->_admin['sw_version'] - Version of the current siteworks build.
+            If the sw_version does not match the number set on the built siteworks javascripts file, it will try to update itself.
+            That means when you git push to your live server, and the build number has changed, you'll need to re-load the site page to have it renew.
+
+    $this->_mem - Same as _admin but it's a volitile memory table, site_works_mem. Garbage to most.
+        $this->_mem['apcu_start_time'] - The time of the last cacheing of the database table.
+        $this->_mem['sw_mem_key'] - Database key - should always be 1.
+        $this->_mem['sw_site_visits'] - Volitile as a memory table, but you can use it if you want.
+    ** Special Notice - Updating the $this->_admin or $this->_mem arrays does NOT change your database and will be refreshed every $this->APCuTimeoutMinutes minutes.
+        If you want to really change a value you need to write the information to the database, not the array.
+        Genearlly you'll treat the array as read only, but you can write if you want, like for +1 per visit for sw_site_visits since last refresh.
+
+    $this->_m - When you are in your controller and want to quickly access the model with the same name as yoru controller you use $this->_m->YourModelsMethod();
+        $this->_m is the auto-loaded model, selected only if it has the same name as the contorller and is under the same Modual as the controller.
+
+    $this->_m_modelname - when you load a model load_model('modelname'); You access it by using $this->_m_ followed by the name of the loaded model.
+        $this->_m_modelname must be within the controllers Modual
+
+    $this->_p - This is an array of parameters you want to pass around between your controller, modual, and view pages
+
+# How do I load view pages and stuff?
+    The load functions use the PHP require_once() function. The following loaded files must be found under the Modual your current controller is in.
+    filename should be just the start of the file name, so myfile.view.php should be sent as load_view('myfile'); only.
+    $this->load_view(filename) - Loads modual/views/name.view.php - if left empty, it loads the view with the same name as the current controller.
+    $this->load_model(filename) - Loads modual/views/name.model.php - if empty, loads model with the same name as controller; However, it should already be loaded.
+    To load something that you want available to multipul controller, try using a helper, or include.
+    $this->load_helper(filename) - This will load a file from the helper folder, accessable from all your controllers.
+    $this->load_path(full_path) - You should never need this, but you could use it to require_once on a path.
+    To use the include folder, just drop a file in it and it will be automatically called php autoloader.
+    Include files should end in .inc.php Example: mytools.inc.php
+    You load them like this:
+    $mytools = new mytools();
+    Your database table classes are special, they go in the dev/dbtables directory and have the following format:
+    t_myfilename.inc.php
+    the t_ tells the php Autoloader to look in the dbtables directory for the table ojbect, I also use this directory for framework purposes.
+
+# File Extentions:
+    For the framework to find your files, and for readability on your end, give your files the following extentions
+    dev/includes - your_file_name.inc.php
+    dev/helpers - your_file_name.helper.php
+    dev/ajaxs - your_file_name.ajax.php
+    dev/controller - your_file_name.controller.php
+    dev/iframes - your_file_name.iframe.php
+    dev/models - your_file_name.model.php
+    dev/views - your_file_name.view.php
+
+# Template Modual
+    I provided this template modual for you to copy and paste to quickly set up a new modual.
+    It gives some basic usage examples, go ahead and explore the files.
+
+# Admin Modual
+    You can remove this modual if you want to handle language yourself, or fix it up a bit.
+    Make sure you revoke access to this folder so your users can not manipulate your langauge files.
+    You can also pick a database table and get some quick sample code to help you set up your
+    HTML, CSS, JS, and AJAX quicker.
+    Notice: When you choose to get sample code, at the bottom I provided a bit of a framework cheat sheet for you.
+    You would not generally use the MVC this way, but I wanted to keep it all contained within the Modual in case
+    you want to remove it completely without hanving to hunt down javascript files and css files.
+
+# You made me read 300+ lines of documentation, tell me about file structure already!
+    ajaxs, iframes, and scripts are exactly like controllers except they only output what you specify.
+        controllers will spit out the overhead like html, head, and body tags.
+        To tell the framework you want to use ajax, iframe, or script just prefix the word before the name of that file in the URI.
+            Ex Ajax:    http://www.MySite.com/ajax_modualname/controller/method/pass_var/pass_vars
+            Ex iFrame:  http://www.MySite.com/iframe_modualname/controller/method/pass_var/pass_vars
+            Ex Script:  http://www.MySite.com/script_modualname/controller/method/pass_var/pass_vars
+    All of your php/js/css work should happen in the site_works/dev folder.
+        Global js/css files are all squished together into one file
+        I then take the global squished file and add it to a squished version of each theme.
+        You end up with one differnet squished file in each theme.
+            If you enabled uglify in your config, I also minify these css and js files.
+        Files in the vendor folder will just be copied to the public folder as is.
+    dev/_css
+        - globalcssfiles.css
+        themes
+            default
+                - themedcssfiles.css
+        vendor
+          - anycssfile.css
+    dev/_js
+        - globaljsfiles.js
+        themes
+            default
+                - themedjsfiles.js
+        vendor
+          - anycssfile.js
+    dev/dbtables
+        - t_myfile.inc.php
+    dev/helpers
+        - myfile.helper.php
+    dev/includes
+        - myfile.inc.php
+    dev/moduals
+        - modualfoldername
+            - ajaxs
+              - template.ajax.php
+            - controllers
+              - template.controller.php
+            - iframes
+              - template.iframe.php
+            - models
+              - template.model.php
+            - scripts
+              - template.script.php
+            - views
+              - template.view.php
+    If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
+    everything else shoudl be safe. You should replace the favicon.ico with yours.
+
+# dbtables
+    dbtables are the class object represention of one of your database tables
+    To see an example of what a dbtable file should look like, check this path:
+        siteworks/includes/dbtables
+    In here you'll find my framework tables, yours should follow the same format
+    You should put yours in
+        siteworks/dev/dbtables
+    If you want to access one of the frameworks dbtables be sure and use the namespace
+        Ex: $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
+    To access yours:
+        Pass the ID if you want to pull a specific one, or 0, and the database connection you want to use.
+        Ex: $r = new t_mytable();
+            That will load the mytable object using the $this->_odb connection. ( the default )
+        Ex: $r = new t_mytable(5,$this->_odb);
+            That will autofill your object with mytables infromation where the id = 5
+        Ex: $r = new t_mytable(0,$this->_dbo['DB_SERVER_2']);
+            That will load the empty object table using your specified database connection
+
+# The Database Table Object Class
+    $this->tableName        = 'site_works_admin';   // Give us the name of your database table
+    $this->keyField         = 'sw_admin_key';       // Give us the key field or '' if you do not have one.
+    $this->autoInc          = false;                // Are you using autoincremnt for your keyfield?
+    $this->f = Array(                               // Your field array. Each table field should be represented here.
+        'sw_admin_key'      => array( 'value' => 0    , 'error' => null) // Set value to either 0 or null based on field type
+        ,'sw_version'       => array( 'value' => null , 'error' => null) // Set value to either 0 or null based on field type
+    );
+    If your field type is a number, 0 is typically correct, if not use null.
+    I have not done anything with the 'error' element of the array, but it may be useful to you.
+    At the bottom of your table object class you will notice the bulidQueryArray
+    case 'pullByVersion':                           // This is the name you will use to refer to the query
+                                                    // set the $sqlFn to the query you want to run.
+        $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->dbClean( $this->f['sw_version']['value'] ) . '"';
+        // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECE...'
+    break;
+    You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
+    When you create a new database table object you get to play with the following tools:
+    $r = new t_mytable(5,$this->_odb);
+        This instantiation has passed an id of 5, and will automatically call the following fillData method
+    $r->fillData(overloaded)
+        $r->fillData(true)
+            This will pull the last record data, you would only use this typically if you had no key field and just one record.
+        $r->fillData(1)
+            Fill the object where the key filed id = 1
+        $r->fillData('dog')
+            Fill the object where the id field = 'dog'
+    $r->query($sqlFn=false)
+        $r->query('pullByVersion')
+            This will load the SQL you set above in the buildQueryArray, and run that array of queries.
+        $r->query('SELECT * FROM site_works_admin')
+            This will just run the query you send it.
+    $r->getFieldNames($is_insert) - This is garbage to you, I use it to build INSERT and UPDATE queries from your database table object.
+    $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
+    $r->clean(string) - this cleans your string to make it ready for insertion to the database.
+    $r->cleanAll() - This will traverse your table object fields and clean each value.
+    $r->clearFields() - This will set your field values in the object back to your defaults.
+    $r->selectAll($where = false, $values_to_return = '*') - Send your WHERE clause and Value list
+        Ex: $r->selectAll('x=y AND z=q ORDER BY x desc', '`x`,`y`')
+        If you do not specify return values, you'll get the entire record for each row.
+    $r->insertData() - This will take the field values in your object and attempt to insert it as a new record in your database.
+    $r->insertUpdateData() - This will insert the data, unless a keyfield is matched in which case it should update it.
+    $r->updateData($where = false,$values=false) - To update your data, multipul ways to use it.
+        $r->updateData(); - This will simply update whatever data you have in the field array of your table object.
+        $r->updateData('x=y'); This will update using your field list, and apply the where clause x=y
+        $r->updateData('x=y','x'); This will only update the x field where x=y
+        $r->updateData(4,'`x`') This will only update the x field where the id = 4
+        $r->updateData('bob','`x`') This will only update the x field where the id = 'bob'
+    $r->deleteData($where = '') - To delete data from the database
+        $r->deleteData(); - Delete your currently loaded table object.
+        $r->deleteData('x=y'); - Delete all rows where x = y.
+        $r->deleteData(4); - Delete where id = 4
+        $r->deleteData('bob') - Delete where id = 'bob'
+    Need to access a field value?
+        $r->f['sw_admin_key']['value']
+    Need to access a field error?
+        $r->f['sw_admin_key']['error']
