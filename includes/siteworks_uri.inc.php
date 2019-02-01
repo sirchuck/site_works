@@ -48,7 +48,7 @@ class siteworks_uri
 		$this->root_url     = ( $_s->secure ) ? $this->root_url_s : $this->root_url_n ;
 		
 		// Base gets you to your site folder http://www.example.com/siteworks
-		$base_url = 'site_works';
+		$base_url = $_s->cPaths['project_name'];
 		$this->base_url_n   = 'http://'  . $root_url . '/' . $base_url ;
 		$this->base_url_s   = 'https://' . $root_url . '/' . $base_url ;
 		$this->base_url     = ( $_s->secure ) ? $this->base_url_s : $this->base_url_n ;
@@ -60,7 +60,7 @@ class siteworks_uri
 		$this->public_url     = ( $_s->secure ) ? $this->public_url_s : $this->public_url_n ;
 		
 		// So many ways to handle assets, you'll have to figure out the best way for your own project of course. This will work for most sites.
-		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ) . $_s->cPaths['domain_a'] . '.'. $_s->cPaths['tld_a'] . '/' . ( ( $_s->cPaths['base_dir_a'] != '' ) ? $_s->cPaths['base_dir_a'] : '' )  ;
+		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a'].'/'.$_s->cPaths['project_name'].'/public';
 		$this->asset_url_n   = 'http://'  . $asset_url ;
 		$this->asset_url_s   = 'https://' . $asset_url ;
 		$this->asset_url     = ( $_s->secure ) ? $this->asset_url_s : $this->asset_url_n ;
@@ -74,7 +74,7 @@ class siteworks_uri
 		$this->asset->css_vendor  = $this->asset_url . '/assets/css/vendor';
 
 		$uri = $_SERVER['DOCUMENT_URI'];
-		$this->fixeduri = trim(str_replace(['site_works/public','site_works'],'',trim($uri, '/')), '/');
+		$this->fixeduri = trim(str_replace([$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']],'',trim($uri, '/')), '/');
 		$params = explode('/', $this->fixeduri);
 		if(!isset($params[0])){$params[0]=$_s->_s->default_module;}
 		if( isset( $_s->routes[ $params[0] ] ) ){ $params[0] = $_s->routes[ $params[0] ]; }

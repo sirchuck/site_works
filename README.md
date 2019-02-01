@@ -112,6 +112,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->debug_server - The IP of the server running your debug_server app.
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
+        - Be sure and change /site_works/ to your project name when reading URL's in this ReadMe file.
 
 # The site_works output array
     You can type echo like usual to output data, but you need more. You need some control over your output right?
@@ -141,10 +142,9 @@ PHP, MySQL, Javascript, and CSS framework
 # Scope: What sorts of things can I access and how?
     $this->_s      This is the entire site_works object. You can access everything in it from here.
         Well, everything except your database credentials, I remove them after connections are made for added security.
-        An use example:
-        $this->_s->tool->dmsg("This will print something to the debug_server");
-    Aliases
+        Ex: $this->_s->tool->dmsg("This will print something to the debug_server");
 
+    Aliases of _s
     $this->_tool   This is an alias for $this->_s->tool for faster typing
         $this->_tool->trace(int)
             Look Away, you should not need this, the framework uses it to help handle error reporting in the debug_server app
@@ -500,6 +500,7 @@ PHP, MySQL, Javascript, and CSS framework
                [c_gray]           [c_light_red]      [c_light_green]
                [c_yellow]         [c_light_blue]     [c_light_purple]
                [c_light_cyan]     [c_white]
+            Ex: $this->_tool->dmsg('Hello, [c_red] this will be in red, and [c_clear] this will be back to normal',false,false);
     debug_server.exe
         This is the windows version of the linux debug_server app, colors probably will not work.
 

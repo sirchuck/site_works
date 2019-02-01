@@ -103,12 +103,12 @@ class siteworks_config extends siteworks_startup
          'subdomain'       => 'www'                  // Website Subdomain
         ,'domain'          => 'MySite'               // Site Domain Name
         ,'tld'             => 'com'                  // Top-Level Domain
+        ,'project_name'    => 'site_works'           // Your project folder name
 
         // Asset Web Server Address: http(s)://assets.MySite.com/public_path
         ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
         ,'domain_a'        => 'MySite'               // Asset Site Domain Name
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
-        ,'base_dir_a'      => 'site_works/public'    // Asset direct base path
     );
 
 
