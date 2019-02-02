@@ -238,6 +238,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$f = '';
 			// Developer Code
        		$this->tool->delTree(SITEWORKS_DOCUMENT_ROOT . '/private/',false);
+			@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/.githoldfolder',SITEWORKS_DOCUMENT_ROOT . '/private/.githoldfolder');
 			foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/dev/',1) as $v){
 				if( substr( $v['path'], 0, strlen(SITEWORKS_DOCUMENT_ROOT . '/dev/_') ) !== SITEWORKS_DOCUMENT_ROOT . '/dev/_' ){
 					$new_path = preg_replace('@' . SITEWORKS_DOCUMENT_ROOT . '/dev@', SITEWORKS_DOCUMENT_ROOT . '/private', $v['path']);
