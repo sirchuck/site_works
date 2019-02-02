@@ -80,7 +80,7 @@ class siteworks_tools
 
   public function delTree($dir,$include_dir_folder=true) {
    if(!is_dir($dir)){return false;}
-   $files = array_diff(scandir($dir), array('.','..'));
+   $files = array_diff(scandir($dir), array('.','..','.githoldfolderprivate'));
     foreach ($files as $file) {
       (is_dir($dir.'/'.$file)) ? $this->delTree($dir.'/'.$file,true) : unlink($dir.'/'.$file);
     }
