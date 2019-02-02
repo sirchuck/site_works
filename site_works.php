@@ -15,21 +15,26 @@ namespace SiteWorks{
 		if(file_exists($tmp)){
 			require_once($tmp);
 		} else {
-			file_put_contents($tmp,file_get_contents(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/site_conf.txt'));
-			die('This server was missing its server specific config file, I tried adding it with defaults at: ' . $tmp . '<br>'
-				. 'Make sure php (usually www-data) has write access to the following folders:<br><br>'
-				. '1) ' . SITEWORKS_DOCUMENT_ROOT . '/conf<br>'
-				. '2) ' . SITEWORKS_DOCUMENT_ROOT . '/private<br>'
-				. '3) ' . SITEWORKS_DOCUMENT_ROOT . '/public<br><br>'
-				. 'Example commands:<br><br>'
-				. 'Config folder so we can write your defult config:<br>'
-				. 'sudo chmod -R 775 site_work/conf<br>'
-				. 'sudo chgrp -R www-data site_work/conf<br><br>'
-				. 'sudo chmod -R 775 site_work/private<br>'
-				. 'sudo chgrp -R www-data site_work/private<br><br>'
-				. 'sudo chmod -R 775 site_work/public<br>'
-				. 'sudo chgrp -R www-data site_work/public<br><br>'
-				. 'Once you finish setting up your servers config file, just refresh this page.<br>');
+			if( !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/site_conf.txt',$tmp) ){
+				die('Welcome to site_works!<br><br>'
+					. 'To get started you need to set some file permissions so the framework can write to files:<br>'
+					. '1) ' . SITEWORKS_DOCUMENT_ROOT . '/conf<br>'
+					. '2) ' . SITEWORKS_DOCUMENT_ROOT . '/private<br>'
+					. '3) ' . SITEWORKS_DOCUMENT_ROOT . '/public<br><br>'
+					. 'Example commands:<br><br>'
+					. 'sudo chmod -R 775 conf<br>'
+					. 'sudo chgrp -R www-data conf<br><br>'
+					. 'sudo chmod -R 775 private<br>'
+					. 'sudo chgrp -R www-data private<br><br>'
+					. 'sudo chmod -R 775 public<br>'
+					. 'sudo chgrp -R www-data public<br><br>'
+					. 'When you are done setting permissions, refresh this page.<br>');
+			}else{
+				die('Almost done, the next step is to set up your configuration file found at:<br>'
+					. $tmp . '<br><br>'
+					. 'You will need at least one database connection with the \'default\' key.<br>'
+					. 'Once you finish setting up your servers config file, just refresh this page.<br>');
+			}
 		}
 	}
 	catch (Exception $e) { die('Site configuration file is missing. Please try again later. <br /><br />'); }
