@@ -175,8 +175,6 @@ class siteworks_dbc{
 
     public function getInsertID($_result=false)
     {
-        if(!$_result){$_result=$this->last_result;}
-        if(is_bool($_result)){return 0;}
         switch ($this->dbt) {
             case "mysqli":
                 if (isset($this->c->insert_id)) {
@@ -185,6 +183,8 @@ class siteworks_dbc{
                 return 0;
             break;
             case "postgres":
+                if(!$_result){$_result=$this->last_result;}
+                if(is_bool($_result)){return 0;}
                 return pg_last_oid($_result);
             break;
             default:

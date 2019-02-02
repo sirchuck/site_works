@@ -82,10 +82,10 @@ class siteworks_config extends siteworks_startup
         // array('template','template','default')
     );
 
-    // If you want to use the router, match the modual block with where to send it.
-    // www.MySite.com/dog example: 'dog'=>'template/template/about_dogs'
+    // If you want to use the router, match the modual block with where to send it. Use Lower Case
+    // www.MySite.com/dogs/like/to/party example: 'dogs/like/to/party'=>'template/template/about_dogs'
     public $routes = Array(
-        //'dog' => 'template/template/about_dogs'
+    //    'dogs/like/to/party'=>'template/template/about_dogs'
     );
 
 

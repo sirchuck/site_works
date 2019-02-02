@@ -109,6 +109,9 @@ PHP, MySQL, Javascript, and CSS framework
     $this->modualLocks - Disable access for unpriviledged users to visit an entire modual.
     $this->controllerLocks - Disable access for unpriviledged users to visit a speific moduals controller.
     $this->routes - Yes, you can let someone type something odd in your url, then redirect it to a good path.
+        You should use lower case when setting up routes.
+        Ex: 'dogs/like/friends' => 'template/template/about_dogs'
+        Note: anything following the swapped portion will fall into the proper segment - pass_var pass_vars if you provide modual/contorller/method 
     $this->debug_server - The IP of the server running your debug_server app.
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
@@ -148,10 +151,11 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_tool   This is an alias for $this->_s->tool for faster typing
         $this->_tool->trace(int)
             Look Away, you should not need this, the framework uses it to help handle error reporting in the debug_server app
-        $this->_tool->dmsg(string, showArray(bool), showline(bool))
+        $this->_tool->dmsg(string, showArray(bool)(int), showline(bool))
             Ok, this part is fun :)
             This will print the string you send to the debug_server app you have running.
             showArray - (default true) This adds a trace to your output so you know where in the code it was enacted.
+            showArray - (1) If you put a 1 instead of true, it will print the entire debug trace.
             showline - (default true) Adds a __________________________________ after the output for readablity
             If you enabled colors in your config, and your terminal supports it:
                Example:

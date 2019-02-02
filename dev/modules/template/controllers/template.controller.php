@@ -18,7 +18,6 @@ class template_controller extends _s
         // Do you like Jquery? How about loading it from a CDN like google? You can do this in the config if you want it global
         $this->_out['js'][] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
 
-
         // Here is an idea, let's make our model handle math
         $a = 5;
         $this->_out['body'][] = $a . ' + 5 = ' . $this->_m->addToA($a, 5) . '<br><br>';

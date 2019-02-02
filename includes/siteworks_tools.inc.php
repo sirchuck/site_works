@@ -14,11 +14,34 @@ class siteworks_tools
 		$this->_s =& $_s;
 	}
 
-  public function trace($af=0){
-    $data = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,5);
-    $dout = '';
-    foreach($data as $k => $v){ if( $k == $af || $af == 0 ){foreach($v as $k2 => $v2){ if($k2=="file"||$k2=="line"){$dout .= "\n" . '['.$k2.']'.' ' . str_replace(SITEWORKS_DOCUMENT_ROOT.'/','',$v2) . ' ';} } } }
-    return $dout;
+  public function trace($af=0,$fullreport=false){
+    if($fullreport){
+        $backtraceList = debug_backtrace();
+        $returnList = Array();
+        for ($i=0; $i<count($backtraceList); $i++) {
+          $step = $backtraceList[$i];
+          $stepFormatted = '';
+          $omit = false;
+          foreach ($step as $type => $value) {
+            if ($type === 'file' && __FILE__ == $value) {
+              $omit = true;
+              break;
+            }
+            if (in_array($type, Array('file', 'line'))) {
+              $stepFormatted .= '['.$value.']';
+            }
+          }
+          if ($omit === false) {
+            $returnList[] = $stepFormatted;
+          }
+        }
+      return implode("\n", str_replace(SITEWORKS_DOCUMENT_ROOT.'/','',$returnList));
+    }else{
+      $dout = '';
+      $data = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,5);
+      foreach($data as $k => $v){ if( $k == $af || $af == 0 ){foreach($v as $k2 => $v2){ if($k2=="file"||$k2=="line"){$dout .= "\n" . '['.$k2.']'.' ' . str_replace(SITEWORKS_DOCUMENT_ROOT.'/','',$v2) . ' ';} } } }
+      return $dout;
+    }
   }
 
 	public function dmsg($s,$showArray=true,$showline=true){
@@ -29,7 +52,9 @@ class siteworks_tools
           $s_pattern = ['[c_clear]','[c_black]','[c_red]','[c_green]','[c_orange]','[c_blue]','[c_purple]','[c_cyan]','[c_light_gray]','[c_gray]','[c_light_red]','[c_light_green]','[c_yellow]','[c_light_blue]','[c_light_purple]','[c_light_cyan]','[c_white]'];
           $s = str_replace($s_pattern, '', $s);
         }
-        if (!$fp) { $this->_s->console[] = "You are calling dmsg() in debug mode, but your ./debug_server is not accessable. - $errstr ($errno)"; } else { fwrite($fp,(($showArray)?$this->trace(1)."-> ":'').print_r($s,true).(($showline)?"\n__________________________________________":'') . "\0"); fclose($fp); }
+        $btrace = '';
+        if($showArray===1){ $btrace = $this->trace(0,true); }else{ $btrace = ltrim($this->trace(1,false),"\n"); }
+        if (!$fp) { $this->_s->console[] = "You are calling dmsg() in debug mode, but your ./debug_server is not accessable. - $errstr ($errno)"; } else { fwrite($fp,(($showArray)?$btrace."-> ":'').print_r($s,true).(($showline)?"\n__________________________________________\n":'') . "\0"); fclose($fp); }
       } catch (Exception $e) {
          $this->_s->console[] = 'You are in debug mode, but your ./debug_server is not accessable. ' . $e->getMessage();
       }
@@ -83,11 +108,7 @@ class siteworks_tools
       $r->f['sw_origional']['value'] = $r->clean($m[2]);
       $r->f['english']['value'] = $r->f['sw_origional']['value'];
       $pid = $r->insertData();
-      $r->p['list'][] = $r->p['list'][0];
-      $pcount = count($r->p['list']) -1;
-      $r->p['list'][$pcount]->sw_lang_key = $pid;
-      $r->p['list'][$pcount]->sw_lang_keep = 2;
-      $r->p['list'][$pcount]->english = $m[2];
+      $r->p['list'][] = (object) array('sw_lang_key' => $pid, 'sw_lang_keep' => 2, 'sw_origional' => $m[2]);
     }
     switch($m[1]){
       case '.':
