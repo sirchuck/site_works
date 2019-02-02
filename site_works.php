@@ -28,13 +28,15 @@ namespace SiteWorks{
 					. 'sudo chgrp -R www-data private<br><br>'
 					. 'sudo chmod -R 775 public<br>'
 					. 'sudo chgrp -R www-data public<br><br>'
+					. ' - or - <br><br>'
+					. 'sudo chmod -R 775 conf && sudo chgrp -R www-data conf && sudo chmod -R 775 private && sudo chgrp -R www-data private && sudo chmod -R 775 public && sudo chgrp -R www-data public<br><br>'
 					. 'When you are done setting permissions, refresh this page.<br>');
 			}else{
 				die('Almost done, the next step is to set up your configuration file found at:<br>'
 					. $tmp . '<br><br>'
 					. 'You will need at least one database connection with the \'default\' key.<br>'
-					. 'You will need to give yourself access to the config file<br>'
-					. 'sudo chown YOUR_COMPUTER_USER_NAME ' . $tmp . '<br><br>'
+					. 'You will need to give yourself access to the config file Example: <br><br>'
+					. 'sudo chown ' . posix_getpwuid(fileowner(SITEWORKS_DOCUMENT_ROOT . '/index.php'))['name'] . ' ' . $tmp . '<br><br>'
 					. 'Once you finish setting up your servers config file, just refresh this page.<br>');
 			}
 		}
