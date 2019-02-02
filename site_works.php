@@ -33,6 +33,8 @@ namespace SiteWorks{
 				die('Almost done, the next step is to set up your configuration file found at:<br>'
 					. $tmp . '<br><br>'
 					. 'You will need at least one database connection with the \'default\' key.<br>'
+					. 'You will need to give yourself access to the config file<br>'
+					. 'sudo chown YOUR_COMPUTER_USER_NAME ' . $tmp . '<br><br>'
 					. 'Once you finish setting up your servers config file, just refresh this page.<br>');
 			}
 		}

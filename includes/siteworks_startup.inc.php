@@ -115,7 +115,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				$had_to_build_databases = true;
 			}
 		}
-		if($had_to_build_databases){die($dbc_database_name . ' database tables were created with default values. Change the values as needed, sw_admin_key and sw_mem_key must be set to 1.');}
+		if($had_to_build_databases){die($dbc_database_name . ' database tables were created with default values. Change the values as needed, sw_admin_key and sw_mem_key must be set to 1. <br><br>Setup Complete: Refresh This Page.');}
 
 
 		// Handle Database setup and management
