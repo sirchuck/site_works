@@ -47,6 +47,7 @@ class siteworks_startup
 			$this->dbo['default'] = $this->odb;
 		}else{die('You must have a default database connection for administration.');}
 		foreach($this->dbc as $k => $v){ if($k != 'default'){ $this->dbo[$k] = new siteworks_dbc((object)$v,$this); } }
+		$dbc_database_name = $this->dbc['default']['database'];
 
 		// Protect Database Connection Passwords from being revield later.
 		unset($this->dbc);
@@ -67,6 +68,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 
 		// Handle Admin Table and APCu
 		$db_load = true;
+		$had_to_build_databases = false;
 		$apcu_hold_time = time();
 		if( extension_loaded('apcu') ){
 			$db_load = false;
@@ -76,9 +78,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($db_load){
 			$radmin = new t_site_works_admin(1,$this->odb);
 			if( (int)$radmin->f['sw_admin_key']['value'] !== 1 ){
-					$this->odb->q("CREATE TABLE IF NOT EXISTS `site_works`.`site_works_admin` ( `sw_admin_key` TINYINT(1) UNSIGNED NOT NULL, `sw_version` CHAR(40) NOT NULL , PRIMARY KEY (`sw_admin_key`)) ENGINE = InnoDB;");
-					$this->odb->q("INSERT INTO `site_works`.`site_works_admin` (`sw_admin_key`,`sw_version`) VALUES (1,'0');");
-					die('site_works_admin table was created with default values in the default database. Change the values as needed, sw_admin_key must be set to 1.');
+					$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_admin` ( `sw_admin_key` TINYINT(1) UNSIGNED NOT NULL, `sw_version` CHAR(40) NOT NULL , PRIMARY KEY (`sw_admin_key`)) ENGINE = InnoDB;");
+					$this->odb->q("INSERT INTO `" . $dbc_database_name . "`.`site_works_admin` (`sw_admin_key`,`sw_version`) VALUES (1,'0');");
+					$had_to_build_databases = true;
 			}
 			$this->admin = null;
 			$this->admin = ['apcu_start_time' => $apcu_hold_time];
@@ -95,8 +97,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($db_load){
 			$r = new t_site_works_mem(1,$this->odb);
 			if( (int)$r->f['sw_mem_key']['value'] !== 1 ){
-				$this->odb->q("CREATE TABLE IF NOT EXISTS `site_works`.`site_works_mem` ( `sw_mem_key` TINYINT(1) UNSIGNED NOT NULL , `sw_site_visits` BIGINT(11) UNSIGNED NOT NULL , PRIMARY KEY (`sw_mem_key`)) ENGINE = MEMORY;");
-				$this->odb->q("INSERT INTO `site_works`.`site_works_mem` (`sw_mem_key`,`sw_site_visits`) VALUES (1,0);");
+				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_mem` ( `sw_mem_key` TINYINT(1) UNSIGNED NOT NULL , `sw_site_visits` BIGINT(11) UNSIGNED NOT NULL , PRIMARY KEY (`sw_mem_key`)) ENGINE = MEMORY;");
+				$this->odb->q("INSERT INTO `" . $dbc_database_name . "`.`site_works_mem` (`sw_mem_key`,`sw_site_visits`) VALUES (1,0);");
+				$had_to_build_databases = true;
 			}
 			$this->mem = null;
 			$this->mem = ['apcu_start_time' => $apcu_hold_time];
@@ -108,9 +111,12 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$r = new t_site_works_lang(0,$this->odb);
 			$r->query("SHOW TABLES LIKE 'site_works_lang';");
 			if($r->c->numRows()<1){
-				$this->odb->q("CREATE TABLE IF NOT EXISTS `site_works`.`site_works_lang` ( `sw_lang_key` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_lang_keep` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0', `sw_lang_category` CHAR(40) NULL , `sw_origional` TEXT NULL , `english` TEXT NULL, PRIMARY KEY (`sw_lang_key`)) ENGINE = InnoDB;");
+				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_lang` ( `sw_lang_key` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_lang_keep` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0', `sw_lang_category` CHAR(40) NULL , `sw_origional` TEXT NULL , `english` TEXT NULL, PRIMARY KEY (`sw_lang_key`)) ENGINE = InnoDB;");
+				$had_to_build_databases = true;
 			}
 		}
+		if($had_to_build_databases){die($dbc_database_name . ' database tables were created with default values. Change the values as needed, sw_admin_key and sw_mem_key must be set to 1.');}
+
 
 		// Handle Database setup and management
 		if($this->debugMode){
@@ -226,7 +232,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			// Build Language Files
 			$r = new t_site_works_lang(0,$this->odb);
 			$r->p['list'] = array();
-			$r->query('SELECT sw_lang_key, sw_lang_keep, sw_origional FROM `site_works`.`site_works_lang` WHERE sw_lang_category = \'\'');
+			$r->query('SELECT sw_lang_key, sw_lang_keep, sw_origional FROM `' . $dbc_database_name . '`.`site_works_lang` WHERE sw_lang_category = \'\'');
 			while($row = $r->getRows()){$r->p['list'][]=$row;}
 
 			$f = '';
@@ -394,9 +400,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($this->debugMode && $this->showPHPErrors_debug){
 			$e = error_get_last();
 			if($e == ''){
-				$this->tool->dmsg("\n".'[c_light_green]    No PHP Errors  - America, Hell Yeah!'."\n",false,false);
+				$this->tool->dmsg('[c_light_green]    No PHP Errors  - America, Hell Yeah!'."\n",false,false);
 			}else{
-				$this->tool->dmsg("\n\n".'[c_light_red]************   E R R O R S   ************', false, false);
+				$this->tool->dmsg("\n".'[c_light_red]************   E R R O R S   ************', false, false);
 				$this->tool->dmsg('[c_white][File] '.$e['file'], false, false);
 				$this->tool->dmsg('[c_white][Line] '.$e['line'], false, false);
 				$e = "\n".'Errors: '.implode("\n",$e)."\n";

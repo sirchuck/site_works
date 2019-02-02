@@ -15,19 +15,46 @@ class siteworks_dbc{
         $this->dbt = $dbc->dbtype;
         switch ($this->dbt) {
             case "mysqli":
-                if ((integer)$dbc->port !== 3306 && (integer)$dbc->port > 0) {
-                    $this->c = new \mysqli($dbc->hostname, $dbc->username, $dbc->password, $dbc->database, $dbc->port);
-                }
-                else if ($dbc->port != '' && (string)$dbc->port != '/tmp/mysql.sock'&& file_exists($dbc->port)) {
-                    $this->c = new \mysqli($dbc->hostname, $dbc->username, $dbc->password, $dbc->database, false, $dbc->port);
-                }
-                else {
-                    $this->c = new \mysqli($dbc->hostname, $dbc->username, $dbc->password, $dbc->database);
-                }
-
-                if ($this->c->connect_errno) {
-                    throw new \ErrorException('MySQLi Connection Failure: ['.$dbc->database.' '.(string)$c->connect_errno.'] '.$c->connect_error);
-                    return false;
+                $dbCreated = 0;
+                while($dbCreated < 2){
+                    if ((integer)$dbc->port !== 3306 && (integer)$dbc->port > 0) {
+                        $this->c = @new \mysqli($dbc->hostname, $dbc->username, $dbc->password, $dbc->database, $dbc->port);
+                    }
+                    else if ($dbc->port != '' && (string)$dbc->port != '/tmp/mysql.sock'&& file_exists($dbc->port)) {
+                        $this->c = @new \mysqli($dbc->hostname, $dbc->username, $dbc->password, $dbc->database, false, $dbc->port);
+                    }
+                    else {
+                        $this->c = @new \mysqli($dbc->hostname, $dbc->username, $dbc->password, $dbc->database);
+                    }
+                    if ($this->c->connect_errno) {
+                        if($dbCreated == 0){
+                            $dbCreated = 1;
+                            $tc = null;
+                            if ((integer)$dbc->port !== 3306 && (integer)$dbc->port > 0) {
+                                $tc = new \mysqli($dbc->hostname, $dbc->username, $dbc->password, false, $dbc->port);
+                            }
+                            else if ($dbc->port != '' && (string)$dbc->port != '/tmp/mysql.sock'&& file_exists($dbc->port)) {
+                                $tc = new \mysqli($dbc->hostname, $dbc->username, $dbc->password, false, false, $dbc->port);
+                            }
+                            else {
+                                $tc = new \mysqli($dbc->hostname, $dbc->username, $dbc->password);
+                            }
+                            if ($tc->connect_error) {
+                                $dbCreated = 10;
+                                throw new \ErrorException('Verify Database Exists: ( CREATE DATABASE IF NOT EXISTS `' . $dbc->database . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; ) MySQLi Connection Failure: ['.$dbc->database.' '.(string)$tc->connect_errno.'] '.$tc->connect_error);
+                                return false;
+                            } else {
+                                $tc->query("CREATE DATABASE IF NOT EXISTS `" . $dbc->database . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+                            }
+                            $tc->close();
+                        } else {
+                            $dbCreated = 10;
+                            throw new \ErrorException('Verify Database Exists: -( CREATE DATABASE IF NOT EXISTS `' . $dbc->database . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; ) MySQLi Connection Failure: ['.$dbc->database.' '.(string)$tc->connect_errno.'] '.$tc->connect_error);
+                            return false;
+                        }
+                    } else {
+                        $dbCreated = 10;
+                    }
                 }
                 return $this->c;
             break;
@@ -48,7 +75,7 @@ class siteworks_dbc{
                     }
                 }
                 catch(\Exception $e) {
-                    throw new \ErrorException('postgres failure [' . $dbc->database . ']:  '.$e->getMessage() );
+                    throw new \ErrorException('postgres failure SQL: ( CREATE DATABASE IF NOT EXISTS `' . $dbc->database . '` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; )  [' . $dbc->database . ']:  '.$e->getMessage() );
                     return false;
                 }
                 return $this->c;

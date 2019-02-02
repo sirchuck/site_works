@@ -136,7 +136,7 @@ class siteworks_tools
     $holdSQL = $this->_s->printSQL;
     $this->_s->printSQL = false;
     $r = new t_site_works_lang(0,$this->_s->odb);
-    $r->query('SELECT  `' . $language . '` as l FROM `site_works`.`site_works_lang` WHERE sw_lang_key = ' . $index);
+    $r->query('SELECT  `' . $language . '` as l FROM `site_works_lang` WHERE sw_lang_key = ' . $index);
     $row = $r->getRows();
     $this->_s->printSQL = $holdSQL;
     return (isset($row->l))?$row->l:'';
