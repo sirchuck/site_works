@@ -1,25 +1,23 @@
 # site_works
 PHP, MySQL, Javascript, and CSS framework
 
-# Getting Started with my setup, adapt to your desires
+# Working Setup:
     Ubuntu     18.04
-    Nginx      1.14.0 (Ubuntu)
-    PHP        7.2+
-    uglifyjs AND uglifycss ( optional )
+    Nginx      1.14.0
+    PHP        7.2
+    uglifyjs AND uglifycss     ( optional )
         sudo apt update
         sudo apt install nodejs npm
         npm install uglify-js -g
         npm install uglifycss -g
-    PHP APCu (optional - but makes it a small amount faster)
-        Example Install: 
+    PHP APCu                   ( optional )
         sudo apt-get update
-        sudo apt-get install php7.2-apcu -y (Note 7.x based on yoru version)
+        sudo apt-get install php7.2-apcu -y
         sudo service php7.2-fpm restart
         sudo systemctl restart nginx
-        Additional Install Help:
-        - https://guides.wp-bullet.com/install-apcu-object-cache-for-php7-for-wordpress-ubuntu-16-04/
 
-# Quick and Dirty Nginx Setup Examples
+# Nginx Setup Examples:
+    NOTE: you can change site_works with your project name.
     Your server is dedicated to your project:
         server {
 	        listen 80;
@@ -76,20 +74,176 @@ PHP, MySQL, Javascript, and CSS framework
             }
         } # End Nginx Server Example
 
-# Folder Permissions Example
-        sudo chmod -R 775 conf
-        sudo chgrp -R www-data conf
+# Folder Permissions Example:
+    The framework needs to be able to write to certain folders
 
-        sudo chmod -R 775 private
-        sudo chgrp -R www-data private
+    sudo chmod -R 775 conf
+    sudo chgrp -R www-data conf
 
-        sudo chmod -R 775 public
-        sudo chgrp -R www-data public
+    sudo chmod -R 775 private
+    sudo chgrp -R www-data private
 
-# site_works first server load:
-    On first load, site_works will attempt to build your servers individual config file.
-    You can find the file in site_works/conf/siteworks.YOUR_SERVER_WITHOUT_DOTS.pconf.php
-    pconf.php files have been added to the root directories .gitignore file.
+    sudo chmod -R 775 public
+    sudo chgrp -R www-data public
+
+# Initial Site Load:
+    Once you completed the setup above, open your new site in a browser.
+    1) You will get a message telling you that the configuration file was created
+    and where to find it. Your next step is to open that file and modify it to
+    your needs.
+    2) Once your config file is loaded properly, the framework will build your
+    site_works database tables.
+    3) Refresh your page, and you should be presented with the template moduals home page.
+    
+    You will find a .gitignore file in the root directory. You will likely want to remove
+    /private/
+    /public/assets/css/siteworks/
+    /public/assets/js/siteworks/
+    This will allow you to pull everything needed from your repository.
+
+    You should now be ready to write your own code.
+
+# File Structure:
+    ajaxs, iframes, and scripts are exactly like controllers except they only output what you specify.
+    controllers will output the overhead like html, head, and body tags.
+    To tell the framework you want to use ajax, iframe, or script just prefix the word before the name of that Modual 
+        Ex Ajax:    http://www.MySite.com/ajax_modualname/controller/method/pass_var/pass_vars
+        Ex iFrame:  http://www.MySite.com/iframe_modualname/controller/method/pass_var/pass_vars
+        Ex Script:  http://www.MySite.com/script_modualname/controller/method/pass_var/pass_vars
+    DEV:
+        All of your php/js/css work should happen in the site_works/dev folder.
+        js/css files are all squished together into one js and one css file
+        I then take the squished file and add it to a squished version of each theme.
+        If you enabled uglify in your config, I also minify these css and js files.
+        Files in the vendor folder will just be copied to the public folder as is.
+
+    dev/_css
+        - globalcssfiles.css
+        themes
+            default
+                - themedcssfiles.css
+        vendor
+          - anycssfile.css
+    dev/_js
+        - globaljsfiles.js
+        themes
+            default
+                - themedjsfiles.js
+        vendor
+          - anycssfile.js
+    dev/dbtables
+        - t_myfile.inc.php
+    dev/helpers
+        - myfile.helper.php
+    dev/includes
+        - myfile.inc.php
+    dev/moduals
+        - modualfoldername
+            - ajaxs
+              - template.ajax.php
+            - controllers
+              - template.controller.php
+            - iframes
+              - template.iframe.php
+            - models
+              - template.model.php
+            - scripts
+              - template.script.php
+            - views
+              - template.view.php
+
+    If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
+    everything else shoudl be safe.
+
+# dbtables
+    dbtables are the class represention of your database tables
+    To see an example of what a dbtable file should look like, check this path:
+        siteworks/includes/dbtables
+    In here you'll find my framework tables, yours should follow the same format
+    You should put yours in
+        siteworks/dev/dbtables
+    If you want to access one of the frameworks dbtables be sure and use the namespace
+        Ex: $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
+    To access yours:
+        Pass the ID if you want to pull a specific one, or 0, and the database connection you want to use.
+        Ex: $r = new t_mytable();
+            That will load the mytable object using the $this->_odb connection. ( the default )
+        Ex: $r = new t_mytable(5,$this->_odb);
+            That will autofill your object with mytables infromation where the id = 5
+        Ex: $r = new t_mytable(0,$this->_dbo['DB_SERVER_2']);
+            That will load the empty object table using your specified database connection
+
+# The Database Table Object Class
+    $this->tableName        = 'site_works_admin';   // Give us the name of your database table
+    $this->keyField         = 'sw_admin_key';       // Give us the key field or '' if you do not have one.
+    $this->autoInc          = false;                // Are you using autoincremnt for your keyfield?
+    $this->f = Array(                               // Your field array. Each table field should be represented here.
+        'sw_admin_key'      => array( 'value' => 0    , 'error' => null) // Set value to either 0 or null based on field type
+        ,'sw_version'       => array( 'value' => null , 'error' => null) // Set value to either 0 or null based on field type
+    );
+    If your field type is a number, 0 is typically correct, if not use null.
+    I have not done anything with the 'error' element of the array, but it may be useful to you.
+    At the bottom of your table object class you will notice the bulidQueryArray
+    case 'pullByVersion':                           // This is the name you will use to refer to the query
+                                                    // set the $sqlFn to the query you want to run.
+        $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->dbClean( $this->f['sw_version']['value'] ) . '"';
+        // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECE...'
+    break;
+    You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
+    When you create a new database table object you get to play with the following tools:
+    $r = new t_mytable(5,$this->_odb);
+        This instantiation has passed an id of 5, and will automatically call the following fillData method
+    $r->fillData(overloaded)
+        $r->fillData(true)
+            This will pull the last record data, you would only use this typically if you had no key field and just one record.
+        $r->fillData(1)
+            Fill the object where the key filed id = 1
+        $r->fillData('dog')
+            Fill the object where the id field = 'dog'
+    $r->query($sqlFn=false)
+        $r->query('pullByVersion')
+            This will load the SQL you set above in the buildQueryArray, and run that array of queries.
+        $r->query('SELECT * FROM site_works_admin')
+            This will just run the query you send it.
+    $r->getFieldNames($is_insert) - This is garbage to you, I use it to build INSERT and UPDATE queries from your database table object.
+    $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
+    $r->clean(string) - this cleans your string to make it ready for insertion to the database.
+    $r->cleanAll() - This will traverse your table object fields and clean each value.
+    $r->clearFields() - This will set your field values in the object back to your defaults.
+    $r->selectAll($where = false, $values_to_return = '*') - Send your WHERE clause and Value list
+        Ex: $r->selectAll('x=y AND z=q ORDER BY x desc', '`x`,`y`')
+        If you do not specify return values, you'll get the entire record for each row.
+    $r->insertData() - This will take the field values in your object and attempt to insert it as a new record in your database.
+    $r->insertUpdateData() - This will insert the data, unless a keyfield is matched in which case it should update it.
+    $r->updateData($where = false,$values=false) - To update your data, multipul ways to use it.
+        $r->updateData(); - This will simply update whatever data you have in the field array of your table object.
+        $r->updateData('x=y'); This will update using your field list, and apply the where clause x=y
+        $r->updateData('x=y','x'); This will only update the x field where x=y
+        $r->updateData(4,'`x`') This will only update the x field where the id = 4
+        $r->updateData('bob','`x`') This will only update the x field where the id = 'bob'
+    $r->deleteData($where = '') - To delete data from the database
+        $r->deleteData(); - Delete your currently loaded table object.
+        $r->deleteData('x=y'); - Delete all rows where x = y.
+        $r->deleteData(4); - Delete where id = 4
+        $r->deleteData('bob') - Delete where id = 'bob'
+    Need to access a field value?
+        $r->f['sw_admin_key']['value']
+    Need to access a field error?
+        $r->f['sw_admin_key']['error']
+
+# Important $_SESSION variables
+    Sometimes the framework needs to get some information from your user.
+    To do that we use session variables that you can control, usually when you create a login scheme for your user.
+    $_SESSION['is_loggedin'] - (booleen) this is used to decide if I should even bother looking at your admin_level. 
+        Set it to true if your user is logged in, and false if not
+    $_SESSION['admin_level'] - (int) This is the level we test against to see if your user has access to moduals and controllers.
+        You can set a number directly, or you can use the config files enumerated array: admin_level_options
+        Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
+    $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
+    $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
+
+
+
 
 # Once your template config file has been written, open it and let's adjust it to your needs
     $this->dbc - Use this array to set up the connection information to your database(s).
@@ -319,143 +473,6 @@ PHP, MySQL, Javascript, and CSS framework
     Notice: When you choose to get sample code, at the bottom I provided a bit of a framework cheat sheet for you.
     You would not generally use the MVC this way, but I wanted to keep it all contained within the Modual in case
     you want to remove it completely without hanving to hunt down javascript files and css files.
-
-# You made me read 300+ lines of documentation, tell me about file structure already!
-    ajaxs, iframes, and scripts are exactly like controllers except they only output what you specify.
-        controllers will spit out the overhead like html, head, and body tags.
-        To tell the framework you want to use ajax, iframe, or script just prefix the word before the name of that file in the URI.
-            Ex Ajax:    http://www.MySite.com/ajax_modualname/controller/method/pass_var/pass_vars
-            Ex iFrame:  http://www.MySite.com/iframe_modualname/controller/method/pass_var/pass_vars
-            Ex Script:  http://www.MySite.com/script_modualname/controller/method/pass_var/pass_vars
-    All of your php/js/css work should happen in the site_works/dev folder.
-        Global js/css files are all squished together into one file
-        I then take the global squished file and add it to a squished version of each theme.
-        You end up with one differnet squished file in each theme.
-            If you enabled uglify in your config, I also minify these css and js files.
-        Files in the vendor folder will just be copied to the public folder as is.
-    dev/_css
-        - globalcssfiles.css
-        themes
-            default
-                - themedcssfiles.css
-        vendor
-          - anycssfile.css
-    dev/_js
-        - globaljsfiles.js
-        themes
-            default
-                - themedjsfiles.js
-        vendor
-          - anycssfile.js
-    dev/dbtables
-        - t_myfile.inc.php
-    dev/helpers
-        - myfile.helper.php
-    dev/includes
-        - myfile.inc.php
-    dev/moduals
-        - modualfoldername
-            - ajaxs
-              - template.ajax.php
-            - controllers
-              - template.controller.php
-            - iframes
-              - template.iframe.php
-            - models
-              - template.model.php
-            - scripts
-              - template.script.php
-            - views
-              - template.view.php
-    If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
-    everything else shoudl be safe.
-
-# dbtables
-    dbtables are the class object represention of one of your database tables
-    To see an example of what a dbtable file should look like, check this path:
-        siteworks/includes/dbtables
-    In here you'll find my framework tables, yours should follow the same format
-    You should put yours in
-        siteworks/dev/dbtables
-    If you want to access one of the frameworks dbtables be sure and use the namespace
-        Ex: $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
-    To access yours:
-        Pass the ID if you want to pull a specific one, or 0, and the database connection you want to use.
-        Ex: $r = new t_mytable();
-            That will load the mytable object using the $this->_odb connection. ( the default )
-        Ex: $r = new t_mytable(5,$this->_odb);
-            That will autofill your object with mytables infromation where the id = 5
-        Ex: $r = new t_mytable(0,$this->_dbo['DB_SERVER_2']);
-            That will load the empty object table using your specified database connection
-
-# The Database Table Object Class
-    $this->tableName        = 'site_works_admin';   // Give us the name of your database table
-    $this->keyField         = 'sw_admin_key';       // Give us the key field or '' if you do not have one.
-    $this->autoInc          = false;                // Are you using autoincremnt for your keyfield?
-    $this->f = Array(                               // Your field array. Each table field should be represented here.
-        'sw_admin_key'      => array( 'value' => 0    , 'error' => null) // Set value to either 0 or null based on field type
-        ,'sw_version'       => array( 'value' => null , 'error' => null) // Set value to either 0 or null based on field type
-    );
-    If your field type is a number, 0 is typically correct, if not use null.
-    I have not done anything with the 'error' element of the array, but it may be useful to you.
-    At the bottom of your table object class you will notice the bulidQueryArray
-    case 'pullByVersion':                           // This is the name you will use to refer to the query
-                                                    // set the $sqlFn to the query you want to run.
-        $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->dbClean( $this->f['sw_version']['value'] ) . '"';
-        // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECE...'
-    break;
-    You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
-    When you create a new database table object you get to play with the following tools:
-    $r = new t_mytable(5,$this->_odb);
-        This instantiation has passed an id of 5, and will automatically call the following fillData method
-    $r->fillData(overloaded)
-        $r->fillData(true)
-            This will pull the last record data, you would only use this typically if you had no key field and just one record.
-        $r->fillData(1)
-            Fill the object where the key filed id = 1
-        $r->fillData('dog')
-            Fill the object where the id field = 'dog'
-    $r->query($sqlFn=false)
-        $r->query('pullByVersion')
-            This will load the SQL you set above in the buildQueryArray, and run that array of queries.
-        $r->query('SELECT * FROM site_works_admin')
-            This will just run the query you send it.
-    $r->getFieldNames($is_insert) - This is garbage to you, I use it to build INSERT and UPDATE queries from your database table object.
-    $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
-    $r->clean(string) - this cleans your string to make it ready for insertion to the database.
-    $r->cleanAll() - This will traverse your table object fields and clean each value.
-    $r->clearFields() - This will set your field values in the object back to your defaults.
-    $r->selectAll($where = false, $values_to_return = '*') - Send your WHERE clause and Value list
-        Ex: $r->selectAll('x=y AND z=q ORDER BY x desc', '`x`,`y`')
-        If you do not specify return values, you'll get the entire record for each row.
-    $r->insertData() - This will take the field values in your object and attempt to insert it as a new record in your database.
-    $r->insertUpdateData() - This will insert the data, unless a keyfield is matched in which case it should update it.
-    $r->updateData($where = false,$values=false) - To update your data, multipul ways to use it.
-        $r->updateData(); - This will simply update whatever data you have in the field array of your table object.
-        $r->updateData('x=y'); This will update using your field list, and apply the where clause x=y
-        $r->updateData('x=y','x'); This will only update the x field where x=y
-        $r->updateData(4,'`x`') This will only update the x field where the id = 4
-        $r->updateData('bob','`x`') This will only update the x field where the id = 'bob'
-    $r->deleteData($where = '') - To delete data from the database
-        $r->deleteData(); - Delete your currently loaded table object.
-        $r->deleteData('x=y'); - Delete all rows where x = y.
-        $r->deleteData(4); - Delete where id = 4
-        $r->deleteData('bob') - Delete where id = 'bob'
-    Need to access a field value?
-        $r->f['sw_admin_key']['value']
-    Need to access a field error?
-        $r->f['sw_admin_key']['error']
-
-# Important $_SESSION variables
-    Sometimes the framework needs to get some information from your user.
-    To do that we use session variables that you can control, usually when you create a login scheme for your user.
-    $_SESSION['is_loggedin'] - (booleen) this is used to decide if I should even bother looking at your admin_level. 
-        Set it to true if your user is logged in, and false if not
-    $_SESSION['admin_level'] - (int) This is the level we test against to see if your user has access to moduals and controllers.
-        You can set a number directly, or you can use the config files enumerated array: admin_level_options
-        Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
-    $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
-    $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
 
 # Tell me about the Language Feature!
     The selling point of this framework for some developers will be the easy way to handle sites that need multipul langauges.
