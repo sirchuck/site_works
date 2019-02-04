@@ -32,6 +32,7 @@ class siteworks_config extends siteworks_startup
 
     // Turning this on will make yoru page loads slower, you might run it once before pushing to production servers
     public $css_js_minify        = false;      // Minify css&js, only in debug mode and when loading a controller 
+    public $css_js_one_file      = true;       // To minimize number of called assets you can merge your js and css
 
     // Setting this will only reload $this->admin and $this->mem tables every x minutes otherwise uses cache.
     public $APCuTimeoutMinutes   = 60;         // PHP APCu 7.2+, 0 to disable cacheing. Default 60

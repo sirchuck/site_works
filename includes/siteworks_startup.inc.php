@@ -283,6 +283,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			function fixText(_s){return _s.replace(/{__(.+?)__}/g,function(m0,m1){return getText(m1);});}
 			document.addEventListener(\'DOMContentLoaded\', function () {	 document.documentElement.innerHTML = fixText(document.documentElement.innerHTML);   });
 			';
+			if($this->css_js_one_file){
+				$jscode .= '(function addcss(css){var s = document.createElement(\'style\');s.setAttribute(\'type\', \'text/css\');if (s.styleSheet) {s.styleSheet.cssText = css;} else {s.appendChild(document.createTextNode(css));}document.getElementsByTagName(\'head\')[0].appendChild(s); })("%D%");';
+			}
 
 			$tmp = '';
        		$this->tool->delTree(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/');
@@ -303,7 +306,10 @@ Start Time: " . date('Y-m-d H:i:s') . "
 							$use_cat = ($row->sw_lang_category != '')?$row->sw_lang_category:'_s';
 							$jsStringArray[$use_cat][$row->sw_lang_key] = $row->lang;
 						}
-						file_put_contents($new_path.'siteworks.j','var _slang = '.json_encode($jsStringArray).';'.$jscode.$tmp2,775);
+						$tmp3 = '';
+						if($this->css_js_one_file){$tmp3 = file_get_contents(SITEWORKS_DOCUMENT_ROOT . '/public/assets/css/siteworks/themes/'.$v2['name'].'/'.'siteworks_' . $this->admin['sw_version'] . '.css'); }
+						$tmp3 = preg_replace(["/\r\n|\r|\n/",'/"/'],["",'\"'],$tmp3);
+						file_put_contents($new_path.'siteworks.j','var _slang = '.json_encode($jsStringArray).';'.preg_replace('/%D%/',$tmp3,$jscode).$tmp2,775);
 						if($this->css_js_minify){
 							try{exec('uglifyjs ' . $new_path.'siteworks.j > ' . $new_path.'siteworks_' . $k . '_' . $this->admin['sw_version'] . '.js');}catch(Exception $e){unset($e);} 
 						} else {
@@ -322,7 +328,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			unset($m);
 			unset($jscode);
 			unset($jsStringArray);
-			unset($tmp); unset($tmp2);
+			unset($tmp); unset($tmp2); unset($tmp3);
 			// _s_lang_set_delete - if you uncomment the lines with this variable, i'll reload the page to make sure your js files are clean when you mark text for deletion.
 			//$_SESSION['_s_lang_set_delete'] = (isset($_SESSION['_s_lang_set_delete']))?$_SESSION['_s_lang_set_delete']:0;
        		// Mark language for deletion
@@ -445,7 +451,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		$_SESSION['theme'] = (isset($_SESSION['theme']) && $_SESSION['theme'] != '') ? $_SESSION['theme'] : $this->theme;
 		$_SESSION['language'] = (isset($_SESSION['language']) && $_SESSION['language'] != '') ? $_SESSION['language'] : $this->language;
 
-		$this->out['css'][] = '<link rel="stylesheet" type="text/css" href="' . $this->uri->asset->css . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' . $this->admin['sw_version'] .'.css"/>';
+		if(!$this->css_js_one_file){
+			$this->out['css'][] = '<link rel="stylesheet" type="text/css" href="' . $this->uri->asset->css . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' . $this->admin['sw_version'] .'.css"/>';
+		}
 		$this->out['js'][]  = '<script src="' . $this->uri->asset->js . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' .$_SESSION['language'] . '_' . $this->admin['sw_version'] .'.js"></script>';
 
 		// Might not want to auto-include css and js above when using an iframe.
