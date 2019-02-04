@@ -165,7 +165,7 @@ PHP, MySQL, Javascript, and CSS framework
     dev/models - your_file_name.model.php
     dev/views - your_file_name.view.php
 
-# Once your template config file has been written, open it and let's adjust it to your needs
+# Configuration File:
     $this->dbc - Use this array to set up the connection information to your database(s).
         Important: The arrays 'default' key needs to be the one you want the site_works framework to use.
     $this->theme - If you want to use multipul css and js themes, you can select a default.
