@@ -155,11 +155,87 @@ PHP, MySQL, Javascript, and CSS framework
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
     everything else shoudl be safe.
 
+# File Extentions:
+    For the framework to find your files, and for readability on your end, give your files the following extentions
+    dev/includes - your_file_name.inc.php
+    dev/helpers - your_file_name.helper.php
+    dev/ajaxs - your_file_name.ajax.php
+    dev/controller - your_file_name.controller.php
+    dev/iframes - your_file_name.iframe.php
+    dev/models - your_file_name.model.php
+    dev/views - your_file_name.view.php
+
+# Once your template config file has been written, open it and let's adjust it to your needs
+    $this->dbc - Use this array to set up the connection information to your database(s).
+        Important: The arrays 'default' key needs to be the one you want the site_works framework to use.
+    $this->theme - If you want to use multipul css and js themes, you can select a default.
+    $this->language - This is the default language, but you can manipulate $_SESSION['language'] to handle users choices.
+    $this->debugMode - Enable Debugger, This allows us to send info to your debug_server app. Usage: $this->_tool->dmsg("debug_server output");
+    $this->allowDebugColors - linux debug_server app can use colors on some systems, set to true if you want to try it.
+    $this->showPHPErrors - sends php errors to your web browser, like normal php error enabled scripts.
+    $this->showPHPErrors_debug - sends php error messages to the debug_server.
+    $this->printSQL - Do you like seeing what your MySQL commands are doing? Enable this.
+    $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
+    $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
+    $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
+    $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
+    $this->tail_array - Want to see tail of a file in the debugger? Add the file path and number of lines to show.
+    $this->default_module - This determins what dev/modual will be used if none are found in the URL.
+    $this->modualLocks - Disable access for unpriviledged users to visit an entire modual.
+    $this->controllerLocks - Disable access for unpriviledged users to visit a speific moduals controller.
+    $this->routes - Yes, you can let someone type something odd in your url, then redirect it to a good path.
+        You should use lower case when setting up routes.
+        Ex: 'dogs/like/friends' => 'template/template/about_dogs'
+        Note: anything following the swapped portion will fall into the proper segment - pass_var pass_vars if you provide modual/contorller/method 
+    $this->debug_server - The IP of the server running your debug_server app.
+    $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
+    $this->cPaths - tell the system some basics about your server and asset server paths.
+        - Be sure and change /site_works/ to your project name when reading URL's in this ReadMe file.
+
+# The output arraay:
+    You can type echo like usual to output data, but you need more. You need some control over your output right?
+    $this->_out['header'][]
+    $this->_out['title'][]
+    $this->_out['meta'][]
+    $this->_out['css'][]
+    $this->_out['js'][]
+    $this->_out['body'][]
+    $this->_out['footer'][]
+    The favicon is a special part of the header output, you can set it like this:
+    $this->_out['header']['favicon'] = '<link rel="shortcut icon" type="image/png" href="https://path_to/favicon.ico"/>';
+
+    I listed the above in the order they will print out. Each is an array of it's own so you can append to any of them
+    during the setup of your code like this:
+    $this->_out['body'][] = 'Some new text to be appended to the array';
+
+    You may want to provide some keys of your own if you want to manipulate the order later.
+    $this->_out['body'][20] = '20';
+    $this->_out['body'][30] = '30';
+    $this->_out['body'][10] = '10';
+    ksort($this->_out['body']);
+
+    Not enough? You want to write to the browser console too? Ok.
+    $this->_console[] = 'This will print to the browsers console window.';
+
+
+# Important $_SESSION variables
+    Sometimes the framework needs to get some information from your user.
+    To do that we use session variables that you can control, usually when you create a login scheme for your user.
+    $_SESSION['is_loggedin'] - (booleen) this is used to decide if I should even bother looking at your admin_level. 
+        Set it to true if your user is logged in, and false if not
+    $_SESSION['admin_level'] - (int) This is the level we test against to see if your user has access to moduals and controllers.
+        You can set a number directly, or you can use the config files enumerated array: admin_level_options
+        Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
+    $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
+    $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
+
+
+
 # dbtables
     dbtables are the class represention of your database tables
     To see an example of what a dbtable file should look like, check this path:
         siteworks/includes/dbtables
-    In here you'll find my framework tables, yours should follow the same format
+    In here you'll find my framework tables, yours should follow the this template
     You should put yours in
         siteworks/dev/dbtables
     If you want to access one of the frameworks dbtables be sure and use the namespace
@@ -181,7 +257,7 @@ PHP, MySQL, Javascript, and CSS framework
         'sw_admin_key'      => array( 'value' => 0    , 'error' => null) // Set value to either 0 or null based on field type
         ,'sw_version'       => array( 'value' => null , 'error' => null) // Set value to either 0 or null based on field type
     );
-    If your field type is a number, 0 is typically correct, if not use null.
+    If your field type is a number, 0, if not use null.
     I have not done anything with the 'error' element of the array, but it may be useful to you.
     At the bottom of your table object class you will notice the bulidQueryArray
     case 'pullByVersion':                           // This is the name you will use to refer to the query
@@ -190,7 +266,8 @@ PHP, MySQL, Javascript, and CSS framework
         // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECE...'
     break;
     You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
-    When you create a new database table object you get to play with the following tools:
+
+    Database Objects provide the following Methods:
     $r = new t_mytable(5,$this->_odb);
         This instantiation has passed an id of 5, and will automatically call the following fillData method
     $r->fillData(overloaded)
@@ -231,72 +308,8 @@ PHP, MySQL, Javascript, and CSS framework
     Need to access a field error?
         $r->f['sw_admin_key']['error']
 
-# Important $_SESSION variables
-    Sometimes the framework needs to get some information from your user.
-    To do that we use session variables that you can control, usually when you create a login scheme for your user.
-    $_SESSION['is_loggedin'] - (booleen) this is used to decide if I should even bother looking at your admin_level. 
-        Set it to true if your user is logged in, and false if not
-    $_SESSION['admin_level'] - (int) This is the level we test against to see if your user has access to moduals and controllers.
-        You can set a number directly, or you can use the config files enumerated array: admin_level_options
-        Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
-    $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
-    $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
 
-
-
-
-# Once your template config file has been written, open it and let's adjust it to your needs
-    $this->dbc - Use this array to set up the connection information to your database(s).
-        Important: The arrays 'default' key needs to be the one you want the site_works framework to use.
-    $this->theme - If you want to use multipul css and js themes, you can select a default.
-    $this->language - This is the default language, but you can manipulate $_SESSION['language'] to handle users choices.
-    $this->debugMode - Enable Debugger, This allows us to send info to your debug_server app. Usage: $this->_tool->dmsg("debug_server output");
-    $this->allowDebugColors - linux debug_server app can use colors on some systems, set to true if you want to try it.
-    $this->showPHPErrors - sends php errors to your web browser, like normal php error enabled scripts.
-    $this->showPHPErrors_debug - sends php error messages to the debug_server.
-    $this->printSQL - Do you like seeing what your MySQL commands are doing? Enable this.
-    $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
-    $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
-    $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
-    $this->tail_array - Want to see tail of a file in the debugger? Add the file path and number of lines to show.
-    $this->default_module - This determins what dev/modual will be used if none are found in the URL.
-    $this->modualLocks - Disable access for unpriviledged users to visit an entire modual.
-    $this->controllerLocks - Disable access for unpriviledged users to visit a speific moduals controller.
-    $this->routes - Yes, you can let someone type something odd in your url, then redirect it to a good path.
-        You should use lower case when setting up routes.
-        Ex: 'dogs/like/friends' => 'template/template/about_dogs'
-        Note: anything following the swapped portion will fall into the proper segment - pass_var pass_vars if you provide modual/contorller/method 
-    $this->debug_server - The IP of the server running your debug_server app.
-    $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
-    $this->cPaths - tell the system some basics about your server and asset server paths.
-        - Be sure and change /site_works/ to your project name when reading URL's in this ReadMe file.
-
-# The site_works output array
-    You can type echo like usual to output data, but you need more. You need some control over your output right?
-    $this->_out['header'][]
-    $this->_out['title'][]
-    $this->_out['meta'][]
-    $this->_out['css'][]
-    $this->_out['js'][]
-    $this->_out['body'][]
-    $this->_out['footer'][]
-    The favicon is a special part of the header output, you can set it like this:
-    $this->_out['header']['favicon'] = '<link rel="shortcut icon" type="image/png" href="https://path_to/favicon.ico"/>';
-
-    I listed the above in the order they will print out. Each is an array of it's own so you can append to any of them
-    during the setup of your code like this:
-    $this->_out['body'][] = 'Some new text to be appended to the array';
-
-    You may want to provide some keys of your own if you want to manipulate the order later.
-    $this->_out['body'][20] = '20';
-    $this->_out['body'][30] = '30';
-    $this->_out['body'][10] = '10';
-    ksort($this->_out['body']);
-
-    Not enough? You want to write to the browser console too? Ok.
-    $this->_console[] = 'This will print to the browsers console window.';
-
-# Scope: What sorts of things can I access and how?
+# Scope: What can I access and How?
     $this->_s      This is the entire site_works object. You can access everything in it from here.
         Well, everything except your database credentials, I remove them after connections are made for added security.
         Ex: $this->_s->tool->dmsg("This will print something to the debug_server");
@@ -435,7 +448,7 @@ PHP, MySQL, Javascript, and CSS framework
 
     $this->_p - This is an array of parameters you want to pass around between your controller, modual, and view pages
 
-# How do I load view pages and stuff?
+# Loading: Helpers, View Pages, Modles, Includes
     The load functions use the PHP require_once() function. The following loaded files must be found under the Modual your current controller is in.
     filename should be just the start of the file name, so myfile.view.php should be sent as load_view('myfile'); only.
     $this->load_view(filename) - Loads modual/views/name.view.php - if left empty, it loads the view with the same name as the current controller.
@@ -451,15 +464,6 @@ PHP, MySQL, Javascript, and CSS framework
     t_myfilename.inc.php
     the t_ tells the php Autoloader to look in the dbtables directory for the table ojbect, I also use this directory for framework purposes.
 
-# File Extentions:
-    For the framework to find your files, and for readability on your end, give your files the following extentions
-    dev/includes - your_file_name.inc.php
-    dev/helpers - your_file_name.helper.php
-    dev/ajaxs - your_file_name.ajax.php
-    dev/controller - your_file_name.controller.php
-    dev/iframes - your_file_name.iframe.php
-    dev/models - your_file_name.model.php
-    dev/views - your_file_name.view.php
 
 # Template Modual
     I provided this template modual for you to copy and paste to quickly set up a new modual.
@@ -474,7 +478,7 @@ PHP, MySQL, Javascript, and CSS framework
     You would not generally use the MVC this way, but I wanted to keep it all contained within the Modual in case
     you want to remove it completely without hanving to hunt down javascript files and css files.
 
-# Tell me about the Language Feature!
+# Main Feature: Multi-Language Handling
     The selling point of this framework for some developers will be the easy way to handle sites that need multipul langauges.
     When you are busy writing code, you do not always have access to the boss to tell you what specific words to use for differnt things.
     Now you can write your code and use [__My Words__]
@@ -499,7 +503,7 @@ PHP, MySQL, Javascript, and CSS framework
       As long as your in a js file you could do $w = [__My Words Here__] and the system will get the right getText() version
       Ex: $w = '[__My Words__]'; Will become $w = '{__6__}'; Then that will be auto-parsed by the js on page load.
 
-# Tool Time - what cool executable toys are you giving us?
+# Included Apps to help you develop faster:
     ifind
         This is a linux only app, you can install it /usr/bin/ifind if you want to run it without typing the ./
         - Usage
