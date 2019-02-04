@@ -192,7 +192,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->cPaths - tell the system some basics about your server and asset server paths.
         - Be sure and change /site_works/ to your project name when reading URL's in this ReadMe file.
 
-# The output arraay:
+# The output array:
     You can type echo like usual to output data, but you need more. You need some control over your output right?
     $this->_out['header'][]
     $this->_out['title'][]
