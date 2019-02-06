@@ -9,6 +9,22 @@ class template_controller extends _s
 {
     public function template(){
 
+        /****************************************************************************************************************
+        **                                                                                                             **
+        **                      E X A M P L E         D A T A B A S E       U S A G E                                  **
+        **                                                                                                             **
+        **   Template in /dev/dbtables/t_site_works_template_table.inc.php                                             **
+        **   Nameing Convention: t_YOUR_TABLE_NAME.inc.php                                                             **
+        **                                                                                                             **
+        **   Insert Into Example:                                                                                      **
+        **   $r = new t_YOUR_TABLE_NAME.inc.php(0,$this->_odb);     // Load the table object                           **
+        **   $r->f['FIELD_NAME']['value'] = 'my value'              // Set the values                                  **
+        **   $r->insertData();                                      // Insert Into                                     **
+        **                                                                                                             **
+        **   Note: do not use site_works_template_table as a DB table name, it will not be parsed.                     **
+        **                                                                                                             **
+        ****************************************************************************************************************/
+
         // If you use a modual or controller lock, we will return error_permission as a passvar to your default modual.
         // You can handle it with a statement like this
         if( $this->_uri->pass_var == 'error_permission' ){

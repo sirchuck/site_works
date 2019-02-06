@@ -21,6 +21,8 @@ class siteworks_startup
 		,'footer'=>array()	// This goes just before last body tag. 
 	];
 
+	// Logs are written at page end to files you specify in config.
+	public $log = [];
 	// console will print to the webpages console.
 	public $console = [];
 
@@ -127,18 +129,39 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->admin['sw_version'] = $radmin->f['sw_version']['value'];
 			$radmin->updateData();
 
+			$f = '';
+			// Developer Code
+       		$this->tool->delTree(SITEWORKS_DOCUMENT_ROOT . '/private/',false);
+			foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/dev/',1) as $v){
+				if( substr( $v['path'], 0, strlen(SITEWORKS_DOCUMENT_ROOT . '/dev/_') ) !== SITEWORKS_DOCUMENT_ROOT . '/dev/_' ){
+					$new_path = preg_replace('@' . SITEWORKS_DOCUMENT_ROOT . '/dev@', SITEWORKS_DOCUMENT_ROOT . '/private', $v['path']);
+					if (!is_dir($new_path)){mkdir($new_path,0775,true);}
+	        		unset($m);
+	        		$f = file_get_contents($v['path'].$v['name']);
+	        		$f = preg_replace_callback('/(.)\s*\[__(.*?)__\]/', function($m)use(&$r){return $this->tool->buildText($m,$r);},$f);
+					file_put_contents($new_path.$v['name'],$f,775);
+				}
+			}
+
+
 			// Get a list of db tables, make sure you can start objects and match fields 
 			// Verify Database Structure and Tabeles
+			$tmp = scandir( SITEWORKS_DOCUMENT_ROOT . '/includes/dbtables' );
+			foreach($tmp as $v){ if( substr($v, 0, 1) != '.' ){ $this->site_works_db_classes[] = array($v,'0'); } }
+			$tmp = scandir( SITEWORKS_DOCUMENT_ROOT . '/private/dbtables' );
+			foreach($tmp as $v){ if( substr($v, 0, 1) != '.' ){ $this->site_works_db_classes[] = array($v,'1'); } }
 
-			$this->site_works_db_classes = scandir( SITEWORKS_DOCUMENT_ROOT . '/includes/dbtables' );
-			$tmp = scandir( SITEWORKS_DOCUMENT_ROOT . '/dev/dbtables' );
-			foreach($tmp as $v){ if( substr($v, 0, 1) != '.' ){ $this->site_works_db_classes[] = $v; } }
 			foreach($this->site_works_db_classes as $k => $v){
-				if( substr($v, 0, 1) == '.' ){ unset($this->site_works_db_classes[$k]); } else {
+				if( substr($v[0], 0, 1) == '.' || $v[0] == 't_site_works_template_table.inc.php'){ unset($this->site_works_db_classes[$k]); } else {
 					unset($farray);
 					$farray = array();
-					$this->site_works_db_classes[$k] = array('value'=>explode('.',$v,2)[0],'f'=>$farray,'primary'=>'');
-					$vx = 'SiteWorks\\'. $this->site_works_db_classes[$k]['value'];
+					$swdb = $v[1];
+					$this->site_works_db_classes[$k] = array('value'=>explode('.',$v[0],2)[0],'sw'=>$v[1],'f'=>$farray,'primary'=>'');
+					if($swdb == 0){
+						$vx = 'SiteWorks\\'. $this->site_works_db_classes[$k]['value'];
+					}else{
+						$vx = $this->site_works_db_classes[$k]['value'];
+					}
 					$tmp = new $vx(0,$this->odb);
 					$this->site_works_db_classes[$k]['primary'] = $tmp->keyField;
 					foreach($tmp->f as $k2 => $v2){
@@ -235,19 +258,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$r->query('SELECT sw_lang_key, sw_lang_keep, sw_origional FROM `' . $dbc_database_name . '`.`site_works_lang` WHERE sw_lang_category = \'\'');
 			while($row = $r->getRows()){$r->p['list'][]=$row;}
 
-			$f = '';
-			// Developer Code
-       		$this->tool->delTree(SITEWORKS_DOCUMENT_ROOT . '/private/',false);
-			foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/dev/',1) as $v){
-				if( substr( $v['path'], 0, strlen(SITEWORKS_DOCUMENT_ROOT . '/dev/_') ) !== SITEWORKS_DOCUMENT_ROOT . '/dev/_' ){
-					$new_path = preg_replace('@' . SITEWORKS_DOCUMENT_ROOT . '/dev@', SITEWORKS_DOCUMENT_ROOT . '/private', $v['path']);
-					if (!is_dir($new_path)){mkdir($new_path,0775,true);}
-	        		unset($m);
-	        		$f = file_get_contents($v['path'].$v['name']);
-	        		$f = preg_replace_callback('/(.)\s*\[__(.*?)__\]/', function($m)use(&$r){return $this->tool->buildText($m,$r);},$f);
-					file_put_contents($new_path.$v['name'],$f,775);
-				}
-			}
 
 			// CSS
 			$tmp = '';
@@ -389,7 +399,11 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			
 			// Load Database Tables $dba['tableName'] = new t_tableName;
 			if( preg_match('/^t_/', $className) ){
-				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
+                if( file_exists(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php') ){
+    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
+                } else {
+    				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
+                }
 			}
 			
 			// Load standard classes
@@ -414,9 +428,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				$e = "\n".'Errors: '.implode("\n",$e)."\n";
 				$this->tool->dmsg('[c_light_red]'.$e, false, false);
 			}
-			foreach($this->tail_array as $v){ $this->tool->dmsg('[c_white][Tail] ' . $v[0] . "\n[c_light_purple]" . exec('tail -n '.$v[1].' '.$v[0]) . "\n", false, false); }
 		}
 		if($this->debugMode){
+			foreach($this->tail_array as $v){$this->tool->dmsg('[c_white][Tail] ' . $v[0] . "\n[c_light_purple]" . shell_exec('tail -n '.$v[1].' '.$v[0]) . "\n", false, false); }
 			$this->tool->dmsg('************   F I N I S H   ************', false, false);
 		}
 	}
@@ -431,10 +445,27 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		$this->out['body'][] = ob_get_contents();
 		ob_end_clean();
 
+        // Handle Log Output
+        foreach( $this->log_files as $v ){
+	        if( $this->log_auto_clean_size_kb > 0 && filesize( $v[1] ) >= $this->log_auto_clean_size_kb * 1000 ){
+                $tmp = '';
+                $file = file( $v[1] );
+                $c = count($file);
+                if( $c > 10 ){
+                    for( $i=$c-10; $i<$c; $i++ ){
+                    	$tmp .= $file[$i];
+                    }
+                }
+                $myfile = fopen($v[1], "w");
+                fwrite($myfile, $tmp);
+                fclose($myfile);
+	        }
+	        if( isset( $this->log[$v[0]] ) ){ file_put_contents( $v[1], "\n".implode("\n",$this->log[$v[0]]), FILE_APPEND | LOCK_EX);}
+        }
+
 		// Only output what you put in the body or echo if script or ajax.
 		if($this->uri->calltypes == 'scripts'){$x='';foreach($this->out as $v){$x .= implode('',$v);}echo $x;return false;}
 		if((isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest") || $this->uri->calltypes == 'ajaxs'){$x='';foreach($this->out as $v){$x .= implode('',$v);}echo $x;return false;}
-
 
 		// Handle Console Output
 		$this->console[] = str_replace(["\n","\r"],'','

@@ -179,6 +179,8 @@ PHP, MySQL, Javascript, and CSS framework
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
     $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
+    $this->log_files - An array of log files you set. ['NickName','log/file/path']
+    $this->log_auto_clean_size_kb - delete all but the last 10 lines if max is reached, 0 to never delete from file automatically.
     $this->tail_array - Want to see tail of a file in the debugger? Add the file path and number of lines to show.
     $this->default_module - This determins what dev/modual will be used if none are found in the URL.
     $this->modualLocks - Disable access for unpriviledged users to visit an entire modual.
@@ -217,6 +219,9 @@ PHP, MySQL, Javascript, and CSS framework
     Not enough? You want to write to the browser console too? Ok.
     $this->_console[] = 'This will print to the browsers console window.';
 
+    You can set a log file in the config and assign it a friendly name to write a log file.
+    $this->_log['PRETTY_NAME'][] = 'You can do this to write to a log file of your choosing in the config.'
+
 
 # Important $_SESSION variables
     Sometimes the framework needs to get some information from your user.
@@ -234,11 +239,9 @@ PHP, MySQL, Javascript, and CSS framework
 # dbtables
     dbtables are the class represention of your database tables
     To see an example of what a dbtable file should look like, check this path:
-        siteworks/includes/dbtables
-    In here you'll find my framework tables, yours should follow the this template
-    You should put yours in
         siteworks/dev/dbtables
-    If you want to access one of the frameworks dbtables be sure and use the namespace
+    Your database tables should follow the this class template, and be placed in the /dev/dbtables folder
+    If you want to access one of my frameworks dbtables be sure and use the namespace
         Ex: $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
     To access yours:
         Pass the ID if you want to pull a specific one, or 0, and the database connection you want to use.

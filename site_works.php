@@ -53,6 +53,7 @@ namespace{
 		public $_odb = null;                    // Database odb is the default database
 		public $_dbo = null;                    // Database array dbo['default']
 		public $_out = null;                    // The output array [header/title/meta/css/js/body/footer]
+		public $_log = null;                    // The log array
 		public $_console = null;                // The console output array
 		public $_m = null;                      // The default modual that gets loaded with the same name as Controller
 		public $_p = array();                   // The Pass array to share variables between Controller Moduals and Views
@@ -69,6 +70,7 @@ namespace{
 			$this->_dbo        =& $this->_s->dbo;
 			$this->_dbo        =& $this->_s->dbo;
 			$this->_out        =& $this->_s->out;
+			$this->_log        =& $this->_s->log;
 			$this->_console    =& $this->_s->console;
 			$this->_p          =& $this->_s->p;
 			$this->_admin      =& $this->_s->admin;

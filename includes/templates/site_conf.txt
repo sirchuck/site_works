@@ -55,6 +55,17 @@ class siteworks_override extends siteworks_config
         ,'dev'     => '10000'
     );
 
+    // Would you like to write to a log file? You can do that just make sure php has write permissions.
+    // To use in code: $this->_log['pretty_name1'][] = 'Message to write to selected log file.';
+    $this->log_files = array(
+    //     array('pretty_name1','/var/www/mydir/my_log_file_name1')
+    //    ,array('pretty_name2','/var/www/mydir/my_log_file_name2')
+    );
+
+    // Set to 0 if you never want us to delete data from your file
+    // If file size in KB is met, we delete all but the last 10 lines.
+    $this->log_auto_clean_size_kb = 400; // 1000 = 1MB (Default: 400KB)
+
     // Would you like to monitor log files? We run tail -n # on the file you pass in the array.
     // Make sure webserver can read files: chmod 644 or set owner to www-data normally
     // array('YOUR_LOG_FILE_NAME',INT_NUMBER_OF_LINES)
