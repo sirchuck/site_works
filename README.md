@@ -189,6 +189,8 @@ PHP, MySQL, Javascript, and CSS framework
         You should use lower case when setting up routes.
         Ex: 'dogs/like/friends' => 'template/template/about_dogs'
         Note: anything following the swapped portion will fall into the proper segment - pass_var pass_vars if you provide modual/contorller/method 
+    $this->thread_php_path - The path to your version of php. Ex: /usr/bin/ (Only needed if you want to use the php_threader)
+    $this->thread_php_version - The version of your php. Ex: 7.2 (Only needed if you want to use the php_threader)
     $this->debug_server - The IP of the server running your debug_server app.
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
@@ -531,5 +533,28 @@ PHP, MySQL, Javascript, and CSS framework
             Ex: $this->_tool->dmsg('Hello, [c_red] this will be in red, and [c_clear] this will be back to normal',false,false);
     debug_server.exe
         This is the windows version of the linux debug_server app, colors probably will not work.
+    php_threader
+        This is a linux only app, you need to leave it in your site_works root folder so the framework can find it.
+        - Why
+            Say you want to let a user visit your page, but you want to do some behind the scenes work without making them wait.
+            Now you can run a script like the following to run a background script, starting 20 seconds from now, with an array of variables.
+            You'll find an example of this in the template controller.
+        - Usage
+            $this->_tool->thread( 'MyFile', 20, ['key1'=>'var1','key2'=>'var2'] );
+        - Your threaded script
+            Your thread scripts should be located in /dev/thread_scripts
+            They should have the extention .php
+            They must contain vanilla php code as they are not run thought the framework
+            If you need to run through the framework try something like this in your thread script:
+                $x = file_get_contents('http://www.MySite.com/Modual/Controller/Method/pass_var/pass_vars');
+        - Passing Variables to the thread file
+            Your thread files should always start with this line:
+            $q = json_decode( base64_decode( getopt("q:")['q'] ) );
+            If you sent an array of variables, as shown in the call above, then you will access them here as an object.
+            $q->key1 and $q->key2 as per the calling example above.
+
+
+
+
 
 - site_works Author: Frost Cinderstorm (FrostCandy)

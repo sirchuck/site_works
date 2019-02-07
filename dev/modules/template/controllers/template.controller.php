@@ -25,6 +25,47 @@ class template_controller extends _s
         **                                                                                                             **
         ****************************************************************************************************************/
 
+
+        /****************************************************************************************************************
+        **                                                                                                             **
+        **                               E X A M P L E        T H R E A D I N G                                        **
+        **                                                                                                             **
+        **   Put your thread scripts in: /dev/thread_scripts                                                           **
+        **   Thread scripts should have a php extention: MyFile.php                                                    **
+        **                                                                                                             **
+        **   php_threader in your site_works root folder must have execuable permissions:                              **
+        **   Ex: chmod 755 php_threader                                                                                **
+        **                                                                                                             **
+        **   To Call the Threader:                                                                                     **
+        **   $this->_tool->thread( 'MyFile', 20, ['key1'=>'var1','key2'=>'var2'] );                                    **
+        **                                                                                                             **
+        **   MyFile - is your file name found in /dev/thread_scripts folder without the extention.                     **
+        **   20 - is the number of seconds to wait until the script is run.                                            **
+        **   Variables - Depending on how you read out the other end, its probably easiest to just send an array       **
+        **        as shown above.                                                                                      **
+        **                                                                                                             **
+        **   Example Thread File:                                                                                      **
+        **   <?php                                                                                                     **
+        **        // site_works sends variables json and base64 encoded as the letter q parameter                      **
+        **        // Use a line like the following to unpack your variables into an object                             **
+        **        // base64_encode apparently turns an opening [ into an {                                             **
+        **        $q = json_decode( base64_decode( getopt("q:")['q'] ) );                                              **
+        **                                                                                                             **
+        **        // Open a file your script has permissions to write to                                               **
+        **        $f = fopen("/var/log/www/writeable_log.txt", "w");                                                   **
+        **                                                                                                             **
+        **        // Write our variables to the file                                                                   **
+        **        fwrite($f, 'Key 1: '. $q->key1);                                                                     **
+        **        fwrite($f, 'Key 2: '. $q->key2);                                                                     **
+        **        fclose($myfile);                                                                                     **
+        **   ?>                                                                                                        **
+        **                                                                                                             **
+        **   Note: These scripts do not go through the framework, so write vanilla php                                 **
+        **   If you really need the framework, you could rig your MyFile.php with something like:                      **
+        **   $x = file_get_contents('http://www.MySite.com/Modual/Controller/Method/pass_var/pass_vars');              **
+        **                                                                                                             **
+        ****************************************************************************************************************/
+
         // If you use a modual or controller lock, we will return error_permission as a passvar to your default modual.
         // You can handle it with a statement like this
         if( $this->_uri->pass_var == 'error_permission' ){

@@ -100,6 +100,10 @@ class siteworks_config extends siteworks_startup
     //    'dogs/like/to/party'=>'template/template/about_dogs'
     );
 
+    // If you want to use theadding tell us where PHP is and what version it is. 
+    // The defaults will run /usr/bin/php7.2 as the php executable.
+    public $thread_php_path = '/usr/bin/';    //  default: /usr/bin/
+    public $thread_php_version = '7.2';       //  default: 7.2
 
 
     /*********************************************************************************************************
