@@ -180,6 +180,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					$result2 = $c->q('SHOW FIELDS FROM ' . $row[0] . ';');
 					while ($row2 = $result2->fetch_row()) {
 						// Field   Type    Null    Key     Default     Extra
+						$row2[3] = ( strtoupper(substr( $row2[3], 0, 3 )) === "PRI" ) ? 'PRI':'';
 						$farray[] = array('value'=>$row2[0],'type'=>$row2[1],'primary'=>$row2[3],'dbtype'=>$c->dbt);
 					}
 					$check_site_works_db_classes[] = Array('value'=>'t_'.$row[0],'f'=>$farray);
@@ -228,7 +229,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 									}else{
 										$stype = $sv['type']; $stype2 = $sv2['type']; $primary = ($sv['primary'] != '')?$sv['value']:'';$dbtype = $sv['dbtype'];
 									}
-
 									//*************** CHECKING MySQLi Database Types Only.
 									if($dbtype=='mysqli'){
 										$stype = explode('(',$stype)[0];
