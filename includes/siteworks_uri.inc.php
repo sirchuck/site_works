@@ -76,7 +76,7 @@ class siteworks_uri
 		$uri = $_SERVER['DOCUMENT_URI'];
 		if( $_s->cPaths['project_name'] == '' ){
 			$this->fixeduri = strtolower(trim(str_replace('public','',trim($uri, '/')), '/'));
-		}elseif(){
+		}else{
 			$this->fixeduri = strtolower(trim(str_replace([$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']],'',trim($uri, '/')), '/'));
 		}
 
