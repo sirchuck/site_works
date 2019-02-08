@@ -17,7 +17,11 @@ PHP, MySQL, Javascript, and CSS framework
         sudo systemctl restart nginx
 
 # Nginx Setup Examples:
-    NOTE: you can change site_works with your project name.
+    NOTES: you can change site_works with your project name.
+        you must keep the /public in your route, or your try files
+        In your site config, you can set a dir_path for your asset files, typically it will be '' or public depending on what your root here is.
+        Let me know if you need assistance, and I'll update the docs for others with your usecase.
+
     Your server is dedicated to your project:
         server {
 	        listen 80;
@@ -31,9 +35,8 @@ PHP, MySQL, Javascript, and CSS framework
                 try_files $uri $uri/ /index.php?$args;
             }
             location ~ \.php$ {
-                include snippets/fastcgi-php.conf;
-                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
                 include fastcgi_params;
+                fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
                 fastcgi_param DOCUMENT_URI $request_uri;
                 fastcgi_param SCRIPT_FILENAME $request_filename;
                 fastcgi_param SCRIPT_NAME $fastcgi_script_name;
@@ -56,16 +59,16 @@ PHP, MySQL, Javascript, and CSS framework
                 include snippets/fastcgi-php.conf;
                 fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
             }
-            # This is the important part, you can try adding this to your current nginx setup.
+            # ---- This is the important part, you can try adding this to your current nginx setup.
             location ^~ /site_works/ {
                 root /var/www/html/;
                 index index.php;
                 # Note: try_files will change our url, but we want to know the origional.
-                # set $holduri $uri; if you prefer to use the uri param.
+                # set $holduri $uri; or set $holduri $request_uri; if you plan on corrupting the $request_uri
                 try_files $uri $uri/ /site_works/public/index.php?$args;
                 location ~ \.php$ {
-                    fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
                     include fastcgi_params;
+                    fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
                     fastcgi_param DOCUMENT_URI $request_uri;
                     fastcgi_param SCRIPT_FILENAME $request_filename;
                     fastcgi_param SCRIPT_NAME $fastcgi_script_name;
