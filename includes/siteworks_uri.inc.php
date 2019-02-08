@@ -60,7 +60,7 @@ class siteworks_uri
 		$this->public_url     = ( $_s->secure ) ? $this->public_url_s : $this->public_url_n ;
 		
 		// So many ways to handle assets, you'll have to figure out the best way for your own project of course. This will work for most sites.
-		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a']. ( ($_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name'] : '' ) . ( $_s->cPaths['dir_path'] != '' )?'/'.$_s->cPaths['dir_path']: '';
+		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a']. ( ($_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name'] : '' ) . (( $_s->cPaths['dir_path'] != '' )?'/'.$_s->cPaths['dir_path']: '');
 		$this->asset_url_n   = 'http://'  . $asset_url ;
 		$this->asset_url_s   = 'https://' . $asset_url ;
 		$this->asset_url     = ( $_s->secure ) ? $this->asset_url_s : $this->asset_url_n ;
