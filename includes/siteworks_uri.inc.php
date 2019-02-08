@@ -54,9 +54,9 @@ class siteworks_uri
 		$this->base_url     = ( $_s->secure ) ? $this->base_url_s : $this->base_url_n ;
 		
 		// Public gets you to your sites public folder http://www.example.com/siteworks/public
-		$public_url = 'public' ;
-		$this->public_url_n   = 'http://'  . $root_url . $base_url . '/' . $public_url ;
-		$this->public_url_s   = 'https://' . $root_url . $base_url . '/' . $public_url ;
+		$public_url = ( $_s->use_public_url_folder ) ? '/public' : '';
+		$this->public_url_n   = 'http://'  . $root_url . $base_url . $public_url;
+		$this->public_url_s   = 'https://' . $root_url . $base_url . $public_url;
 		$this->public_url     = ( $_s->secure ) ? $this->public_url_s : $this->public_url_n ;
 		
 		// So many ways to handle assets, you'll have to figure out the best way for your own project of course. This will work for most sites.

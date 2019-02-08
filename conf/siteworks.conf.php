@@ -127,6 +127,9 @@ class siteworks_config extends siteworks_startup
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
         ,'dir_path'        => 'public'               // Asset site subfolder path Ex: public or site_works/public, '' for nothing
     );
+    // Depending on your nginx config, you may not need to ever show a url like MySite.com/public. Ex: Nginx root mysite.com/myproject/public
+    // Setitng this to true should work for all, but some won't need it. It's safe to try, but if $this->_uri->public_url breaks, then turn it back on.
+    public $use_public_url_folder = true;             // Default true.
 
 
 
