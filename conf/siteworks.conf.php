@@ -125,6 +125,7 @@ class siteworks_config extends siteworks_startup
         ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
         ,'domain_a'        => 'MySite'               // Asset Site Domain Name
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
+        ,'dir_path'        => 'public'               // Asset site subfolder path Ex: public or site_works/public, '' for nothing
     );
 
 
