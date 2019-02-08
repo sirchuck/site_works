@@ -26,7 +26,6 @@ PHP, MySQL, Javascript, and CSS framework
             index index.php;
             server_name MYDOMAIN.com www.MYDOMAIN.com;
             # Note: try_files will change our url, but we want to know the origional.
-            set $holduri $uri;
             location / {
                 # Note: You handle everything through index.php if not found, so 404 errors dont really exist
                 try_files $uri $uri/ /index.php?$args;
@@ -35,7 +34,7 @@ PHP, MySQL, Javascript, and CSS framework
                 include snippets/fastcgi-php.conf;
                 fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
                 include fastcgi_params;
-                fastcgi_param DOCUMENT_URI $holduri;
+                fastcgi_param DOCUMENT_URI $request_uri;
                 fastcgi_param SCRIPT_FILENAME $request_filename;
                 fastcgi_param SCRIPT_NAME $fastcgi_script_name;
             }
@@ -62,12 +61,12 @@ PHP, MySQL, Javascript, and CSS framework
                 root /var/www/html/;
                 index index.php;
                 # Note: try_files will change our url, but we want to know the origional.
-                set $holduri $uri;
+                # set $holduri $uri; if you prefer to use the uri param.
                 try_files $uri $uri/ /site_works/public/index.php?$args;
                 location ~ \.php$ {
                     fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
                     include fastcgi_params;
-                    fastcgi_param DOCUMENT_URI $holduri;
+                    fastcgi_param DOCUMENT_URI $request_uri;
                     fastcgi_param SCRIPT_FILENAME $request_filename;
                     fastcgi_param SCRIPT_NAME $fastcgi_script_name;
                 }

@@ -55,8 +55,8 @@ class siteworks_uri
 		
 		// Public gets you to your sites public folder http://www.example.com/siteworks/public
 		$public_url = 'public' ;
-		$this->public_url_n   = 'http://'  . $root_url . '/' . $base_url . '/' . $public_url ;
-		$this->public_url_s   = 'https://' . $root_url . '/' . $base_url . '/' . $public_url ;
+		$this->public_url_n   = 'http://'  . $root_url . $base_url . '/' . $public_url ;
+		$this->public_url_s   = 'https://' . $root_url . $base_url . '/' . $public_url ;
 		$this->public_url     = ( $_s->secure ) ? $this->public_url_s : $this->public_url_n ;
 		
 		// So many ways to handle assets, you'll have to figure out the best way for your own project of course. This will work for most sites.
@@ -75,13 +75,11 @@ class siteworks_uri
 
 		$uri = $_SERVER['DOCUMENT_URI'];
 
-		$_s->tool->dmsg( $uri );
 		if( $_s->cPaths['project_name'] == '' ){
 			$this->fixeduri = strtolower(trim(str_replace('public','',trim($uri, '/')), '/'));
 		}else{
 			$this->fixeduri = strtolower(trim(str_replace([$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']],'',trim($uri, '/')), '/'));
 		}
-		$_s->tool->dmsg( $this->fixeduri );
 
 		// The Router will automatically swap the largest key match with the sent URI segments. 
 		krsort($_s->routes);
