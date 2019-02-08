@@ -29,7 +29,7 @@ PHP, MySQL, Javascript, and CSS framework
             set $holduri $uri;
             location / {
                 # Note: You handle everything through index.php if not found, so 404 errors dont really exist
-                try_files $uri $uri/ /index.php?$args;
+                try_files $uri $uri/ /site_works/public/index.php?$args;
             }
             location ~ \.php$ {
                 include snippets/fastcgi-php.conf;
