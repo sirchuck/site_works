@@ -74,7 +74,7 @@ class siteworks_uri
 		$this->asset->css_vendor  = $this->asset_url . '/assets/css/vendor';
 
 		$uri = $_SERVER['DOCUMENT_URI'];
-		if( str_replace([$_s->cPaths['project_name'] == '' ){
+		if( $_s->cPaths['project_name'] == '' ){
 			$this->fixeduri = strtolower(trim(str_replace('public','',trim($uri, '/')), '/'));
 		}elseif(){
 			$this->fixeduri = strtolower(trim(str_replace([$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']],'',trim($uri, '/')), '/'));
