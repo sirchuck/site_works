@@ -86,7 +86,7 @@ class siteworks_tools
   public function addTrailSlash($s){ return rtrim($s,'/').'/';}
   public function delTree($dir,$include_dir_folder=true) {
    if(!is_dir($dir)){return false;}
-   $dir = addTrailSlash($dir);
+   $dir = $this->addTrailSlash($dir);
    $files = array_diff(scandir($dir), array('.','..','.githoldfolderprivate'));
     foreach ($files as $file) {
       (is_dir($dir.$file)) ? $this->delTree($dir.$file,true) : unlink($dir.$file);
