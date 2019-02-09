@@ -54,6 +54,15 @@ class siteworks_config extends siteworks_startup
         ,'dev'     => '10000'
     );
 
+    // If you add an IP to this array, any non-matching IP will force all above toggles to false.
+    // Only people in the array will have the framework pre-parse the code. Everyone else will
+    // use the arlready compiled code.
+    public $debug_mode_ip_arary = array(
+    //     'Me'=>'111.111.1.1'
+    //    ,'Boss'=>'111.111.1.2'
+    );
+
+
     // Would you like to write to a log file? You can do that just make sure php has write permissions.
     // To use in code: $this->_log['pretty_name1'][] = 'Message to write to selected log file.';
     public $log_files = array(
@@ -134,9 +143,24 @@ class siteworks_config extends siteworks_startup
 
 
     public function __construct(){
-
         // Here we set the secure setting for URI to choose correct paths.
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) { $this->secure = true; }
+        $foundDev = -1;
+        if(count($this->debug_mode_ip_arary)>0){
+            $foundDev = 0;
+            foreach($this->debug_mode_ip_arary as $v){ if($_SERVER['REMOTE_ADDR'] == $v){ $foundDev = 1; break;} }
+        }
+        if($foundDev==0){
+           // If not in the approved IP array, set toggles to false, add more code here if you want.
+            $this->debugMode            = false;
+            $this->allowDebugColors     = false;
+            $this->showPHPErrors        = false;
+            $this->showPHPErrors_debug  = false;
+            $this->printSQL             = false;
+            $this->css_js_minify        = false;
+            $this->css_js_one_file      = false;
+        }
+
 
         // You could set things like meta tags or load jquery here or in yoru personal server
         // Example: $this->out['meta'][] = '<meta property="og:title" content="OG EXAMPLE META YOUR TITLE" />';

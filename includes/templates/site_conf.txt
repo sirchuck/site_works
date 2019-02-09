@@ -55,6 +55,14 @@ class siteworks_override extends siteworks_config
         ,'dev'     => '10000'
     );
 
+    // If you add an IP to this array, any non-matching IP will force all above toggles to false.
+    // Only people in the array will have the framework pre-parse the code. Everyone else will
+    // use the arlready compiled code.
+    $this->debug_mode_ip_arary = array(
+    //     'Me'=>'111.111.1.1'
+    //    ,'Boss'=>'111.111.1.2'
+    );
+
     // Would you like to write to a log file? You can do that just make sure php has write permissions.
     // To use in code: $this->_log['pretty_name1'][] = 'Message to write to selected log file.';
     $this->log_files = array(
