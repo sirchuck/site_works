@@ -79,6 +79,7 @@ namespace{
 			// If your controller has the same name as a module we'll load it automaticaly into $this->_model for you to play with.
 			if($model && $_s->uri->load_the_model){
 	   			spl_autoload_register(array($this, 'handle_autoload'));
+	   			require_once( SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php' );
 				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false);}catch(Exception $e){unset($e);}
 			}else{}
 	    }
