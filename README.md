@@ -153,9 +153,21 @@ PHP, MySQL, Javascript, and CSS framework
               - template.script.php
             - views
               - template.view.php
+    dev/preloads
+        - ajax_preload.php
+        - controller_preload.php
+        - iframe_preload.php
+        - script_preload.php
+    dev/thread_scripts
 
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
     everything else shoudl be safe.
+
+    The preloads will be automatically included in your ajax/controller/iframe or script call. For example, if you wanted all of your controllers
+    to load jquery from a google CDN you could write in the controller_preload.php file: 
+        $this->_out['js'][] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
+
+    Files you put in the thread_scripts will be called if you use the threading tool shown below. Files in this directory should have the .php extention.
 
 # File Extentions:
     For the framework to find your files, and for readability on your end, give your files the following extentions
