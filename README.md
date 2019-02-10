@@ -159,6 +159,7 @@ PHP, MySQL, Javascript, and CSS framework
         - iframe_preload.php
         - script_preload.php
     dev/thread_scripts
+        - your_script.php
 
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
     everything else shoudl be safe.

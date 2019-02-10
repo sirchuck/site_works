@@ -162,9 +162,9 @@ class siteworks_config extends siteworks_startup
         }
 
 
-        // You could set things like meta tags or load jquery here or in yoru personal server
-        // Example: $this->out['meta'][] = '<meta property="og:title" content="OG EXAMPLE META YOUR TITLE" />';
-        // Example: $this->out['js'][] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
+        // You can add things here that apply to your entire site, but it's probably better to use the preload area
+        // as you can specify the controller type you want to preload something. This area will apply to all controller 
+        // types, ajax, iframe, script, and controllers.
 
         // This is the parent constructor for your servers individual configuration, should be last line.
         parent::__construct();
