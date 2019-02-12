@@ -200,6 +200,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->default_module - This determins what dev/modual will be used if none are found in the URL.
     $this->modualLocks - Disable access for unpriviledged users to visit an entire modual.
     $this->controllerLocks - Disable access for unpriviledged users to visit a speific moduals controller.
+    $this->email - Array of emails so you do not have to remember addresses, and can change easily throughout your code.
     $this->routes - Yes, you can let someone type something odd in your url, then redirect it to a good path.
         You should use lower case when setting up routes.
         Ex: 'dogs/like/friends' => 'template/template/about_dogs'
@@ -497,6 +498,11 @@ PHP, MySQL, Javascript, and CSS framework
     Notice: When you choose to get sample code, at the bottom I provided a bit of a framework cheat sheet for you.
     You would not generally use the MVC this way, but I wanted to keep it all contained within the Modual in case
     you want to remove it completely without hanving to hunt down javascript files and css files.
+
+# CSS
+    If you write the word asset_url in your parsable CSS code in the dev folder, the system will swap that out with
+    The current http or https://subdomain.domain.tld/assetfolder url. in css add a slash and the rest of your path.
+    Or, if you are using the systems public folder you can get to your files just starting with a /assets/path.
 
 # Main Feature: Multi-Language Handling
     The selling point of this framework for some developers will be the easy way to handle sites that need multipul langauges.

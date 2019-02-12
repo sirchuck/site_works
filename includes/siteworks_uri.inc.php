@@ -72,7 +72,10 @@ class siteworks_uri
 		$this->asset->css         = $this->asset_url . '/assets/css';
 		$this->asset->js_vendor   = $this->asset_url . '/assets/js/vendor';
 		$this->asset->css_vendor  = $this->asset_url . '/assets/css/vendor';
+	}
 
+
+	public function uri_finish(&$_s){
 		$uri = $_SERVER['DOCUMENT_URI'];
 
 		if( $_s->cPaths['project_name'] == '' ){

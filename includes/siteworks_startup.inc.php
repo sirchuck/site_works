@@ -35,6 +35,7 @@ class siteworks_startup
     	$this->softwareTimer = microtime(true);
 		spl_autoload_register(array($this, 'handle_autoload'));
 		$this->tool = new siteworks_tools($this);
+		$this->uri = new siteworks_uri($this);
 		register_shutdown_function(array($this, 'handle_shutdown'));
 		if( array_key_exists('default', $this->dbc) ){
 			$tmp = ( !isset($this->dbc['default']['hostname']) || $this->dbc['default']['hostname'] == '') ? 'Default Database Hostname Missing<br>' : '';
@@ -270,6 +271,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				$tmp2 = $tmp2.$tmp;
 				if($tmp2 == ''){$tmp2 = '/* S I T E    W O R K S */';}
 				if (!is_dir($new_path)){mkdir($new_path,0775,true);}
+				$tmp2 = preg_replace('/asset_url/',$this->uri->asset_url,$tmp2);
 				file_put_contents($new_path.'siteworks.cs',$tmp2,775);
 				if($this->css_js_minify){
 					try{exec('uglifycss ' . $new_path.'siteworks.cs > ' . $new_path.'siteworks_' . $this->admin['sw_version'] . '.css');}catch(Exception $e){unset($e);}
@@ -357,7 +359,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 
 
 		} // End if debug mode
-		$this->uri = new siteworks_uri($this);
+		$this->uri->uri_finish($this);
 
 
 		$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js';

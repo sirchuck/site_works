@@ -82,6 +82,12 @@ class siteworks_config extends siteworks_startup
     //    ,array('/var/log/php7.2-fpm.log',2)
     );
 
+    // Set up emails array to quickly send mail to dev, or boss, or whoever $this->_s->email['NiceName']
+    public $email = array(
+    //     'DEV'       => 'Me@Myself.com'
+    //    ,'BOSS'      => 'Boss@Herself.com'
+    //    ,'SALES'     => 'SalesTeam@Sales.com'
+    );
 
     /*********************************************************************************************************
     **                                        R O U T I N G                                                 **

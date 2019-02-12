@@ -82,6 +82,13 @@ class siteworks_override extends siteworks_config
     //    ,array('/var/log/php7.2-fpm.log',2)
     );
 
+    // Set up emails array to quickly send mail to dev, or boss, or whoever $this->_s->email['NiceName']
+    $this->email = array(
+    //     'DEV'       => 'Me@Myself.com'
+    //    ,'BOSS'      => 'Boss@Herself.com'
+    //    ,'SALES'     => 'SalesTeam@Sales.com'
+    );
+
 
     /*********************************************************************************************************
     **                                        R O U T I N G                                                 **
