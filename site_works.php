@@ -35,10 +35,12 @@ namespace SiteWorks{
 					. 'sudo chmod -R 775 conf && sudo chgrp -R www-data conf && sudo chmod -R 775 dev && sudo chgrp -R www-data dev && sudo chmod -R 775 private && sudo chgrp -R www-data private && sudo chmod -R 775 public && sudo chgrp -R www-data public<br><br>'
 					. 'When you are done setting permissions, refresh this page.<br>');
 			}else{
-				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template',SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template') ){
+				if( !is_dir(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template') ){
+					exec('cp -r '.SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template '.SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template');
 					die('We could not write the template folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
 				}
-				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/sw_admin',SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin') ){
+				if( !is_dir(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin') ){
+					exec('cp -r '.SITEWORKS_DOCUMENT_ROOT.'/includes/templates/sw_admin '.SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin');
 					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
 				}
 
