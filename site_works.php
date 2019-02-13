@@ -12,6 +12,7 @@ namespace SiteWorks{
 		require_once(SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.conf.php');
 		// Configuration per server
 		$tmp = SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.' . str_replace('.', '', (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '')?$_SERVER['HTTP_HOST']:$_SERVER['SERVER_NAME'] ) . '.pconf.php';
+		$tmpu = posix_getpwuid(fileowner(SITEWORKS_DOCUMENT_ROOT . '/index.php'))['name'];
 		if(file_exists($tmp)){
 			require_once($tmp);
 		} else {
@@ -24,50 +25,55 @@ namespace SiteWorks{
 					. '3) ' . SITEWORKS_DOCUMENT_ROOT . '/public<br><br>'
 					. 'Example commands:<br><br>'
 					. 'sudo chmod -R 775 conf<br>'
-					. 'sudo chgrp -R www-data conf<br><br>'
+					. 'sudo chown -R '.$tmpu.':www-data conf<br><br>'
 					. 'sudo chmod -R 775 dev<br>'
-					. 'sudo chgrp -R www-data dev<br><br>'
+					. 'sudo chown -R '.$tmpu.':www-data dev<br><br>'
 					. 'sudo chmod -R 775 private<br>'
-					. 'sudo chgrp -R www-data private<br><br>'
+					. 'sudo chown -R '.$tmpu.':www-data private<br><br>'
 					. 'sudo chmod -R 775 public<br>'
-					. 'sudo chgrp -R www-data public<br><br>'
+					. 'sudo chown -R '.$tmpu.':www-data public<br><br>'
 					. ' - or - <br><br>'
-					. 'sudo chmod -R 775 conf && sudo chgrp -R www-data conf && sudo chmod -R 775 dev && sudo chgrp -R www-data dev && sudo chmod -R 775 private && sudo chgrp -R www-data private && sudo chmod -R 775 public && sudo chgrp -R www-data public<br><br>'
+					. 'sudo chmod -R 775 conf && sudo chown -R '.$tmpu.':www-data conf && sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev && sudo chmod -R 775 private && sudo chown -R '.$tmpu.':www-data private && sudo chmod -R 775 public && sudo chown -R '.$tmpu.':www-data public<br><br>'
 					. 'When you are done setting permissions, refresh this page.<br>');
 			}else{
 				if( !is_dir(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template') ){
 					exec('cp -r '.SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template '.SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template');
-					die('We could not write the template folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
 				}
 				if( !is_dir(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin') ){
 					exec('cp -r '.SITEWORKS_DOCUMENT_ROOT.'/includes/templates/sw_admin '.SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin');
-					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
+				}
+				if( !is_dir(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/template') || !is_dir(SITEWORKS_DOCUMENT_ROOT.'/dev/modules/sw_admin') ){
+					unlink($tmp);
+					die('We could not write the template or sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 
 				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/dbtables/t_site_works_template_table.inc.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/t_site_works_template_table.inc.php',SITEWORKS_DOCUMENT_ROOT.'/dev/dbtables/t_site_works_template_table.inc.php') ){
-					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
+					unlink($tmp);
+					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 
 				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/ajax_preload.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/ajax_preload.php',SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/ajax_preload.php') ){
-					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
+					unlink($tmp);
+					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/controller_preload.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/controller_preload.php',SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/controller_preload.php') ){
-					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
+					unlink($tmp);
+					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/iframe_preload.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/iframe_preload.php',SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/iframe_preload.php') ){
-					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
+					unlink($tmp);
+					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/script_preload.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/script_preload.php',SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/script_preload.php') ){
-					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chgrp -R www-data dev');
+					unlink($tmp);
+					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
-
-
 
 				die('Almost done, the next step is to set up your configuration file found at:<br>'
 					. $tmp . '<br><br>'
 					. 'You will need at least one database connection with the \'default\' key.<br>'
 					. 'You will need to give yourself access to the config file Example: <br><br>'
-					. 'sudo chown ' . posix_getpwuid(fileowner(SITEWORKS_DOCUMENT_ROOT . '/index.php'))['name'] . ' ' . $tmp . '<br><br>'
+					. 'sudo chown ' . $tmpu . ' ' . $tmp . '<br><br>'
 					. 'Once you finish setting up your servers config file, just refresh this page.<br>');
 			}
 		}
