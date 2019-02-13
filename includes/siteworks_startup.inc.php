@@ -48,6 +48,7 @@ class siteworks_startup
 			}
 			$this->odb = new siteworks_dbc((object)$this->dbc['default'],$this);
 			$this->dbo['default'] = $this->odb;
+			$GLOBALS['_odb'] =& $this->odb;
 		}else{die('You must have a default database connection for administration.');}
 		foreach($this->dbc as $k => $v){ if($k != 'default'){ $this->dbo[$k] = new siteworks_dbc((object)$v,$this); } }
 		$dbc_database_name = $this->dbc['default']['database'];
@@ -401,16 +402,20 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			
 			// Load Database Tables $dba['tableName'] = new t_tableName;
 			if( preg_match('/^t_/', $className) ){
-                if( file_exists(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php') ){
-    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
-                } else {
+                if( preg_match('/^t_site_works_/', $className) ){
     				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
+                } else {
+    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
                 }
 			}
 			
 			// Load standard classes
 			else{
-				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php');
+                if( preg_match('/^siteworks_/', $className) ){
+					require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php');
+                } else {
+					require_once(SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php');
+				}
 			}
 		}
 		catch (Exception $e){

@@ -269,6 +269,8 @@ PHP, MySQL, Javascript, and CSS framework
             That will autofill your object with mytables infromation where the id = 5
         Ex: $r = new t_mytable(0,$this->_dbo['DB_SERVER_2']);
             That will load the empty object table using your specified database connection
+    Note: The autoloader checks if your file starts with t_site_works_. If it does we load it from /includes,
+    so for your personal table files in /dev/dbtables do not start filenames with t_site_works_
 
 # The Database Table Object Class
     $this->tableName        = 'site_works_admin';   // Give us the name of your database table
@@ -477,13 +479,18 @@ PHP, MySQL, Javascript, and CSS framework
     To load something that you want available to multipul controller, try using a helper, or include.
     $this->load_helper(filename) - This will load a file from the helper folder, accessable from all your controllers.
     $this->load_path(full_path) - You should never need this, but you could use it to require_once on a path.
+
+    /dev/includes
+    Do not start your includes in this folder with siteworks_ as that tells the autoloader to pull from /includes instead of /dev/includes.
     To use the include folder, just drop a file in it and it will be automatically called php autoloader.
-    Include files should end in .inc.php Example: mytools.inc.php
+    Include files should end in .inc.php Example: mytools.inc.php, 
     You load them like this:
     $mytools = new mytools();
+
     Your database table classes are special, they go in the dev/dbtables directory and have the following format:
     t_myfilename.inc.php
     the t_ tells the php Autoloader to look in the dbtables directory for the table ojbect, I also use this directory for framework purposes.
+    Do not start database tables in /dev/dbtables with t_site_works_
 
 
 # Template Modual

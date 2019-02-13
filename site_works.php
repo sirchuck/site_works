@@ -78,32 +78,10 @@ namespace{
 
 			// If your controller has the same name as a module we'll load it automaticaly into $this->_model for you to play with.
 			if($model && $_s->uri->load_the_model){
-	   			spl_autoload_register(array($this, 'handle_autoload'));
 	   			require_once( SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php' );
 				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false);}catch(Exception $e){unset($e);}
 			}else{}
 	    }
-		private function handle_autoload($className){
-			$cp = explode('\\',$className);
-			$className = end($cp);
-			try{
-				
-				// Load Database Tables $dba['tableName'] = new t_tableName;
-				if( preg_match('/^t_/', $className) ){
-					require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
-				}
-				
-				// Load standard classes
-				else{
-					require_once(SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php');
-				}
-			}
-			catch (Exception $e){
-				die('Could not load required include files.');
-			}  
-			
-		}
-
 	    public function load_view($path=false){
 	    	// Views are not classes just html to be dropped directly in your code as output.
 	    	return $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $this->_uri->module . '/views/' . (($path) ? $path : $this->_s->uri->controller) . '.view.php');

@@ -17,7 +17,7 @@ class template_controller extends _s
         **   Nameing Convention: t_YOUR_TABLE_NAME.inc.php                                                             **
         **                                                                                                             **
         **   Insert Into Example:                                                                                      **
-        **   $r = new t_YOUR_TABLE_NAME.inc.php(0,$this->_odb);     // Load the table object                           **
+        **   $r = new t_YOUR_TABLE_NAME(0,$this->_odb);             // Load the table object                           **
         **   $r->f['FIELD_NAME']['value'] = 'my value'              // Set the values                                  **
         **   $r->insertData();                                      // Insert Into                                     **
         **                                                                                                             **

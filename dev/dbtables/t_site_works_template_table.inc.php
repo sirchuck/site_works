@@ -5,7 +5,7 @@ class t_site_works_template_table extends SiteWorks\siteworks_db_tools
 {
     public function __construct($id = 0, $odb = false){
         parent::__construct();
-        if($odb){$this->c =& $odb;} else {$this->c =& $GLOBALS['_odb'];}
+        if($odb){$this->c =& $odb;} else {$this->c = $GLOBALS['_odb'];}
 
         $this->tableName    = 'DATABASE_TABLE_NAME';
         $this->keyField     = 'FIELD_NAME1';

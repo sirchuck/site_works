@@ -6,7 +6,7 @@ class t_site_works_admin extends siteworks_db_tools
 {
     public function __construct($id = 0, $odb = false){
     	parent::__construct();
-    	if($odb){$this->c =& $odb;} else {$this->c =& $GLOBALS['_odb'];}
+    	if($odb){$this->c =& $odb;} else {$this->c = $GLOBALS['_odb'];}
         
 
 	    $this->tableName    = 'site_works_admin';
