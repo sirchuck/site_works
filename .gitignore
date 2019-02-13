@@ -1,9 +1,6 @@
 # Individual Server Configurations
 *.pconf.php
 
-# private and public folders are build dynamically
-# You can change the ignore for your servers
-# But to keep this master repository clean they are omitted.
-/private/
-/public/assets/css/siteworks/
-/public/assets/js/siteworks/
+#/private/
+#/public/assets/css/siteworks/
+#/public/assets/js/siteworks/
