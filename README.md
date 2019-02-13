@@ -211,6 +211,11 @@ PHP, MySQL, Javascript, and CSS framework
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
         - Be sure and change /site_works/ to your project name when reading URL's in this ReadMe file.
+        Your asset directory automatically applies the project_name name you select for your main domain to the asset domain. 
+        For example if your project_name is set to site_works, the default settings would create an asset URL like:
+        http://assets.MySite.com/site_works/public
+        In most cases you'll just leave the default public for the asset dir_path, because you'll be drawing from the same computer,
+        just using a different subdomain to ignore passing cookies on every asset call.
 
 # The output array:
     You can type echo like usual to output data, but you need more. You need some control over your output right?
