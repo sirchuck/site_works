@@ -19,8 +19,6 @@ PHP, MySQL, Javascript, and CSS framework
 # Nginx Setup Examples:
     NOTES: you can change site_works with your project name.
         you must keep the /public in your route, or your try files
-        In your site config, you can set a dir_path for your asset files, typically it will be '' or public depending on what your root here is.
-        Let me know if you need assistance, and I'll update the docs for others with your usecase.
 
     Your server is dedicated to your project:
         server {
@@ -61,8 +59,6 @@ PHP, MySQL, Javascript, and CSS framework
             }
             # ---- This is the important part, you can try adding this to your current nginx setup.
             location ^~ /site_works/ {
-                root /var/www/html/;
-                index index.php;
                 # Note: try_files will change our url, but we want to know the origional.
                 # set $holduri $uri; or set $holduri $request_uri; if you plan on corrupting the $request_uri
                 try_files $uri $uri/ /site_works/public/index.php?$args;
@@ -214,7 +210,6 @@ PHP, MySQL, Javascript, and CSS framework
         Your asset directory automatically applies the project_name name you select for your main domain to the asset domain. 
         For example if your project_name is set to site_works, the default settings would create an asset URL like:
         http://assets.MySite.com/site_works/public
-        In most cases you'll just leave the default public for the asset dir_path, because you'll be drawing from the same computer,
         just using a different subdomain to ignore passing cookies on every asset call.
 
 # The output array:
