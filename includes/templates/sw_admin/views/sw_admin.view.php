@@ -1,6 +1,6 @@
 <?php
 $this->_out['body'][] = '
-<div>SiteWorks Administration <a href="' . $this->_uri->public_url . '">Return Home</a></div>
+<div>SiteWorks Administration <a href="' . $this->_uri->base_url . '">Return Home</a></div>
 <br>
 <div>Options:</div>
 <div>

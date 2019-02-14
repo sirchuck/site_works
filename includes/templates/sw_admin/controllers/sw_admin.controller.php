@@ -15,7 +15,7 @@ $this->_out['css'][] = '<style>
 </style>';
 $this->_out['js'][] = '<script>
 function postAjax(file,params,callback) {
-	file = \'' . $this->_uri->public_url . '\' + file;
+	file = \'' . $this->_uri->base_url . '\' + file;
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() { if (this.readyState == 4 && this.status == 200) { callback( JSON.parse(this.responseText) ); } };
     xhttp.open("POST", file, true);

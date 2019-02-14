@@ -199,7 +199,7 @@ class sw_admin_ajax extends _s
             $o[] = 'To use debugger use $this->_tool->dmsg(\'My Words\');';
             $o[] = 'The default database is $this->_odb';
             $o[] = 'If you are using multipul databases then $this->_dbo[\'DATABASE_IDENTIFIER (default)\'] array';
-            $o[] = 'You have access to the uri as well, $this->_uri-> (calltype, module, controller, method, pass_var, pass_vars, root_url, base_url, public_url, asset_url, assets array)';
+            $o[] = 'You have access to the uri as well, $this->_uri-> (calltype, module, controller, method, pass_var, pass_vars, root_url, base_url, asset_url, assets array)';
 
             $o[] = '';
             $o[] = 'Psst, hey buddy, you wanna use color? You can at least if you use some versions of linux and the debug_server.';

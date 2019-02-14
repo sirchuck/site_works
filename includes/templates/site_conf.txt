@@ -140,11 +140,7 @@ class siteworks_override extends siteworks_config
         ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
         ,'domain_a'        => 'MySite'               // Asset Site Domain Name
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
-        ,'dir_path'        => 'public'               // Subfolder path - Note: this will come after the project_name you chose above. Ex: 'public' will become project_name/public
     );
-    // Depending on your nginx config, you may not need to ever show a url like MySite.com/public. Ex: Nginx root mysite.com/myproject/public
-    // Setitng this to true should work for all, but some won't need it. It's safe to try, but if $this->_uri->public_url breaks, then turn it back on.
-    $this->use_public_url_folder = true;             // Default true.
 
     // You can add things here that apply to your entire site, but it's probably better to use the preload area
     // as you can specify the controller type you want to preload something. This area will apply to all controller 

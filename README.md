@@ -405,9 +405,8 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_uri->pass_vars - This is the pass_vars segment of the URI
         $this->_uri->root_url - http(s)://subdomain.your_site.tld
         $this->_uri->base_url - http(s)://subdomain.your_site.tld/site_works (Note our Nginx just pushes this to our public folder)
-        $this->_uri->public_url - http(s)://subdomain.your_site.tld/site_works/public
         For root, base and public you can add a _n or a _s to the property to pull the secure or non_secure versions
-            Example: $this->_uri->public_url_s will force the secure https version of the domain.
+            Example: $this->_uri->base_url_s will force the secure https version of the domain.
         $this->_uri->asset_url is built from the asset parts you gave us in the config. You can use the _s and _n to force secureness
         $this->_uri->asset
             This just gives you a quick way to plug in your asset path to images, documents and so on:

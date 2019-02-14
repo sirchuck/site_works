@@ -140,13 +140,7 @@ class siteworks_config extends siteworks_startup
         ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
         ,'domain_a'        => 'MySite'               // Asset Site Domain Name
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
-        ,'dir_path'        => 'public'               // Subfolder path - Note: this will come after the project_name you chose above. Ex: 'public' will become project_name/public
     );
-    // Depending on your nginx config, you may not need to ever show a url like MySite.com/public. Ex: Nginx root mysite.com/myproject/public
-    // Setitng this to true should work for all, but some won't need it. It's safe to try, but if $this->_uri->public_url breaks, then turn it back on.
-    public $use_public_url_folder = true;             // Default true.
-
-
 
     public function __construct(){
         // Here we set the secure setting for URI to choose correct paths.

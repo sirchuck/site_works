@@ -22,11 +22,6 @@ class siteworks_uri
 	public $base_url;
 	public $base_url_n;
 	public $base_url_s;
-
-	// With assets, public is redundant for most setups, but i'll leave it in case I want to add plugins that access my cookies.
-	public $public_url;
-	public $public_url_n;
-	public $public_url_s;
 	
 	public $asset;
 	public $asset_url;
@@ -52,12 +47,6 @@ class siteworks_uri
 		$this->base_url_n   = 'http://'  . $root_url . $base_url ;
 		$this->base_url_s   = 'https://' . $root_url . $base_url ;
 		$this->base_url     = ( $_s->secure ) ? $this->base_url_s : $this->base_url_n ;
-		
-		// Public gets you to your sites public folder http://www.example.com/siteworks/public
-		$public_url = ( $_s->use_public_url_folder ) ? '/public' : '';
-		$this->public_url_n   = 'http://'  . $root_url . $base_url . $public_url;
-		$this->public_url_s   = 'https://' . $root_url . $base_url . $public_url;
-		$this->public_url     = ( $_s->secure ) ? $this->public_url_s : $this->public_url_n ;
 		
 		// So many ways to handle assets, you'll have to figure out the best way for your own project of course. This will work for most sites.
 		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a']. ( ($_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name'] : '' ) . (( $_s->cPaths['dir_path'] != '' )?'/'.$_s->cPaths['dir_path']: '');
@@ -153,7 +142,7 @@ class siteworks_uri
 		foreach($_s->controllerLocks as $v){
 			if( ( $v[0] == $this->module && $v[1] == $_s->uri->controller ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[2]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'error_permission'; }
 		}
-		if($sw_err != ''){ header('Location: ' . $this->public_url . '/' . $sw_err); exit(0);}
+		if($sw_err != ''){ header('Location: ' . $this->base_url . '/' . $sw_err); exit(0);}
 
 
 	}
