@@ -131,6 +131,12 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->admin['sw_version'] = $radmin->f['sw_version']['value'];
 			$radmin->updateData();
 
+			// Build Language Files
+			$r = new t_site_works_lang(0,$this->odb);
+			$r->p['list'] = array();
+			$r->query('SELECT sw_lang_key, sw_lang_keep, sw_origional FROM `' . $dbc_database_name . '`.`site_works_lang` WHERE sw_lang_category = \'\'');
+			while($row = $r->getRows()){$r->p['list'][]=$row;}
+
 			$f = '';
 			// Developer Code
        		$this->tool->delTree(SITEWORKS_DOCUMENT_ROOT . '/private/',false);
@@ -253,13 +259,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				if(!$foundTable){ $db_info_out .= 'Table: [' . preg_replace('/t_/','',$v['value'],1) . '] (MISSING) in ' . $sh[2] . "\n";}
 			}
 			if($db_info_out != ''){ $this->tool->dmsg("\n     [c_light_red]-+-+- Database Errors -+-+-[c_clear]\n".$db_info_out);die('You have a database missmatch, please check your ./debug_server output.'); }
-
-			// Build Language Files
-			$r = new t_site_works_lang(0,$this->odb);
-			$r->p['list'] = array();
-			$r->query('SELECT sw_lang_key, sw_lang_keep, sw_origional FROM `' . $dbc_database_name . '`.`site_works_lang` WHERE sw_lang_category = \'\'');
-			while($row = $r->getRows()){$r->p['list'][]=$row;}
-
 
 			// CSS
 			$tmp = '';
