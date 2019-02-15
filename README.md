@@ -496,10 +496,17 @@ PHP, MySQL, Javascript, and CSS framework
     You would not generally use the MVC this way, but I wanted to keep it all contained within the Modual in case
     you want to remove it completely without hanving to hunt down javascript files and css files.
 
-# CSS
+# CSS & JS
     If you write the word asset_url in your parsable CSS code in the dev folder, the system will swap that out with
     The current http or https://subdomain.domain.tld/assetfolder url. in css add a slash and the rest of your path.
     Or, if you are using the systems public folder you can get to your files just starting with a /assets/path.
+
+    You can also pass your own variables with the sw_array in your config.
+    To access:
+        var x = sw_array['mykey'];
+        body{background: url('sw_array['mykey']');}
+            - Note, we are replaceing the array element, so there is no need to escape its apostophies
+
 
 # Main Feature: Multi-Language Handling
     The selling point of this framework for some developers will be the easy way to handle sites that need multipul langauges.
