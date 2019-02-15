@@ -27,9 +27,8 @@ PHP, MySQL, Javascript, and CSS framework
             root /var/www/html/site_works/public;
             index index.php;
             server_name MYDOMAIN.com www.MYDOMAIN.com;
-            # Note: try_files will change our url, but we want to know the origional.
+            location ~* \.(?:css|js|jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ { expires max; access_log off; log_not_found off; add_header Cache-Control "public"; }
             location / {
-                # Note: You handle everything through index.php if not found, so 404 errors dont really exist
                 try_files $uri $uri/ /index.php?$args;
             }
             location ~ \.php$ {
@@ -46,9 +45,10 @@ PHP, MySQL, Javascript, and CSS framework
             listen 80;
             listen [::]:80;
             root /var/www/html;
-            index index.php index.html;
+            index index.php;
             server_name  MYDOMAIN.com www.MYDOMAIN.com;
             # Handle Your Other Normal Servers
+            location ~* \.(?:css|js|jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ { expires max; access_log off; log_not_found off; add_header Cache-Control "public"; }
             location / {
                 try_files $uri $uri/ =404;
             }
@@ -59,15 +59,14 @@ PHP, MySQL, Javascript, and CSS framework
             }
             # ---- This is the important part, you can try adding this to your current nginx setup.
             location ^~ /site_works/ {
-                # Note: try_files will change our url, but we want to know the origional.
-                # set $holduri $uri; or set $holduri $request_uri; if you plan on corrupting the $request_uri
+                # try_files will rewrite the uri so we hold it
                 try_files $uri $uri/ /site_works/public/index.php?$args;
                 location ~ \.php$ {
-                    include fastcgi_params;
-                    fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
-                    fastcgi_param DOCUMENT_URI $request_uri;
-                    fastcgi_param SCRIPT_FILENAME $request_filename;
-                    fastcgi_param SCRIPT_NAME $fastcgi_script_name;
+                   fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+                   include fastcgi_params;
+                   fastcgi_param DOCUMENT_URI $request_uri;
+                   fastcgi_param SCRIPT_FILENAME $request_filename;
+                   fastcgi_param SCRIPT_NAME $fastcgi_script_name;
                 }
             }
         } # End Nginx Server Example
