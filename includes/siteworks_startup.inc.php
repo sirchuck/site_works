@@ -321,7 +321,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 						}
 						$tmp3 = '';
 						if($this->css_js_one_file){$tmp3 = file_get_contents(SITEWORKS_DOCUMENT_ROOT . '/public/assets/css/siteworks/themes/'.$v2['name'].'/'.'siteworks_' . $this->admin['sw_version'] . '.css'); }
-						$tmp3 = preg_replace(["/\r\n|\r|\n/",'/"/'],["",'\"'],$tmp3);
+						$tmp3 = preg_replace(["/\r\n|\r|\n/",'/"/','/asset_url/'],["",'\"',$this->uri->asset_url],$tmp3);
 						file_put_contents($new_path.'siteworks.j','var _slang = '.json_encode($jsStringArray).';'.preg_replace('/%D%/',$tmp3,$jscode).$tmp2,775);
 						if($this->css_js_minify){
 							try{exec('uglifyjs ' . $new_path.'siteworks.j > ' . $new_path.'siteworks_' . $k . '_' . $this->admin['sw_version'] . '.js');}catch(Exception $e){unset($e);} 
