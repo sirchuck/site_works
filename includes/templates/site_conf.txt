@@ -55,6 +55,10 @@ class siteworks_override extends siteworks_config
         ,'dev'     => '10000'
     );
 
+    // If true, automatically remove parsed language in the database that does not match anything in the code
+    // If false, you have to manually delete language marked for deletion (3) in sw_admin
+    $this->allow_auto_delete_language = false;
+
     // If you add an IP to this array, any non-matching IP will force all above toggles to false.
     // Only people in the array will have the framework pre-parse the code. Everyone else will
     // use the arlready compiled code.

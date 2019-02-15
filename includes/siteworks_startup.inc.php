@@ -345,7 +345,11 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			// _s_lang_set_delete - if you uncomment the lines with this variable, i'll reload the page to make sure your js files are clean when you mark text for deletion.
 			//$_SESSION['_s_lang_set_delete'] = (isset($_SESSION['_s_lang_set_delete']))?$_SESSION['_s_lang_set_delete']:0;
        		// Mark language for deletion
-			foreach($r->p['list'] as $v){ if($v->sw_lang_keep<1){ $r->updateData($v->sw_lang_key,'`sw_lang_keep`=3'); /*$_SESSION['_s_lang_set_delete']=time();*/} }
+       		if($this->allow_auto_delete_language){
+				foreach($r->p['list'] as $v){ if($v->sw_lang_keep<1){ $r->deleteData($v->sw_lang_key); /*$_SESSION['_s_lang_set_delete']=time();*/} }
+       		}else{
+				foreach($r->p['list'] as $v){ if($v->sw_lang_keep<1){ $r->updateData($v->sw_lang_key,'`sw_lang_keep`=3'); /*$_SESSION['_s_lang_set_delete']=time();*/} }
+       		}
 			//if( $_SESSION['_s_lang_set_delete'] > time()-200 ){ header("Refresh:0"); }
 			//unset($_SESSION['_s_lang_set_delete']);
 
