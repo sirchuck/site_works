@@ -504,9 +504,8 @@ PHP, MySQL, Javascript, and CSS framework
     You can also pass your own variables with the sw_array in your config.
     To access:
         var x = sw_array['mykey'];
-        body{background: url('sw_array['mykey']');}
-            - Note, we are replaceing the array element, so there is no need to escape its apostophies
-
+        body{background: url('sw_array[mykey]');}
+            - Note, do not use the apostrophies with your sw_pass element key. (nicer for software editors)
 
 # Main Feature: Multi-Language Handling
     The selling point of this framework for some developers will be the easy way to handle sites that need multipul langauges.

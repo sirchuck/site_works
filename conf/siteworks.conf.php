@@ -119,7 +119,7 @@ class siteworks_config extends siteworks_startup
     //    'dogs/like/to/party'=>'template/template/about_dogs'
     );
 
-    // Array of CSS and JS pass variables, use them like this sw_pass['key'] and the framework will substitutde it for value
+    // Array of CSS and JS pass variables, use them like this sw_pass[key] and the framework will substitutde it for value
     // Like asset_url, you can pass as many values as you need to the frameworks js and css files. (Does not apply to vendor)
     public $sw_pass = Array(
     // 'key' => 'value'
