@@ -90,15 +90,8 @@ PHP, MySQL, Javascript, and CSS framework
     and where to find it. Your next step is to open that file and modify it to
     your needs.
     2) Once your config file is loaded properly, the framework will build your
-    site_works database tables.
+    site_works database tables. You will need to give yourself write access.
     3) Refresh your page, and you should be presented with the template moduals home page.
-    
-    You will find a .gitignore file in the root directory. You will likely want to remove
-    /private/
-    /public/assets/css/siteworks/
-    /public/assets/js/siteworks/
-    This will allow you to pull everything needed from your repository.
-
     You should now be ready to write your own code.
 
 # File Structure:
@@ -207,10 +200,8 @@ PHP, MySQL, Javascript, and CSS framework
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
         - Be sure and change /site_works/ to your project name when reading URL's in this ReadMe file.
-        Your asset directory automatically applies the project_name name you select for your main domain to the asset domain. 
-        For example if your project_name is set to site_works, the default settings would create an asset URL like:
-        http://assets.MySite.com/site_works/public
-        just using a different subdomain to ignore passing cookies on every asset call.
+        The framework looks framework css and js under:
+        http(s)://asset_subdomain.asset_domain.asset_tld/project_name/public/
 
 # The output array:
     You can type echo like usual to output data, but you need more. You need some control over your output right?

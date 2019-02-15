@@ -140,6 +140,7 @@ class siteworks_config extends siteworks_startup
         ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
         ,'domain_a'        => 'MySite'               // Asset Site Domain Name
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
+        // Framework assets will automatically add /project_name/public at the end the asset url you give above.
     );
 
     public function __construct(){
