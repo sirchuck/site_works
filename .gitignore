@@ -1,6 +1,8 @@
 # Individual Server Configurations
 *.pconf.php
 
-/private/
-/public/assets/css/siteworks/
-/public/assets/js/siteworks/
+# Turn on if your clone doesnt process its own dev.
+# Maybe your produciton server for example.
+#/private/
+#/public/assets/css/siteworks/
+#/public/assets/js/siteworks/
