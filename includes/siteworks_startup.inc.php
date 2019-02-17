@@ -130,7 +130,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$radmin->f['sw_version']['value'] = time();
 			$this->admin['sw_version'] = $radmin->f['sw_version']['value'];
 			$radmin->updateData();
-			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'admin', $this->admin); }
 
 			// Build Language Files
 			$r = new t_site_works_lang(0,$this->odb);
@@ -432,6 +431,10 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		
 	}
 	public function handle_shutdown(){
+		if( extension_loaded('apcu') ){
+			apcu_store($this->uri->fixedapcu.'admin', $this->admin);
+			apcu_store($this->uri->fixedapcu.'mem', $this->admin);
+		}
 		if($this->debugMode && $this->showPHPErrors_debug){
 			$e = error_get_last();
 			if($e == ''){
