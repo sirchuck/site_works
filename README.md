@@ -24,12 +24,12 @@ PHP, MySQL, Javascript, and CSS framework
         server {
 	        listen 80;
 	        listen [::]:80;
-            root /var/www/html/site_works/public;
+            root /var/www/html/site_works;
             index index.php;
             server_name MYDOMAIN.com www.MYDOMAIN.com;
             location ~* \.(?:css|js|jpg|jpeg|gif|png|ico|cur|gz|svg|svgz|mp4|ogg|ogv|webm|htc)$ { expires max; access_log off; log_not_found off; add_header Cache-Control "public"; }
             location / {
-                try_files $uri $uri/ /index.php?$args;
+                try_files $uri $uri/ /public/index.php?$args;
             }
             location ~ \.php$ {
                 include fastcgi_params;
