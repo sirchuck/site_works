@@ -39,7 +39,7 @@ class siteworks_uri
 	{
 		// php APCu is open to other projects to read if they have the key name, so lets try to make our keys apply to this project only.
 		// Note: No real secuirty here, you woulnd't put sensitive information in APCu anyway.
-		$this->fixedapcu = 'siteworks_'.( ( $_s->cPaths['subdomain'] != '' ) ? $_s->cPaths['subdomain'] : '' ) . $_s->cPaths['domain'] . $_s->cPaths['tld'].'_';
+		$this->fixedapcu = 'siteworks_'.( ( $_s->cPaths['subdomain'] != '' ) ? $_s->cPaths['subdomain'] : '' ) . $_s->cPaths['domain'] . $_s->cPaths['tld'].$_s->cPaths['project_name'].'_';
 
 		// Root is basically the domain http://www.example.com
 		$root_url = ( ( $_s->cPaths['subdomain'] != '' ) ? $_s->cPaths['subdomain'] . '.' : '' ) . $_s->cPaths['domain'] . '.'. $_s->cPaths['tld'];
