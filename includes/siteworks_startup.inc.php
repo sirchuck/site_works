@@ -76,7 +76,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		$apcu_hold_time = time();
 		if( extension_loaded('apcu') ){
 			$db_load = false;
-			$this->admin = apcu_fetch($this->fixedapcu.'admin');
+			$this->admin = apcu_fetch($this->uri->fixedapcu.'admin');
 			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
 		}
 		if($db_load){
@@ -89,13 +89,13 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->admin = null;
 			$this->admin = ['apcu_start_time' => $apcu_hold_time];
 			foreach($radmin->f as $k => $v){ $this->admin[$k] = $v['value']; }
-			if( extension_loaded('apcu') ){ apcu_store($this->fixedapcu.'admin', $this->admin); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
+			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'admin', $this->admin); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
 		}
 		// Handle Memory Table and APCu
 		$db_load = true;
 		if( extension_loaded('apcu') ){
 			$db_load = false;
-			$this->mem = apcu_fetch($this->fixedapcu.'mem');
+			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
 			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
 		}
 		if($db_load){
@@ -108,7 +108,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->mem = null;
 			$this->mem = ['apcu_start_time' => $apcu_hold_time];
 			foreach($r->f as $k => $v){ $this->mem[$k] = $v['value']; }
-			if( extension_loaded('apcu') ){ apcu_store($this->fixedapcu.'mem', $this->mem); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
+			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'mem', $this->mem); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
 		}
 		// Handle language table creation if needed.
 		if($db_load){
@@ -450,9 +450,9 @@ Start Time: " . date('Y-m-d H:i:s') . "
 	}
 
 	// APCu functions
-	public function set_apcu($apcu_var_name, $variable)   { if( extension_loaded('apcu') ){ apcu_store($this->fixedapcu.$apcu_var_name, $variable); } }
-	public function get_apcu($apcu_var_name)              { if( extension_loaded('apcu') ){ return apcu_fetch($this->fixedapcu.$apcu_var_name); } return ''; }
-	public function delete_admin($apcu_var_name)          { if( extension_loaded('apcu') ){ apcu_delete($this->fixedapcu.$apcu_var_name); } }
+	public function set_apcu($apcu_var_name, $variable)   { if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.$apcu_var_name, $variable); } }
+	public function get_apcu($apcu_var_name)              { if( extension_loaded('apcu') ){ return apcu_fetch($this->uri->fixedapcu.$apcu_var_name); } return ''; }
+	public function delete_admin($apcu_var_name)          { if( extension_loaded('apcu') ){ apcu_delete($this->uri->fixedapcu.$apcu_var_name); } }
 	public function clear_apcu()                          { if( extension_loaded('apcu') ){ apcu_clear_cache(); } }
 
 	public function site_works_finish(){
