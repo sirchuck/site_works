@@ -1,6 +1,6 @@
 # Individual Server Configurations
 *.pconf.php
 
-#/private/
-#/public/assets/css/siteworks/
-#/public/assets/js/siteworks/
+/private/
+/public/assets/css/siteworks/
+/public/assets/js/siteworks/
