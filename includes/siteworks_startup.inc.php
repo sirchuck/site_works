@@ -258,7 +258,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				}
 				if(!$foundTable){ $db_info_out .= 'Table: [' . preg_replace('/t_/','',$v['value'],1) . '] (MISSING) in ' . $sh[2] . "\n";}
 			}
-			if($db_info_out != ''){ $this->tool->dmsg("\n     [c_light_red]-+-+- Database Errors -+-+-[c_clear]\n".$db_info_out);die('You have a database missmatch, please check your ./debug_server output.'); }
+			if($db_info_out != ''){ $this->tool->dmsg("\n     [c_light_red]-+-+- Database Errors -+-+-[c_clear]\n".$db_info_out);die('You have a database missmatch, please check your ./debug_server output.<br><br>You can also try setting your config files APCuTimeoutMinutes to 0, then refresh this page. This can fail if you already used the same project name before. '); }
 
 			// CSS
 			$tmp = '';
