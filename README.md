@@ -100,16 +100,23 @@ PHP, MySQL, Javascript, and CSS framework
         Ex Ajax:    http://www.MySite.com/ajax_modualname/controller/method/pass_var/pass_vars
         Ex iFrame:  http://www.MySite.com/iframe_modualname/controller/method/pass_var/pass_vars
         Ex Script:  http://www.MySite.com/script_modualname/controller/method/pass_var/pass_vars
+    SITEWORKS_DOCUMENT_ROOT:
+        This variable holds your root directory, ex: /var/www/html/site_works
+        You can put a Vendor folder for SDK's like Facebook for example, then include them:
+        require_once SITEWORKS_DOCUMENT_ROOT . '/vendor/Facebook/autoload.php';
+    PUBLIC:
+        The framework overwrites the index page, the css and js siteworks folders, but other than that you should be ok
+        to put your own stuff here if you want. Like your root folder, you can drop your third party Vendor folder here.
+
+        * NOTE: You might want to put SDK's in the root or public folder instead of the DEV folder because
+        the dev folder gets copied every page load, and you'll just waste time loading your pages to perform the copy.
+
     DEV:
         All of your php/js/css work should happen in the site_works/dev folder.
         js/css files are all squished together into one js and one css file
         I then take the squished file and add it to a squished version of each theme.
         If you enabled uglify in your config, I also minify these css and js files.
         Files in the vendor folder will just be copied to the public folder as is.
-    PUBLIC:
-        Your public folder is mostly yours, but the software re-writes the index page, and the css and js siteworks folders.
-        So, if for example, you want to add a Facebook SDK, you could drop it in the public folder so the framework doesn't
-        have to copy it on every page load while you're developing. There is no reason to use third party SDK's in the DEV folder.
 
     dev/_css
         - globalcssfiles.css
