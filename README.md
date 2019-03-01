@@ -511,8 +511,9 @@ PHP, MySQL, Javascript, and CSS framework
     If you write the word asset_url, base_url, or root_url in your parsable CSS code in the dev folder,
     the system will swap those with the url with the proper http or https. 
     asset_url = https://subdomain.domain.tld/assetfolder
-    base_url  = https://subdomain.domain.tld/public
+    base_url  = https://subdomain.domain.tld/project_folder // If no project folder, this is the same as root folder. 
     root_url  = https://subdomain.domain.tld/
+    If you plan to bounce between an Nginx setup with and without a project_folder, its best to just use base_url.
     Or, if you are using the systems public folder you can get to your files just starting with a /assets/path.
 
     You can also pass your own variables with the sw_array in your config.
