@@ -214,6 +214,20 @@ PHP, MySQL, Javascript, and CSS framework
         The framework looks framework css and js under:
         http(s)://asset_subdomain.asset_domain.asset_tld/project_name/public/
 
+    * NOTE: If you are using a development server and a production server for example you may want to add an if statement to your config file
+      to build $this->cPaths properly before you git commit and pull on your production server. Something like this:
+      if(1==1){
+        $this->cPaths = array(
+            // Your development server paths
+        );
+      }else{
+        $this->cPaths = array(
+            // Your production server paths
+        );
+      }
+      Then you just change it to 1==2 and reload your page to build with the proper URL's for your produciton server. git add / git commit / git pull
+      then switch it back to 1==1 so you can develop again.
+
 # The output array:
     You can type echo like usual to output data, but you need more. You need some control over your output right?
     $this->_out['header'][]
