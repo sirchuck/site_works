@@ -21,7 +21,7 @@ class t_site_works_lang extends siteworks_db_tools
 		    ,'english'                    => array( 'value' => null , 'error' => null) // Default Lang - add more as neccessary.
 	    );
 
-		if($id > 0)
+		if($id != '' && $id !== 0)
 	    	$this->fillData($id);
 		return true;
     }

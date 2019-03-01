@@ -18,7 +18,7 @@ class t_site_works_admin extends siteworks_db_tools
 		    ,'sw_version'                 => array( 'value' => null , 'error' => null) // SiteWorks Version Number
 	    );
 
-		if($id > 0)
+		if($id != '' && $id !== 0)
 	    	$this->fillData($id);
 		return true;
     }
