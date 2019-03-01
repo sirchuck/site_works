@@ -508,8 +508,11 @@ PHP, MySQL, Javascript, and CSS framework
     you want to remove it completely without hanving to hunt down javascript files and css files.
 
 # CSS & JS
-    If you write the word asset_url in your parsable CSS code in the dev folder, the system will swap that out with
-    The current http or https://subdomain.domain.tld/assetfolder url. in css add a slash and the rest of your path.
+    If you write the word asset_url, base_url, or root_url in your parsable CSS code in the dev folder,
+    the system will swap those with the url with the proper http or https. 
+    asset_url = https://subdomain.domain.tld/assetfolder
+    base_url  = https://subdomain.domain.tld/public
+    root_url  = https://subdomain.domain.tld/
     Or, if you are using the systems public folder you can get to your files just starting with a /assets/path.
 
     You can also pass your own variables with the sw_array in your config.
