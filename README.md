@@ -8,8 +8,8 @@ PHP, MySQL, Javascript, and CSS framework
     uglifyjs AND uglifycss     ( optional )
         sudo apt update
         sudo apt install nodejs npm
-        npm install uglify-js -g
-        npm install uglifycss -g
+        sudo npm install uglify-js -g
+        sudo npm install uglifycss -g
     PHP APCu                   ( optional )
         sudo apt-get update
         sudo apt-get install php7.2-apcu -y
@@ -106,6 +106,10 @@ PHP, MySQL, Javascript, and CSS framework
         I then take the squished file and add it to a squished version of each theme.
         If you enabled uglify in your config, I also minify these css and js files.
         Files in the vendor folder will just be copied to the public folder as is.
+    PUBLIC:
+        Your public folder is mostly yours, but the software re-writes the index page, and the css and js siteworks folders.
+        So, if for example, you want to add a Facebook SDK, you could drop it in the public folder so the framework doesn't
+        have to copy it on every page load while you're developing. There is no reason to use third party SDK's in the DEV folder.
 
     dev/_css
         - globalcssfiles.css
