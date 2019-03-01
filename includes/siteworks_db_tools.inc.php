@@ -113,7 +113,7 @@ abstract class siteworks_db_tools
             if(strrpos($id,'=')===false && strrpos($id,'>')===false && strrpos($id,'<')===false){
                 $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
             } else {
-                $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE \''.$id.'\'';
+                $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE '.$id;
             }
         }
         else{
