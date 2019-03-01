@@ -87,7 +87,7 @@ class siteworks_uri
 			}
 		}
 
-		$params = explode('/', $this->fixeduri);
+		$params = explode( '/', explode('?', $this->fixeduri)[0] );
 		if(!isset($params[0])){$params[0]=$_s->_s->default_module;}
 
 		$p = explode('_', $params[0], 2);
