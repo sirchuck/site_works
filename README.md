@@ -295,6 +295,7 @@ PHP, MySQL, Javascript, and CSS framework
     Database Objects provide the following Methods:
     $r = new t_mytable(5,$this->_odb);
         This instantiation has passed an id of 5, and will automatically call the following fillData method
+        id can be true, number, string, or where. If where it must have a =,>, or < symbol.
     $r->fillData(overloaded)
         $r->fillData(true)
             This will pull the last record data, you would only use this typically if you had no key field and just one record.
@@ -302,6 +303,8 @@ PHP, MySQL, Javascript, and CSS framework
             Fill the object where the key filed id = 1
         $r->fillData('dog')
             Fill the object where the id field = 'dog'
+        $r->fillData("myfield='dog'")
+            Fill the object where the myfield field = 'dog'
     $r->query($sqlFn=false)
         $r->query('pullByVersion')
             This will load the SQL you set above in the buildQueryArray, and run that array of queries.

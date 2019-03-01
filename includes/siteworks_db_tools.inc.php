@@ -110,7 +110,11 @@ abstract class siteworks_db_tools
             $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = '.$id;
         }
         elseif( !is_numeric($id) && $id != '' ){
-            $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
+            if(strrpos($id,'=')===false && strrpos($id,'>')===false && strrpos($id,'<')===false){
+                $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
+            } else {
+                $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE \''.$id.'\'';
+            }
         }
         else{
             return false;
