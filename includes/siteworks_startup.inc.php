@@ -404,31 +404,33 @@ Start Time: " . date('Y-m-d H:i:s') . "
 
 	private function handle_autoload($className){
 		$cp = explode('\\',$className);
-		$className = end($cp);
-		try{
-			
-			// Load Database Tables $dba['tableName'] = new t_tableName;
-			if( preg_match('/^t_/', $className) ){
-                if( preg_match('/^t_site_works_/', $className) ){
-    				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
-                } else {
-    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
-                }
-			}
-			
-			// Load standard classes
-			else{
-                if( preg_match('/^siteworks_/', $className) ){
-					require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php');
-                } else {
-					require_once(SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php');
+		// You can add your own autoload under other namespaces.
+		if(count($cp)==1 || $cp[0] == 'SiteWorks' ){
+			$className = end($cp);
+			try{
+				
+				// Load Database Tables $dba['tableName'] = new t_tableName;
+				if( preg_match('/^t_/', $className) ){
+	                if( preg_match('/^t_site_works_/', $className) ){
+	    				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
+	                } else {
+	    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
+	                }
+				}
+				
+				// Load standard classes
+				else{
+	                if( preg_match('/^siteworks_/', $className) ){
+						require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php');
+	                } else {
+						require_once(SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php');
+					}
 				}
 			}
+			catch (Exception $e){
+				die('Could not load required include files.');
+			}  
 		}
-		catch (Exception $e){
-			die('Could not load required include files.');
-		}  
-		
 	}
 	public function handle_shutdown(){
 		if( extension_loaded('apcu') ){
