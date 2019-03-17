@@ -103,7 +103,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			if( (int)$r->f['sw_mem_key']['value'] !== 1 ){
 				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_mem` ( `sw_mem_key` TINYINT(1) UNSIGNED NOT NULL , `sw_site_visits` BIGINT(11) UNSIGNED NOT NULL , PRIMARY KEY (`sw_mem_key`)) ENGINE = MEMORY;");
 				$this->odb->q("INSERT INTO `" . $dbc_database_name . "`.`site_works_mem` (`sw_mem_key`,`sw_site_visits`) VALUES (1,0);");
-				$had_to_build_databases = true;
+				// $had_to_build_databases = true;
 			}
 			$this->mem = null;
 			$this->mem = ['apcu_start_time' => $apcu_hold_time];
