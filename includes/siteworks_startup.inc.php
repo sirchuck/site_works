@@ -92,13 +92,13 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'admin', $this->admin); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
 		}
 		// Handle Memory Table and APCu
-		$db_load = true;
+		$db_load2 = true;
 		if( extension_loaded('apcu') ){
-			$db_load = false;
+			$db_load2 = false;
 			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
-			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
+			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load2 = true; }
 		}
-		if($db_load){
+		if($db_load2){
 			$r = new t_site_works_mem(1,$this->odb);
 			if( (int)$r->f['sw_mem_key']['value'] !== 1 ){
 				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_mem` ( `sw_mem_key` TINYINT(1) UNSIGNED NOT NULL , `sw_site_visits` BIGINT(11) UNSIGNED NOT NULL , PRIMARY KEY (`sw_mem_key`)) ENGINE = MEMORY;");
@@ -111,6 +111,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'mem', $this->mem); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
 		}
 		// Handle language table creation if needed.
+		// If $db_load is true, we'll check to see if the following tables exist, if not create them but we dont pull anything.
 		if($db_load){
 			$r = new t_site_works_lang(0,$this->odb);
 			$r->query("SHOW TABLES LIKE 'site_works_lang';");
@@ -118,6 +119,14 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_lang` ( `sw_lang_key` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_lang_keep` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0', `sw_lang_category` CHAR(40) NULL , `sw_origional` TEXT NULL , `english` TEXT NULL, PRIMARY KEY (`sw_lang_key`)) ENGINE = InnoDB;");
 				$had_to_build_databases = true;
 			}
+
+			$r = new t_site_works_queue(0,$this->odb);
+			$r->query("SHOW TABLES LIKE 'site_works_queue';");
+			if($r->c->numRows()<1){
+				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_queue` ( `sw_ts` CHAR(60) NOT NULL , `sw_tag` TEXT NOT NULL , `sw_script` TEXT NOT NULL , `sw_vars` LONGTEXT NOT NULL , `sw_waitstart` INT(11) NOT NULL DEFAULT '0', `sw_timeout` INT(11) NOT NULL DEFAULT '0', PRIMARY KEY (`sw_ts`)) ENGINE = InnoDB;");
+				$had_to_build_databases = true;
+			}
+
 		}
 		if($had_to_build_databases){die($dbc_database_name . ' database tables were created with default values. Change the values as needed, sw_admin_key and sw_mem_key must be set to 1. <br><br>If the site_work tables were not created in your database, verify the config is set correctly and that the user has proper grant priviledges. Setup Complete: Refresh This Page.');}
 

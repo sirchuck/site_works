@@ -78,6 +78,17 @@ namespace SiteWorks{
 					die('We could not write the /dev/includes/template.inc.php file. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 
+
+				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/thread_scripts/template_threader.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template_threader.php',SITEWORKS_DOCUMENT_ROOT.'/dev/thread_scripts/template_threader.php') ){
+					unlink($tmp);
+					die('We could not write the /dev/thread_scripts/template_threader.php file. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
+				}
+				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/queue_scripts/template.inc.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template_queue.php',SITEWORKS_DOCUMENT_ROOT.'/dev/queue_scripts/template_queue.php') ){
+					unlink($tmp);
+					die('We could not write the /dev/queue_scripts/template_queue.php file. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
+				}
+
+
 				die('Almost done, the next step is to set up your configuration file found at:<br>'
 					. $tmp . '<br><br>'
 					. 'You will need at least one database connection with the \'default\' key.<br>'

@@ -125,10 +125,11 @@ class siteworks_override extends siteworks_config
     // 'key' => 'value'
     );
 
-    // If you want to use theadding tell us where PHP is and what version it is. 
-    // The defaults will run /usr/bin/php7.2 as the php executable.
-    $this->thread_php_path = '/usr/bin/';    //  default: /usr/bin/
-    $this->thread_php_version = '7.2';       //  default: 7.2
+    // Ex: /usr/bin/php7.2 if you wanted to run php7.2 to run your threadding and queue PHP scripts
+    // Leaveing them blank means you can type php yourPHPscirpt.php and have it run.
+    // Note: Do not remove these two variables if you plan to use the php_q_it queue manager.
+    $this->thread_php_path = '';       //  Ex: /usr/bin/
+    $this->thread_php_version = '';    //  Ex: 7.2
 
 
     /*********************************************************************************************************

@@ -205,8 +205,8 @@ PHP, MySQL, Javascript, and CSS framework
         You should use lower case when setting up routes.
         Ex: 'dogs/like/friends' => 'template/template/about_dogs'
         Note: anything following the swapped portion will fall into the proper segment - pass_var pass_vars if you provide modual/contorller/method 
-    $this->thread_php_path - The path to your version of php. Ex: /usr/bin/ (Only needed if you want to use the php_threader)
-    $this->thread_php_version - The version of your php. Ex: 7.2 (Only needed if you want to use the php_threader)
+    $this->thread_php_path - The path to your version of php. Ex: /usr/bin/ (Only needed if you want to use the php_threader or php_q_it queue manager)
+    $this->thread_php_version - The version of your php. Ex: 7.2 (Only needed if you want to use the php_threader or php_q_it queue manager)
     $this->debug_server - The IP of the server running your debug_server app.
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
@@ -591,6 +591,10 @@ PHP, MySQL, Javascript, and CSS framework
         This is the windows version of the linux debug_server app, colors probably will not work.
     php_threader
         This is a linux only app, you need to leave it in your site_works root folder so the framework can find it.
+        - Parameters
+            File: This is the filename of the file in your thread_scripts folder you want to run. We add the path and .php for you.
+            Seconds before starting the script: Integer number of seconds to wait before starting your thread.
+            Variables: Send an array of key => value pairs to retrieve in your thread script.
         - Why
             Say you want to let a user visit your page, but you want to do some behind the scenes work without making them wait.
             Now you can run a script like the following to run a background script, starting 20 seconds from now, with an array of variables.
@@ -608,9 +612,74 @@ PHP, MySQL, Javascript, and CSS framework
             $q = json_decode( base64_decode( getopt("q:")['q'] ) );
             If you sent an array of variables, as shown in the call above, then you will access them here as an object.
             $q->key1 and $q->key2 as per the calling example above.
+    php_q_it
+        This is the queue manager. When you put something in the site_works_queue database, and you have the php_q_it queue manager running
+        it will run the script in the order it was put in. This is only precice to microseconds. (1/1000000 of a second) More percision needs another solution.
+        - Parameters
+            File: This is the filename of the file in your queue_scripts folder you want to run. We add the path and .php for you.
+            Variables: Send an array of key => value pairs to retrieve in your thread script.
+            Tag: You can run multipul queues at once by giving each queue item a tag it belongs to. Queue tag A and B can run at the same time
+                The second queue item with the tag A will come after the first queue item with the tag A.
+            WaitStart: How many seconds should we wait before starting this individual queue item?
+            Timeout: How long should we wait for your script to run? 0 for default 30 seconds. If your script needs more time tell us here
+                or the next in line may start before your first one is complete. 
+            Seconds before starting the script: Integer number of seconds to wait before starting your thread.
+        - Why
+            You expect a high number of people to click a funciton, but you need a first come first serve action to happen in the background.
+        - Usage
+            $this->_tool->queue( 'MyFile', ['key1'=>'var1','key2'=>'var2'], 'MyQueueTag', 0, 0 );
+        - Your queue script
+            Your thread scripts should be located in /dev/queue_scripts
+            They should have the extention .php
+            They must contain vanilla php code as they are not run thought the framework
+            If you need to run through the framework try something like this in your thread script:
+                $x = file_get_contents('http://www.MySite.com/Modual/Controller/Method/pass_var/pass_vars');
+        - Passing Variables to the queue file
+            Your queue files should always start with this line:
+            $q = json_decode( base64_decode( getopt("q:")['q'] ) );
+            If you sent an array of variables, as shown in the call above, then you will access them here as an object.
+            $q->key1 and $q->key2 as per the calling example above.
+        - Unlike the threader, you need to start php_q_it yourself if you want it to opperate. Typically you might use something like UPSTART or SYSTEMD for this.
+        - php_p_it takes the following command line arguments, if you provide a config file and another item like -prt, then -prt will take precedence. 
+            Collected by your Config if you provided it:
+            -x1 : This goes on the left side of the php command. /usr/bin/ for example. Set by: $this->thread_php_path in config
+            -x2 : This goes on the right side of the php command. 7.2 for example. Set by: $this->thread_php_version in config
+                 If you leave it blank we would call: php /path/to/queue_script.php or per the example: /usr/bin/php7.2 /path/to/queue_script.php
+            -h   : hostname for your database
+            -u   : username for your database
+            -p   : password for your database
+            -d   : database name
+            -prt : Database Port / Socket
+            -t   : Database type ( mysqli / postgres ) - not currently used.
+            Not Collected by your Config, you provide them in UPSTART or SYSTEMD or Command line
+            -c   : Full path to your configuration file, Ex: /var/www/YOURSITE/conf/siteworks.YOURSITECOM.pconf.php
+            -s   : Seconds to wait between calls to read your database for new queue items to manage. Default is to check ever 1 second.
+        - SYSTEMD Example for php_q_it
+            sudo chmod +x /path/to/php_q_it
+            sudo nano /lib/systemd/system/myservice.service
+                [Unit]
+                Description=Example Systemd Service.
 
+                [Service]
+                type=simple
+                ExecStart=/bin/bash /path/to/php_q_it "-c /path/to/php_q_it -s 10"
+                Restart=always
+                RestartSec=3
 
-
+                [Install]
+                WantedBy=multi-user.target
+            # Start The service for testing
+            sudo systemctl start myservice
+            # Check the Status
+            sudo systemctl status myservice
+            # To stop it
+            sudo systemctl stop myservice
+            # To restart it
+            sudo systemctl restart myservice
+            # If its all good, enable it
+            sudo systemctl enable myservice
+            # Reboot and Check if its running
+            sudo systemctl status myservice
 
 
 - site_works Author: Frost Cinderstorm (FrostCandy)

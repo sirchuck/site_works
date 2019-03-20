@@ -67,6 +67,19 @@ class siteworks_tools
     exec('bash -c "'. SITEWORKS_DOCUMENT_ROOT.'/php_threader -x1='.$this->_s->thread_php_path.' -x2='.$this->_s->thread_php_version.' -s='.$seconds.' -p=' . SITEWORKS_DOCUMENT_ROOT . '/private/thread_scripts/'.$path.'.php'.$vars.'> /dev/null 2>&1 &"');
   }
 
+  public function queue($path='',$vars='',$tag='',$waitstart=0,$timeout=0){
+    if($vars != ''){$vars = ' -q=' . base64_encode(json_encode($vars));}
+    $r = new t_site_works_queue(0,$this->_s->odb);
+    $r->f['sw_ts']['value'] = microtime(false);
+    $r->f['sw_tag']['value'] = $tag;
+    $r->f['sw_script']['value'] = SITEWORKS_DOCUMENT_ROOT . '/private/queue_scripts/'.$path.'.php';
+    $r->f['sw_vars']['value'] = $vars;
+    $r->f['sw_waitstart']['value'] = $waitstart;
+    $r->f['sw_timeout']['value'] = $timeout;
+    $r->insertData();
+  }
+
+
   public function listFiles($dir,$ftype=0,$recursive=true,&$results=array()){
     // ftype( 0 all, 1 files only, 2 folders only )
     if(!is_dir($dir)){return false;}
