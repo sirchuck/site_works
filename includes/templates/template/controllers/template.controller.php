@@ -101,8 +101,9 @@ class template_controller extends _s
         // Well, you have a modual lock in your config that says only admins and higher can access it.
         // You should create a login and then use these session values to allow proper users in to it.
         // For now we'll just hard code it in, but remember to remove the next two lines when ready
-        $_SESSION['is_loggedin'] = true;
-        $_SESSION['admin_level'] = 1000;
+        // Uncomment these two lines to force a pretend good login so you can access the admin area.
+        // $_SESSION['is_loggedin'] = true;
+        // $_SESSION['admin_level'] = 1000;
 
         // Now let us add a link to the admin page.
         $this->_out['body'][] = '<a href="'. $this->_uri->base_url . '/sw_admin">Admin Page</a><br>';
