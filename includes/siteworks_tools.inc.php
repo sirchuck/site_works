@@ -70,7 +70,6 @@ class siteworks_tools
   public function queue($path='',$vars='',$tag='',$waitstart=0,$timeout=0){
     if($vars != ''){$vars = ' -q=' . base64_encode(json_encode($vars));}
     $r = new t_site_works_queue(0,$this->_s->odb);
-    $r->f['sw_ts']['value'] = microtime(false);
     $r->f['sw_tag']['value'] = $tag;
     $r->f['sw_script']['value'] = SITEWORKS_DOCUMENT_ROOT . '/private/queue_scripts/'.$path.'.php';
     $r->f['sw_vars']['value'] = $vars;

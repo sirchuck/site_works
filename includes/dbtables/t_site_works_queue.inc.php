@@ -15,7 +15,7 @@ class t_site_works_queue extends siteworks_db_tools
 	    $this->autoInc      = false;
 	
 		$this->f = Array(
-			 'sw_ts'                         => array( 'value' => null    , 'error' => null) // Queue Key time + F + random 6
+			 'sw_ts'                         => array( 'value' => 0       , 'error' => null) // Queue Key time + F + random 6
 		    ,'sw_tag'                        => array( 'value' => null    , 'error' => null) // Queue Tag to identify which queue it goes in.
 		    ,'sw_script'                     => array( 'value' => null    , 'error' => null) // Queue Script full path
 		    ,'sw_vars'                       => array( 'value' => null    , 'error' => null) // Queue Script Variables base64

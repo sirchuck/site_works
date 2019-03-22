@@ -614,7 +614,7 @@ PHP, MySQL, Javascript, and CSS framework
             $q->key1 and $q->key2 as per the calling example above.
     php_q_it
         This is the queue manager. When you put something in the site_works_queue database, and you have the php_q_it queue manager running
-        it will run the script in the order it was put in. This is only precice to microseconds. (1/1000000 of a second) More percision needs another solution.
+        it will run the script in the order it was put in.
         - Parameters
             File: This is the filename of the file in your queue_scripts folder you want to run. We add the path and .php for you.
             Variables: Send an array of key => value pairs to retrieve in your thread script.

@@ -123,7 +123,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$r = new t_site_works_queue(0,$this->odb);
 			$r->query("SHOW TABLES LIKE 'site_works_queue';");
 			if($r->c->numRows()<1){
-				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_queue` ( `sw_ts` CHAR(60) NOT NULL , `sw_tag` TEXT NOT NULL , `sw_script` TEXT NOT NULL , `sw_vars` LONGTEXT NOT NULL , `sw_waitstart` INT(11) NOT NULL DEFAULT '0', `sw_timeout` INT(11) NOT NULL DEFAULT '0', PRIMARY KEY (`sw_ts`)) ENGINE = InnoDB;");
+				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_queue` ( `sw_ts` BIGINT(13) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_tag` TEXT NOT NULL , `sw_script` TEXT NOT NULL , `sw_vars` LONGTEXT NOT NULL , `sw_waitstart` INT(11) NOT NULL DEFAULT '0' , `sw_timeout` INT(11) NOT NULL DEFAULT '0' , PRIMARY KEY (`sw_ts`)) ENGINE = InnoDB;");
 				$had_to_build_databases = true;
 			}
 
