@@ -3,15 +3,18 @@ PHP, MySQL, Javascript, and CSS framework
 
 # Git Suggested Clone for your repo:
     cd path/to/your_master_repo_folder
-    git clone --bare https://github.com/sirchuck/site_works.git your_project_folder_name.git
+    sudo git clone --bare https://github.com/sirchuck/site_works.git your_project_folder_name.git
     cd your_project_folder_name
-    git remote set-url --push origin no_push
+    sudo git remote set-url --push origin no_push
     cd path/to/work_folder
-    git clone path/to/your_master_repo/your_project_folder_name.git your_project_folder_name
+    sudo git clone path/to/your_master_repo/your_project_folder_name.git your_project_folder_name
 
     Use .gitignore for image upload folders and other large items,
     you shouldn't use git for that sort of thing back them up another way.
 
+    When you want to rebase changes to the framework, go to your master_repository.git folder
+    sudo git pull
+    Then do another sudo git pull in your working copies of your master_repository.git repo.
 
 # Working Setup:
     Ubuntu     18.04
