@@ -14,8 +14,10 @@ PHP, MySQL, Javascript, and CSS framework
     you shouldn't use git for that sort of thing back them up another way.
 
     When you want to rebase changes to the framework, go to your master_repository.git folder
+    sudo git fetch origin master:master
+
+    Then move to your working non-bare copies of the repository and type:
     sudo git pull
-    Then do another sudo git pull in your working copies of your master_repository.git repo.
 
 # Working Setup:
     Ubuntu     18.04
