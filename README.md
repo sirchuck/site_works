@@ -1,6 +1,18 @@
 # site_works
 PHP, MySQL, Javascript, and CSS framework
 
+# Git Suggested Clone for your repo:
+    cd path/to/your_master_repo_folder
+    git clone --bare https://github.com/sirchuck/site_works.git your_project_folder_name.git
+    cd your_project_folder_name
+    git remote set-url --push origin no_push
+    cd path/to/work_folder
+    git clone path/to/your_master_repo/your_project_folder_name.git your_project_folder_name
+
+    Use .gitignore for image upload folders and other large items,
+    you shouldn't use git for that sort of thing back them up another way.
+
+
 # Working Setup:
     Ubuntu     18.04
     Nginx      1.14.0
