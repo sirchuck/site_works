@@ -3,9 +3,10 @@ PHP, MySQL, Javascript, and CSS framework
 
 # Git Suggested Clone for your repo:
     cd path/to/your_master_repo_folder
-    sudo git clone https://github.com/sirchuck/site_works.git your_project_folder_name.git
+    sudo git clone --bare https://github.com/sirchuck/site_works.git your_project_folder_name.git
     cd your_project_folder_name
     sudo git remote set-url --push origin no_push
+    sudo git remote show origin
     cd path/to/work_folder
     sudo git clone path/to/your_master_repo/your_project_folder_name.git your_project_folder_name
 
