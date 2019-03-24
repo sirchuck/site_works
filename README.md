@@ -177,6 +177,8 @@ PHP, MySQL, Javascript, and CSS framework
         - script_preload.php
     dev/thread_scripts
         - your_script.php
+    dev/queue_scripts
+        - your_script.php
 
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
     everything else shoudl be safe.
@@ -191,11 +193,13 @@ PHP, MySQL, Javascript, and CSS framework
     For the framework to find your files, and for readability on your end, give your files the following extentions
     dev/includes - your_file_name.inc.php
     dev/helpers - your_file_name.helper.php
-    dev/ajaxs - your_file_name.ajax.php
-    dev/controller - your_file_name.controller.php
-    dev/iframes - your_file_name.iframe.php
-    dev/models - your_file_name.model.php
-    dev/views - your_file_name.view.php
+    dev/modules/ajaxs - your_file_name.ajax.php
+    dev/modules/controller - your_file_name.controller.php
+    dev/modules/iframes - your_file_name.iframe.php
+    dev/modules/models - your_file_name.model.php
+    dev/modules/views - your_file_name.view.php
+    dev/thread_scripts - your_file_name.php
+    dev/queue_scripts - your_file_name.php
 
 # Configuration File:
     $this->dbc - Use this array to set up the connection information to your database(s).
@@ -285,7 +289,6 @@ PHP, MySQL, Javascript, and CSS framework
         Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
     $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
     $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
-
 
 
 # dbtables
