@@ -644,7 +644,6 @@ PHP, MySQL, Javascript, and CSS framework
             WaitStart: How many seconds should we wait before starting this individual queue item?
             Timeout: How long should we wait for your script to run? 0 for default 30 seconds. If your script needs more time tell us here
                 or the next in line may start before your first one is complete. 
-            Seconds before starting the script: Integer number of seconds to wait before starting your thread.
         - Why
             You expect a high number of people to click a funciton, but you need a first come first serve action to happen in the background.
         - Usage
