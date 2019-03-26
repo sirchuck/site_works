@@ -710,7 +710,7 @@ PHP, MySQL, Javascript, and CSS framework
         $use_config = 'joint_config.pconf.php';
         require_once('/var/www/html/YOUR_PROJECT/site_works_essentials.php');
     # Note, your path may differ between servers, you could do something like this php7+
-        require_once(dirname(__DIR__, 2)'/site_works_essentials.php');
+        require_once(dirname(__DIR__, 2) . '/site_works_essentials.php');
     Requiring the essnentials file requires you to specify a configuration file. 
     Some of you will have a development server and a live server, so you'll have to create
     a shared config file for this. An easy way to do it is create a symbolic link to your individual servers
