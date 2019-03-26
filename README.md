@@ -6,6 +6,8 @@ PHP, MySQL, Javascript, and CSS framework
     sudo git clone --bare https://github.com/sirchuck/site_works.git your_project_folder_name.git
     cd your_project_folder_name
     sudo git remote set-url --push origin no_push
+    # The next line changes how you call fetch later
+    # (optional) sudo git config --add remote.origin.fetch +refs/*:refs/*
     sudo git remote show origin
     cd path/to/work_folder
     sudo git clone path/to/your_master_repo/your_project_folder_name.git your_project_folder_name
@@ -14,7 +16,9 @@ PHP, MySQL, Javascript, and CSS framework
     you shouldn't use git for that sort of thing back them up another way.
 
     When you want to rebase changes to the framework, go to your master_repository.git folder
-    sudo git fetch origin master:master
+    sudo git fetch origin +refs/*:refs/*
+    # If you used the optional command above, insetad type: sudo git fetch
+    # NOTE: If the above fetch doesnt work try this instead: sudo git fetch origin master:master
 
     Then move to your working non-bare copies of the repository and type:
     sudo git pull
