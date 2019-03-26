@@ -76,6 +76,12 @@ namespace SiteWorks{
 
 } // End SiteWorks NameSpace
 namespace{
-	$_s = new SiteWorks\siteworks_override();
+	$_s           = new SiteWorks\siteworks_override();
+	$_s->_tool    = $_s->tool;
+	$_s->_odb     = $_s->odb;
+	$_s->_dbo     = $_s->dbo;
+	$_s->_log     = $_s->log;
+	$_s->_admin   = $_s->admin;
+	$_s->_mem     = $_s->mem;
 }
 ?>
