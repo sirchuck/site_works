@@ -158,9 +158,11 @@ class siteworks_config extends siteworks_startup
         // Here we set the secure setting for URI to choose correct paths.
         if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443)) { $this->secure = true; }
         $foundDev = -1;
-        if(count($this->debug_mode_ip_arary)>0){
-            $foundDev = 0;
-            foreach($this->debug_mode_ip_arary as $v){ if( (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == $v) ){ $foundDev = 1; break;} }
+        if( !defined('USING_ESSENTIALS') || !USING_ESSENTIALS ){
+            if(count($this->debug_mode_ip_arary)>0){
+                $foundDev = 0;
+                foreach($this->debug_mode_ip_arary as $v){ if( isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] == $v ){ $foundDev = 1; break;} }
+            }
         }
         if($foundDev==0){
            // If not in the approved IP array, set toggles to false, add more code here if you want.

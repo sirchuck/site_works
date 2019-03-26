@@ -1,5 +1,6 @@
 <?php
 namespace SiteWorks{
+	define('USING_ESSENTIALS',true);
 	define('SITEWORKS_DOCUMENT_ROOT', dirname(__FILE__));
 	class siteworks_startup
 	{
