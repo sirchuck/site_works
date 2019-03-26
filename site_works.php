@@ -125,7 +125,6 @@ namespace{
 			$this->_uri        =& $this->_s->uri;
 			$this->_odb        =& $this->_s->odb;
 			$this->_dbo        =& $this->_s->dbo;
-			$this->_dbo        =& $this->_s->dbo;
 			$this->_out        =& $this->_s->out;
 			$this->_log        =& $this->_s->log;
 			$this->_console    =& $this->_s->console;
