@@ -703,26 +703,32 @@ PHP, MySQL, Javascript, and CSS framework
             # Reboot and Check if its running
             sudo systemctl status myservice
 
-# BUT WAIT, THERE's MORE! SITE_WORKS_ESSENTIALS
+# SITE_WORKS_ESSENTIALS
     You may find yourself wishing you didn't have to rewrite vanilla php code to access
     your databases, configs, and site_works tools.
     - Add these lines to get the essence of the framework added to your vanilla code
         $use_config = 'joint_config.pconf.php';
         require_once('/var/www/html/YOUR_PROJECT/site_works_essentials.php');
+
     # Note, your path may differ between servers, you could do something like this php7+
+        This will get the queue or threaders root_dir path and move up by two, which 
+        should be your project folder root:
         require_once(dirname(__DIR__, 2) . '/site_works_essentials.php');
+
     Requiring the essnentials file requires you to specify a configuration file. 
     Some of you will have a development server and a live server, so you'll have to create
     a shared config file for this. An easy way to do it is create a symbolic link to your individual servers
     personlized config file with a common name.
         - Ex: ln -s /var/www/html/YOUR_PROJECT/conf/siteworks.mysitecom.pconf.php /var/ww/html/YOUR_PROJECT/conf/joint_config.pconf.php
+
     By creating a symbolic link on each of your servers pionting to that individual servers
-    real config, you can call join_config.pconf.php in your code and the framework will find the right file.
+    real config, you can call joint_config.pconf.php in your code and the framework will find the right file.
 
     How do you access the framework essentials?
         - $_s->
         You can var_dump($_s) to see what you have access too. 
         - $_s->_tool or $_s->tool will work
+        You may be used to $this->_tool or $this->_s-> but you are no longer using the framework as an object here.
 
 
 
