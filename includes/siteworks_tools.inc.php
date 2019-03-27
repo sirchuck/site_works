@@ -63,7 +63,7 @@ class siteworks_tools
 	}
 
   public function thread($path='',$seconds=0,$vars=''){
-    if($vars != ''){$vars = base64_encode(json_encode($vars));}
+    if($vars != ''){$vars = ' -q=' . base64_encode(json_encode($vars));}
     exec('bash -c "'. SITEWORKS_DOCUMENT_ROOT.'/php_threader -x1='.$this->_s->thread_php_path.' -x2='.$this->_s->thread_php_version.' -s='.$seconds.' -p=' . SITEWORKS_DOCUMENT_ROOT . '/private/thread_scripts/'.$path.'.php'.$vars.'> /dev/null 2>&1 &"');
   }
 
