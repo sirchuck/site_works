@@ -5,6 +5,16 @@
 	// You access your variables passed like this:
 	// echo $q->key1;
 
-	// Note you can not use the framework from here. You would have to use something like file_get_contents() to open a web url or something.
+	// Do you want to use the framework?
+	// For multi-server setup create a symbolic link in your config folder pointing to that servers real config file.
+	// Here I'll call it joint_confing.pconf.php
+	// Once you set the config file to use, require the site_works_essentials.php file.
+	// You can no access most framework items with
+	// $_s->_tool->dmsg('hello'); instead of the usual $this->_tool->dmsg('hello');
+	// $_s also includes most of the configuration variables if you need them.
+	$use_config = 'joint_config.pconf.php';
+    require_once(dirname(__DIR__, 2) . '/site_works_essentials.php');
+
+
 
 ?>

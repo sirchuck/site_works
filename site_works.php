@@ -83,9 +83,14 @@ namespace SiteWorks{
 					unlink($tmp);
 					die('We could not write the /dev/thread_scripts/template_threader.php file. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
-				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/queue_scripts/template.inc.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template_queue.php',SITEWORKS_DOCUMENT_ROOT.'/dev/queue_scripts/template_queue.php') ){
+				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/queue_scripts/template_queue.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template_queue.php',SITEWORKS_DOCUMENT_ROOT.'/dev/queue_scripts/template_queue.php') ){
 					unlink($tmp);
 					die('We could not write the /dev/queue_scripts/template_queue.php file. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
+				}
+
+				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/socket_scripts/template_socket.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/template_socket.php',SITEWORKS_DOCUMENT_ROOT.'/dev/socket_scripts/template_socket.php') ){
+					unlink($tmp);
+					die('We could not write the /dev/socket_scripts/template_socket.php file. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 
 
