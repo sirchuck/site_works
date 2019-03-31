@@ -128,7 +128,7 @@ class siteworks_config extends siteworks_startup
     // Ex: /usr/bin/php7.2 if you wanted to run php7.2 to run your threadding and queue PHP scripts
     // Leaveing them blank means you can type php yourPHPscirpt.php and have it run.
     // Note: Do not remove these two variables if you plan to use the php_q_it queue manager.
-    public $thread_php_path = '';       //  Ex: /usr/bin/
+    public $thread_php_path    = '';    //  Ex: /usr/bin/
     public $thread_php_version = '';    //  Ex: 7.2
 
 
