@@ -9,7 +9,7 @@
 	// For multi-server setup create a symbolic link in your config folder pointing to that servers real config file.
 	// Here I'll call it joint_confing.pconf.php
 	// Once you set the config file to use, require the site_works_essentials.php file.
-	// You can no access most framework items with
+	// You can now access most framework items with
 	// $_s->_tool->dmsg('hello'); instead of the usual $this->_tool->dmsg('hello');
 	// $_s also includes most of the configuration variables if you need them.
 	$use_config = 'joint_config.pconf.php';

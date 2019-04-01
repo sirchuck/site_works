@@ -125,11 +125,16 @@ class siteworks_config extends siteworks_startup
     // 'key' => 'value'
     );
 
-    // Ex: /usr/bin/php7.2 if you wanted to run php7.2 to run your threadding and queue PHP scripts
+    // Ex: /usr/bin/php7.2 if you wanted to run php7.2 to run your threadding/queue/websocket PHP scripts
     // Leaveing them blank means you can type php yourPHPscirpt.php and have it run.
     // Note: Do not remove these two variables if you plan to use the php_q_it queue manager.
     public $thread_php_path    = '';    //  Ex: /usr/bin/
     public $thread_php_version = '';    //  Ex: 7.2
+
+    public $websocket_port          = '8090';     // Default ws:// port 8090
+    public $websocket_secure_port   = '8091';     // Default wss:// port 8091
+    public $websocket_cert_path     = '';         // If empty you will only be able to connect on the insecure port
+    public $websocket_certkey_path  = '';         // If empty you will only be able to connect on the insecure port
 
 
     /*********************************************************************************************************
