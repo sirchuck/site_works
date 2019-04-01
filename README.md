@@ -91,6 +91,25 @@ PHP, MySQL, Javascript, and CSS framework
             }
         } # End Nginx Server Example
 
+    (Optional) Websocket running through nginx example
+        map $http_upgrade $connection_upgrade {
+            default upgrade;
+            '' close;
+        }
+        upstream websocket {
+            server 127.0.0.1:8090;
+        }
+        server {
+            listen 8089;
+            location / {
+                proxy_pass http://websocket;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+                proxy_read_timeout 86400;
+            }
+        }
+
 # Folder Permissions Example:
     The framework needs to be able to write to certain folders
 
@@ -181,6 +200,8 @@ PHP, MySQL, Javascript, and CSS framework
         - your_script.php
     dev/queue_scripts
         - your_script.php
+    dev/socket_scripts
+        - your_script.php
 
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
     everything else shoudl be safe.
@@ -202,6 +223,7 @@ PHP, MySQL, Javascript, and CSS framework
     dev/modules/views - your_file_name.view.php
     dev/thread_scripts - your_file_name.php
     dev/queue_scripts - your_file_name.php
+    dev/socket_scripts - your_file_name.php
 
 # Configuration File:
     $this->dbc - Use this array to set up the connection information to your database(s).
@@ -626,6 +648,7 @@ PHP, MySQL, Javascript, and CSS framework
             $this->_tool->thread( 'MyFile', 20, ['key1'=>'var1','key2'=>'var2'] );
         - Your threaded script
             Your thread scripts should be located in /dev/thread_scripts
+            * NOTE: When your page is processed by the framework you reference it in the private/thread_scripts folder. 
             They should have the extention .php
             They must contain vanilla php code as they are not run thought the framework
             If you need to run through the framework try something like this in your thread script:
@@ -652,10 +675,11 @@ PHP, MySQL, Javascript, and CSS framework
         - Usage
             $this->_tool->queue( 'MyFile', ['key1'=>'var1','key2'=>'var2'], 'MyQueueTag', 0, 0 );
         - Your queue script
-            Your thread scripts should be located in /dev/queue_scripts
+            Your queue scripts should be located in /dev/queue_scripts
+            * NOTE: When your page is processed by the framework you reference it in the private/queue_scripts folder. 
             They should have the extention .php
             They must contain vanilla php code as they are not run thought the framework
-            If you need to run through the framework try something like this in your thread script:
+            If you need to run through the framework try something like this in your queue script:
                 $x = file_get_contents('http://www.MySite.com/Modual/Controller/Method/pass_var/pass_vars');
                 - OR Read below to add site_works_essentials
         - Passing Variables to the queue file
@@ -686,7 +710,7 @@ PHP, MySQL, Javascript, and CSS framework
 
                 [Service]
                 type=simple
-                ExecStart=/bin/bash /path/to/php_q_it "-c /path/to/php_q_it -s 10"
+                ExecStart=/bin/bash /path/to/php_q_it "-c /path/to/siteworks.YOURSITE.pconf.php -s 10"
                 Restart=always
                 RestartSec=3
 
@@ -704,6 +728,105 @@ PHP, MySQL, Javascript, and CSS framework
             sudo systemctl enable myservice
             # Reboot and Check if its running
             sudo systemctl status myservice
+    php_websockets
+        This is a linux only app to allow you handle websockets between a client and the websocket server.
+        - Parameters
+            -x1 : This goes on the left side of the php command. /usr/bin/ for example. Set by: $this->thread_php_path in config
+            -x2 : This goes on the right side of the php command. 7.2 for example. Set by: $this->thread_php_version in config
+                 If you leave it blank we would call: php /path/to/socket_script.php or per the example: /usr/bin/php7.2 /path/to/socket_script.php
+            -port    = Websocket Server Port, default 8090
+            -sport   = Websocket Server Secure Port, default 8091
+            -script  = /var/www/html/YOURSITE/private/socket_scripts/YOUR_FILE.php The file the socket server should call for processing.
+            -to      = Script Timeout, default 30 seconds.
+            -debug   = true / false, default false
+            -c       = path to your siteworks config. /var/www/html/YOURSITE/conf/siteworks.YOURSERVER.pconf.php
+            -cert    = (optional) path to your ssl cert. Only needed for secure connection.
+            -certkey = (optional) path to your ssl cert key. Only needed for secure connection
+        - Why
+            You want a chat component for your site, or you want to brodcast an event. (This is not a streamer) Techincally you could
+            probalby use it to stream but it would be really ineffeicnet for that. Use it more to send and recieve messages from
+            many clients. You can select individuals to send text too, or send to everyone at once. 
+        - Usage
+            You start this with UpSart or SystemD, the command line would be something like:
+            sudo ./php_websockets -script=/var/www/SITE/private/socket_scripts/sockets.php -c=conf/siteworks.SITE.pconf.php
+        - Your WebSocket script
+            Your socket scripts should be located in /dev/socket_scripts
+            * NOTE: When your page is processed by the framework you reference it in the private/socket_scripts folder. 
+            They should have the extention .php
+            They must contain vanilla php code as they are not run thought the framework
+            If you need to run through the framework try something like this in your socket script:
+                $x = file_get_contents('http://www.MySite.com/Modual/Controller/Method/pass_var/pass_vars');
+                - OR Read below to add site_works_essentials
+        - Passing Variables to the socket script file
+            Your socket files should always start with this line:
+            $q = json_decode( base64_decode( getopt("q:")['q'] ) );
+            The websocket server sends the following json encoded, base64 encoded variables to your socket script.
+            - $q->sw_var
+                This is the string you passed from your client ( likley javacript )
+                Ex:
+                    var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:"sw_10"};
+                    socket.send( JSON.stringify(obj) );
+                Notice I created my object with an embeded escaped json object string? You can pass json like this to your script if you want.
+            - $q->sw_action
+                Other than sw_* variables, you can use this passed string as you like. If you pass my sw_* commands:
+                - sw_0 = Pass this from your socket script to tell the socket server you want to disconnect the people you selected below
+                - sw_1 = Pass this from your client(javascript) to have the socket server fill the sw_user_list with active user id's.
+                - sw_2 = Pass this from your clinet, socket server sends your script filled active tags - sw_tag_list 
+                - sw_3 = Pass this from your client, socket server sends your script filled active uniqueids - sw_uniqueid_list
+                - sw_10 = Pass this from your clinet, socket server sends filled active: sw_user_list, sw_tag_list, and sw_uniqueid_list
+            - $q->sw_user_list
+                When your clients sends sw_1 action, this array will be filled with a list of active user id's.
+            - $q->sw_tag_list
+                Your client sends sw_2, this array will be filled with all active id's. 
+            - $q->sw_uniqueid_list
+                Your client sneds sw_3, this array will be filled with all active unique_id's.
+            - $q->sw_caller
+                This array is automatically sent to your php socket script ['uid','tag','uniqueid'], with the
+                information of the clinet making the call. ( Assuming you set it of course )
+            # Note I don't know your specific use case, so you may not use user ids, tags, or unique ids. That's fine, your arrays for those will just be
+            empty when you call the sw_ actoins. Calling sw_0 when all users id's are '' will disconnect everyone.
+        - Security
+            - sw_0, when you pass this action from your php socket script it removes everyone you specify in the arrays sw_user_list, sw_tag_list, and sw_uniqueid_list.
+            This means if you send sw_tag_list['chat_server_1'] with the sw_0 sw_action, everyone with the tag chat_server_1 gets disconnected.
+            If you send some users and some tags, then everyone who matches a user or a tag gets diconnected. 
+            - This is how you control who you send to as well. If you dont specify sw_0, then the people or tags you list will be the only ones that recive the broadcast.
+            You can use this to hold a conversation with a single user in a chat room for example.
+            - Anyone can connect if they know your server and port, so if security is an issue I suggest you make use of passing uid/tag/unique_id, this 
+            means when someone puts in fake info you can check it in your php script, then sw_0 boot them and send them a message sw_var = '{"message":"Get off my lawn!"}'
+            - Anyone can listen. If they connect to the webserver they may be able to listen in. Again, use the unique_id's and match it with the one you have in your
+            database for a particular user id. You automate a script sending sw_3, match all unique_id's, and put any that do not match in the sw_uniqueid_list array and
+            send the sw_0 to kick them. Or whitelist by filling the sw_uniqueid_list array with the people you want to send the data to and do not send the sw_0 action 
+            command.
+        - Note: The socet server only sends you unique uids/tags/uniqueid's. So if Frost has uid 1 and has 100 clients, and you send sw_1, you'll get 1, one time in the uid array.
+        - SYSTEMD Example for php_websockets
+            sudo chmod +x /path/to/php_websockets
+            sudo nano /lib/systemd/system/myservice2.service
+                [Unit]
+                Description=Example Systemd Service.
+
+                [Service]
+                type=simple
+                ExecStart=/bin/bash /path/to/php_websockets "-c /path/to/siteworks.YOURSITE.pconf.php -script /path/to/private/socket/scripts/YOURSCRIPT.php"
+                Restart=always
+                RestartSec=3
+
+                [Install]
+                WantedBy=multi-user.target
+            # Start The service for testing
+            sudo systemctl start myservice2
+            # Check the Status
+            sudo systemctl status myservice2
+            # To stop it
+            sudo systemctl stop myservice2
+            # To restart it
+            sudo systemctl restart myservice2
+            # If its all good, enable it
+            sudo systemctl enable myservice2
+            # Reboot and Check if its running
+            sudo systemctl status myservice2
+        - NGINX I provided an example nginx script for this above, but it's not really neccessary. You can directly connect to the ports opened by the websocket server.
+        If for some reason you want to run though Nginx, that's fine too, but it may get more confusing with load balancing.
+
 
 # SITE_WORKS_ESSENTIALS
     You may find yourself wishing you didn't have to rewrite vanilla php code to access

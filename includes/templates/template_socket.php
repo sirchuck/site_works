@@ -3,7 +3,7 @@
 	$q = json_decode( base64_decode( getopt("q:")['q'] ) );
 
     // Do you want to use the framework?
-    // For multi-server setup create a symbolic link in your config folder pointing to that servers real config file.
+    // For multi-server (test/dev/production) setup create a symbolic link in your config folder pointing to that servers real config file.
     // Here I'll call it joint_confing.pconf.php
     // Once you set the config file to use, require the site_works_essentials.php file.
     // You can now access most framework items with
@@ -13,7 +13,7 @@
     require_once(dirname(__DIR__, 2) . '/site_works_essentials.php');
 
 
-    // Some terms:
+    // The Websocket URL segments
     // ws://    - websocket protocol
     // wss://   - secure websocket protocol
     // YOUR_SERVER - This could be MySite.com or an IP number
@@ -23,11 +23,17 @@
     // UNIQUE_ID - (Optional) Use this for security mostly, if that's important to your project.
 
     /*
-        The websocket server sends the following varaibles you can process.
+        The websocket server accepts variables from your javascript client or php/ruby/whatever. I'll
+        provide a javascript example below to get you started. Once the websocket server accepts your
+        connection, it then calls a script (Ex: this page) you provide when starting the websocket server.
+        The websocet send you the variables laid out below for you to process, and then echo a json object
+        that the websocket server will pick up and send the message part back to your client.
+
+        The variables the websocket server sends to your php page:
 
         $q->sw_var
             This is the input you sent from javascript or wherever. You can send a string with json in it
-            but you'll hvae to json_decode($q->sw_var)
+            but you'll hvae to $MyVar = json_decode($q->sw_var);
 
         $q->sw_action
             * Possible actions from here to server:
@@ -45,13 +51,13 @@
         $q->sw_user_list - An array of connected user id's
         $q->sw_tag_list - An array of connected tag's
         $q->sw_uniqueid_list - An array of unique id's
-            Note the arrays can be empty, so you may need to make sure it's an array with a mask (array)
+            Note the arrays can be empty, so you may need to make sure it's an array 
             Ex: implode(',',(array)$q->sw_user_list)
         $q->sw_caller - An array of the calling users parts. [uid, tag, unique_id], the parts of this array are determined by the clinet(javascript)
-            in the url. var socket = new WebSocket("wss://b.w2r.com:8089/1/tag/unique_id");
-            The first segment is the users id.
-            The second segment is the tag you set
-            The third segment is a unique id you set that you store in your db to check against for extra security so only valid users can send info.
+            in the url. var socket = new WebSocket("wss://b.w2r.com:8091/1/tag/unique_id");
+            The first segment $q->sw_caller[0] is the users id.
+            The second segment $q->sw_caller[1] is the tag you set
+            The third segment $q->sw_caller[2] is a unique id
 
 
         * SECURITY MEASURES - may or may not be applicable to what you are doing.
@@ -83,6 +89,8 @@
     	// This is an array of values you sent through the websocket script.
     	// You should handled your own security here too, basically have javascript send a code you verify here through a db call.
     	// Access it like:  $q->sw_vars->key1
+        // Or if you sent a json string, $MyVar = json_decode($q->sw_vars); 
+        // Then: $MyVar->key1
     }
     if( isset($q->sw_action) ){
     	// If you send sw_0, sw_1, sw_2, or sw_3 the websocket will take aciton, but whatever you send to the websocket server you'll get to see it here
@@ -117,101 +125,69 @@
         // $q->sw_caller[2] = calling users unique id
     }
 
-    // Your websocket server will call a socket script you provide with the -script flag
-    // ./php_websockets -port 8090 -script /var/www/html/MY_PROJECT/private/socket_scripts/YOUR_FILE.php
+    // Your websocket server will call a socket script you provide with the -script flag, and a config file flag -c
+    // EX: ./php_websockets -port 8090 -script /var/www/html/MY_PROJECT/private/socket_scripts/YOUR_FILE.php -c=/path/to/sitworks.yourserver.pconf.php
     // You can start the script with UpStart or SystmeD for example as well.
-    // What ever you echo from this script, will be sent back to the clients attached to the websockets server.
+    // It is a full server so you can connect directly to it, or if you prefer you can run it though nginx or whatever.
+
+    // I say go ahead and just use these standard class variables I set up for you here. Just set them to the values you want.
     $sw_websocket = new stdClass();
-    $sw_websocket->sw_var             = ''; // The string you send back, you can use json just send it to websocket server as a string.
+    $sw_websocket->sw_var             = ''; // (string) The string you send back, you can use json
     $sw_websocket->sw_action          = ''; // (string) Send sw_0 to disconnect selected users
     $sw_websocket->sw_user_list       = []; // Array of user id's, ['1','3']
-    $sw_websocket->sw_tag_list        = []; // Array of tags, ['dog_tag','cat_tag']
+    $sw_websocket->sw_tag_list        = []; // Array of tags, ['chat_server_1','chat_server_2']
     $sw_websocket->sw_uniqueid_list   = []; // Array of unique connection id's, ['unique_id1','unique_id3']
 
     $sw_websocket->sw_var      = '{"p1":"' . $q->sw_var . '","p2":"MyResponse","uids":"' . implode(',',(array)$q->sw_user_list) . '","tags":"' . implode(',',(array)$q->sw_tag_list) . '","uniqueids":"' . implode(',',(array)$q->sw_uniqueid_list) . '","caller":"'.implode(',',(array)$q->sw_caller).'"}';
 
-    // To disconnect users matching your sw_user_list / sw_tag_list / sw_uniqueid_list
+    // To disconnect users matching your sw_user_list OR sw_tag_list OR sw_uniqueid_list
     // $sw_websocket->sw_action   = 'sw_0';
-
-
 
 
     // Output a json encoded sw_websocket object
     echo json_encode($sw_websocket);
-    // The websocket server will not broadcast anything if you send it an empty sw_vars array [].
-    // That's useful if you determine with your script that someone is sending garbage you don't want to have sent out.
 
-    // Example way to start your websocet server
-	// ./pathtoyour/php_websockets -script=/var/www/html/roverquest/private/socket_scripts/sockets.php -port=8080
+
 
 
 
 /*
-<!-- Example html script for a browser client. Replace YOUR_SERVER:PORT UID and TAG -->
+<!-- Example Javascript for a browser client. Replace YOUR_SERVER:PORT UID TAG UNIQUEID-->
 <input id="input" type="text" />
 <button onclick="send()">Send</button>
 <pre id="output"></pre>
 <script>
     var input = document.getElementById("input");
     var output = document.getElementById("output");
-    var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG");
+    var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID");
+    // OR: var socket = new WebSocket("wss://YOUR_SERVER:SPORT/UID/TAG/UNIQUEID");
 
+    // Socet Connected
     socket.onopen = function () {
         output.innerHTML += "Status: Connected\n";
     };
 
+    // Recieve Message
     socket.onmessage = function (e) {
         output.innerHTML += "Server: " + e.data + "\n";
+
+        var obj = JSON.parse(e.data);
+        output.innerHTML += "Var uids: "          + obj.uids        + "\n";
+        output.innerHTML += "Var tags: "          + obj.tags        + "\n";
+        output.innerHTML += "Var uniqueids: "     + obj.uniqueids   + "\n";
+        output.innerHTML += "Var you sent: "      + obj.p1          + "\n";
+        output.innerHTML += "Var script said: "   + obj.p2          + "\n";
+        output.innerHTML += "Var Caller: "        + obj.caller      + "\n";
     };
 
+    // Socket Send
     function send() {
-    	// sw_action sw_1 to send list of uid's to your php script
-    	// sw_action sw_2 to send list of tag's to your php script
-		var obj = {sw_var_array:[input.value],sw_action:""};
+        var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:"sw_10"};
 
         socket.send( JSON.stringify(obj) );
         input.value = "";
     }
 </script>
 */
-
-
-<?php
-echo '
-<input id="input" type="text" />
-<button onclick="send()">Send</button>
-<pre id="output"></pre>
-<script>
-    var input = document.getElementById("input");
-    var output = document.getElementById("output");
-    var socket = new WebSocket("wss://YOUR_SERVER:PORT/UID/TAG/UNIQUE_ID");
-
-    socket.onopen = function () {
-        output.innerHTML += "Status: Connected\n";
-    };
-
-    socket.onmessage = function (e) {
-        output.innerHTML += "Server: " + e.data + "\n";
-
-        var obj = JSON.parse(e.data);
-        output.innerHTML += "Var uids: " + obj.uids + "\n";
-        output.innerHTML += "Var tags: " + obj.tags + "\n";
-        output.innerHTML += "Var uniqueids: " + obj.uniqueids + "\n";
-        output.innerHTML += "Var you sent: " + obj.p1 + "\n";
-        output.innerHTML += "Var script said: " + obj.p2 + "\n";
-        output.innerHTML += "Var Caller: " + obj.caller + "\n";
-
-    };
-
-    function send() {
-        var obj = {sw_var:input.value,sw_action:"sw_10"};
-
-        socket.send( JSON.stringify(obj) );
-        input.value = "";
-    }
-</script>
-';
-
-?>
 
 ?>
