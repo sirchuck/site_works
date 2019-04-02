@@ -82,8 +82,8 @@ class siteworks_tools
 
   public function broadcast($sw_vars = '', $sw_action = '', $call_uid = '', $call_tag = '', $call_uniqueid = '', $server ='', $port = ''){
     // This function works in conjunction with php_websockets and the script you place in dev/socket_scripts tied to your port
-    if $port   == '' { $port   = (isset($this->_s->websocket_port))?$this->_s->websocket_port:'8090'; }
-    if $server == '' { $server = (isset($this->_s->websocket_server))?$this->_s->websocket_server:'127.0.0.1'; }
+    if ($port == '') { $port   = (isset($this->_s->websocket_port))?$this->_s->websocket_port:'8090'; }
+    if ($server == '') { $server = (isset($this->_s->websocket_server))?$this->_s->websocket_server:'127.0.0.1'; }
     try{
         $fp=@fsockopen($server . '/'. $call_uid . '/'. $call_tag . '/' . $call_uniqueid, $port, $errno, $errstr, 30);
         if (!$fp) { if($this->_s->debugMode){ $this->dmsg('Websocket Server not available - ' . $$errstr . ' (' . $errno . ')'); } else {
