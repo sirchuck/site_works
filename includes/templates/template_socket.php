@@ -48,6 +48,10 @@
             Once the websocket server gets one of these requests, you can acceess the proper array, process it, then
             use part or all of that array to send back to the server to disconnect or respond to only those people.
 
+            sw_allow - This is sent anytime someone attempts a connection to the server. You respond with a "1" or "0". If you send a "1"
+                the user will be allowed, anything else will disconnect them. We also send $q->sw_caller when someone tries to connect.
+                You can use uid / tag / unique id to match your database for added security to chooes who you allow in.
+
         $q->sw_user_list - An array of connected user id's
         $q->sw_tag_list - An array of connected tag's
         $q->sw_uniqueid_list - An array of unique id's
@@ -138,14 +142,24 @@
     $sw_websocket->sw_tag_list        = []; // Array of tags, ['chat_server_1','chat_server_2']
     $sw_websocket->sw_uniqueid_list   = []; // Array of unique connection id's, ['unique_id1','unique_id3']
 
-    $sw_websocket->sw_var      = '{"p1":"' . $q->sw_var . '","p2":"MyResponse","uids":"' . implode(',',(array)$q->sw_user_list) . '","tags":"' . implode(',',(array)$q->sw_tag_list) . '","uniqueids":"' . implode(',',(array)$q->sw_uniqueid_list) . '","caller":"'.implode(',',(array)$q->sw_caller).'"}';
+    $m = json_decode($q->sw_var);
+    $p1 = (isset($m->input)) ? $m->input: 'You did not send the variable: input';
+
+    $sw_websocket->sw_var      = '{"p1":"' . $p1 . '","p2":"MyResponse","uids":"' . implode(',',(array)$q->sw_user_list) . '","tags":"' . implode(',',(array)$q->sw_tag_list) . '","uniqueids":"' . implode(',',(array)$q->sw_uniqueid_list) . '","caller":"'.implode(',',(array)$q->sw_caller).'"}';
 
     // To disconnect users matching your sw_user_list OR sw_tag_list OR sw_uniqueid_list
     // $sw_websocket->sw_action   = 'sw_0';
 
 
-    // Output a json encoded sw_websocket object
-    echo json_encode($sw_websocket);
+    // When the action is sw_allow, that means someone is trying to connect to the websocket server.
+    // Respond with a "1" if you wan't to allow them, anything else will disconnect them.
+    if(  isset($q->sw_action) && $q->sw_action == 'sw_allow'){
+        // Handled your security check here then respond with a "1" or "0", "1" to allow the connection.
+        echo "1";
+    } else {
+        // Output a json encoded sw_websocket object
+        echo json_encode($sw_websocket);
+    }
 
 
 

@@ -774,6 +774,11 @@ PHP, MySQL, Javascript, and CSS framework
                 - sw_2 = Pass this from your clinet, socket server sends your script filled active tags - sw_tag_list 
                 - sw_3 = Pass this from your client, socket server sends your script filled active uniqueids - sw_uniqueid_list
                 - sw_10 = Pass this from your clinet, socket server sends filled active: sw_user_list, sw_tag_list, and sw_uniqueid_list
+
+                - sw_allow = This aciton is sent anytime someone attempts a connection to the server. You respond with a "1" or "0". If you send a "1"
+                the user will be allowed, anything else will disconnect them. We also send $q->sw_caller when someone tries to connect.
+                You can use uid / tag / unique id from the $q->sw_caller array to match your database for added security to chooes who you allow in.
+
             - $q->sw_user_list
                 When your clients sends sw_1 action, this array will be filled with a list of active user id's.
             - $q->sw_tag_list
@@ -797,6 +802,12 @@ PHP, MySQL, Javascript, and CSS framework
             database for a particular user id. You automate a script sending sw_3, match all unique_id's, and put any that do not match in the sw_uniqueid_list array and
             send the sw_0 to kick them. Or whitelist by filling the sw_uniqueid_list array with the people you want to send the data to and do not send the sw_0 action 
             command.
+
+            # Important - If your server isn't allowing connections, make sure you are handling the sw_allow sw_action in your socket script
+            - Remember, on any connection to the server, we send sw_action of sw_allow. In your script, when you see this special sw_action, you can check
+            their user id / tag / and unique id against your database. If you echo a "1" the user will be allowed to finish the connection. If you echo anything
+            other than "1", the user will be disconnected.
+
         - Note: The socet server only sends you unique uids/tags/uniqueid's. So if Frost has uid 1 and has 100 clients, and you send sw_1, you'll get 1, one time in the uid array.
         - SYSTEMD Example for php_websockets
             sudo chmod +x /path/to/php_websockets
