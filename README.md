@@ -826,6 +826,25 @@ PHP, MySQL, Javascript, and CSS framework
             sudo systemctl status myservice2
         - NGINX I provided an example nginx script for this above, but it's not really neccessary. You can directly connect to the ports opened by the websocket server.
         If for some reason you want to run though Nginx, that's fine too, but it may get more confusing with load balancing.
+        
+        - CLIENT
+            - php framework
+                $this->_tool->broadcast($sw_vars, $sw_action, $call_uid, $call_tag, $call_uniqueid, $server, $port);
+                $sw_vars = (string) The variables you want to send to the socket server - could be a json string.
+                $sw_action = (string) sw_0, sw_1, sw_2 , sw_3, sw_10, your own action as long as it doesnt start with sw_
+                $call_uid = (string) The user ID you want attached to this caller for the socket connection.
+                $call_tag = (string) The tag you want attached to this caller for the socket connection.
+                $call_uniqueid = (string) The unique id you want attached to this caller for the socket connection.
+                $server = (string) The server your socket server is running on, pulled from config if not set.
+                $port = (string) The port your socket server is running on, pulled from config if not set, uses insecure port by default.
+
+            - javascript
+                // You'll find a full example in the socket script tempalte
+                The connection:
+                    var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID");
+                Send your variable string - could be JSON:
+                    var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:"sw_10"};
+                    socket.send( JSON.stringify(obj) );
 
 
 # SITE_WORKS_ESSENTIALS

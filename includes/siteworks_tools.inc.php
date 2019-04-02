@@ -63,11 +63,13 @@ class siteworks_tools
 	}
 
   public function thread($path='',$seconds=0,$vars=''){
+    // This function works with php_threader
     if($vars != ''){$vars = ' -q=' . base64_encode(json_encode($vars));}
     exec('bash -c "'. SITEWORKS_DOCUMENT_ROOT.'/php_threader -x1='.$this->_s->thread_php_path.' -x2='.$this->_s->thread_php_version.' -s='.$seconds.' -p=' . SITEWORKS_DOCUMENT_ROOT . '/private/thread_scripts/'.$path.'.php'.$vars.'> /dev/null 2>&1 &"');
   }
 
   public function queue($path='',$vars='',$tag='',$waitstart=0,$timeout=0){
+    // This function works with php_q_it server
     if($vars != ''){$vars = base64_encode(json_encode($vars));}
     $r = new t_site_works_queue(0,$this->_s->odb);
     $r->f['sw_tag']['value'] = $tag;
@@ -76,6 +78,21 @@ class siteworks_tools
     $r->f['sw_waitstart']['value'] = $waitstart;
     $r->f['sw_timeout']['value'] = $timeout;
     $r->insertData();
+  }
+
+  public function broadcast($sw_vars = '', $sw_action = '', $call_uid = '', $call_tag = '', $call_uniqueid = '', $server ='', $port = ''){
+    // This function works in conjunction with php_websockets and the script you place in dev/socket_scripts tied to your port
+    if $port   == '' { $port   = (isset($this->_s->websocket_port))?$this->_s->websocket_port:'8090'; }
+    if $server == '' { $server = (isset($this->_s->websocket_server))?$this->_s->websocket_server:'127.0.0.1'; }
+    try{
+        $fp=@fsockopen($server . '/'. $call_uid . '/'. $call_tag . '/' . $call_uniqueid, $port, $errno, $errstr, 30);
+        if (!$fp) { if($this->_s->debugMode){ $this->dmsg('Websocket Server not available - ' . $$errstr . ' (' . $errno . ')'); } else {
+          $sw_websocket = new stdClass();
+          $sw_websocket->sw_var             = $sw_vars;
+          $sw_websocket->sw_action          = $sw_action;
+          fwrite($fp, json_encode($sw_websocket)); fclose($fp);
+        }
+      } catch (Exception $e) { if($this->_s->debugMode){ $this->dmsg('WebSocket Calling Error: ' . $e->getMessage()); } }
   }
 
 

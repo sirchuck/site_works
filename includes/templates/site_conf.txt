@@ -131,10 +131,11 @@ class siteworks_override extends siteworks_config
     $this->thread_php_path    = '';    //  Ex: /usr/bin/
     $this->thread_php_version = '';    //  Ex: 7.2
 
-    $this->websocket_port          = '8090';     // Default ws:// port 8090
-    $this->websocket_secure_port   = '8091';     // Default wss:// port 8091
-    $this->websocket_cert_path     = '';         // If empty you will only be able to connect on the insecure port
-    $this->websocket_certkey_path  = '';         // If empty you will only be able to connect on the insecure port
+    $this->websocket_server        = '127.0.0.1'; // Your websocket server address
+    $this->websocket_port          = '8090';      // Default ws:// port 8090
+    $this->websocket_secure_port   = '8091';      // Default wss:// port 8091
+    $this->websocket_cert_path     = '';          // If empty you will only be able to connect on the insecure port
+    $this->websocket_certkey_path  = '';          // If empty you will only be able to connect on the insecure port
 
 
     /*********************************************************************************************************
