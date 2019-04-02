@@ -80,22 +80,6 @@ class siteworks_tools
     $r->insertData();
   }
 
-  public function broadcast($sw_vars = '', $sw_action = '', $call_uid = '', $call_tag = '', $call_uniqueid = '', $server ='', $port = ''){
-    // This function works in conjunction with php_websockets and the script you place in dev/socket_scripts tied to your port
-    if ($port == '') { $port   = (isset($this->_s->websocket_port))?$this->_s->websocket_port:'8090'; }
-    if ($server == '') { $server = (isset($this->_s->websocket_server))?$this->_s->websocket_server:'127.0.0.1'; }
-    try{
-        $fp=@fsockopen($server . '/'. $call_uid . '/'. $call_tag . '/' . $call_uniqueid, $port, $errno, $errstr, 30);
-        if (!$fp) { if($this->_s->debugMode){ $this->dmsg('Websocket Server not available - ' . $$errstr . ' (' . $errno . ')'); }} else {
-          $sw_websocket = new stdClass();
-          $sw_websocket->sw_var             = $sw_vars;
-          $sw_websocket->sw_action          = $sw_action;
-          fwrite($fp, json_encode($sw_websocket)); fclose($fp);
-        }
-      } catch (Exception $e) { if($this->_s->debugMode){ $this->dmsg('WebSocket Calling Error: ' . $e->getMessage()); } }
-  }
-
-
   public function listFiles($dir,$ftype=0,$recursive=true,&$results=array()){
     // ftype( 0 all, 1 files only, 2 folders only )
     if(!is_dir($dir)){return false;}
