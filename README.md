@@ -872,15 +872,15 @@ PHP, MySQL, Javascript, and CSS framework
                 // I wrote this because, say you want your queue manager to handle something, then you want to report to all watchers that the
                 // funciton has completed. You could also use curl to call a javascript/python script but this seems like the easiest solution for most situations.
                 Send a message like this:
-                    $reply = $this->_tool->broadcast($sw_var='',$sw_action='',$host='',$port='',$uid='',$tag='',$uniqueid='',$sendhost='',$sendport='');
+                    $reply = $this->_tool->broadcast($sw_var='',$sw_action='',$uid='',$tag='',$uniqueid='',$host='',$port='',$sendhost='',$sendport='');
                 Parameters:
                     $sw_var = (string) Your message, you can send JSON but as a string, then json_decode it in your socket script.
                     $sw_action = (string) You can use one of the sw_ commands like above, or use it for your own purposes.
-                    $host = (string) If you do not provide a host, we'll use the one you set up in config: $this->_s->websocket_server  Default:127.0.0.1
-                    $port = (string) If you do not provide a port, we'll use the one you set up in config: $this->_s->websocket_port    Default:8090
                     $uid = (string) Set the Callers user id for this connection.
                     $tag = (string) Set the Callers tag for this connection.
                     $uniqueid = (string) Set the Callers unique id for this connection.
+                    $host = (string) If you do not provide a host, we'll use the one you set up in config: $this->_s->websocket_server  Default:127.0.0.1
+                    $port = (string) If you do not provide a port, we'll use the one you set up in config: $this->_s->websocket_port    Default:8090
                     // You may not need to use the following to in most situations. Websockets accept the sender host and port, the default
                     // is localhost and blank, which will just use a random open port. If for some reason the defaults will not work for you
                     // you can set these to a specific host and open port.

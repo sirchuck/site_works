@@ -80,7 +80,7 @@ class siteworks_tools
     $r->insertData();
   }
 
-  public function broadcast($sw_var='',$sw_action='',$host='',$port='',$uid='',$tag='',$uniqueid='',$sendhost='',$sendport=''){
+  public function broadcast($sw_var='',$sw_action='',$uid='',$tag='',$uniqueid='',$host='',$port='',$sendhost='',$sendport=''){
     // php_websockets must be running and php_websockets_client must be in your project root folder.
     $host = ($host == '') ? $this->_s->websocket_server : $host;
     $port = ($port == '') ? $this->_s->websocket_port : $port;
