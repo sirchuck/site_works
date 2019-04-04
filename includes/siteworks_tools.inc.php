@@ -84,9 +84,9 @@ class siteworks_tools
     // php_websockets must be running and php_websockets_client must be in your project root folder.
     $host = ($host == '') ? $this->_s->websocket_server : $host;
     $port = ($port == '') ? $this->_s->websocket_port : $port;
-    $shost = ($sendhost == '') ? '' : ' -sh=' . $sendhost;
-    $sport = ($sendport == '') ? '' : ' -sp=' . $sendport;
-    return exec('bash -c "'. SITEWORKS_DOCUMENT_ROOT.'/php_websockets_client -m="' . $sw_var . '" -a="' . $sw_action . '" -h='.$host.' -p='.$port.' -u='.$uid.' -t='.$tag.' -uq='.$uniqueid.$shost.$sport);
+    $shost = ($sendhost == '') ? '' : ' -sh="' . $sendhost . '"';
+    $sport = ($sendport == '') ? '' : ' -sp="' . $sendport . '"';
+    return exec('bash -c \''. SITEWORKS_DOCUMENT_ROOT.'/php_websockets_client -m="'.$sw_var.'" -a="'.$sw_action.'" -h="'.$host.'" -p="'.$port.'" -u="'.$uid.'" -t="'.$tag.'" -uq="'.$uniqueid.'"'.$shost.$sport.'\'');
   }
 
   public function listFiles($dir,$ftype=0,$recursive=true,&$results=array()){
