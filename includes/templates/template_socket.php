@@ -167,41 +167,23 @@
 
 /*
 <!-- Example Javascript for a browser client. Replace YOUR_SERVER:PORT UID TAG UNIQUEID-->
-<input id="input" type="text" />
-<button onclick="send()">Send</button>
-<pre id="output"></pre>
-<script>
-    var input = document.getElementById("input");
-    var output = document.getElementById("output");
-    var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID");
-    // OR: var socket = new WebSocket("wss://YOUR_SERVER:SPORT/UID/TAG/UNIQUEID");
-
-    // Socet Connected
-    socket.onopen = function () {
-        output.innerHTML += "Status: Connected\n";
-    };
-
-    // Recieve Message
-    socket.onmessage = function (e) {
-        output.innerHTML += "Server: " + e.data + "\n";
-
-        var obj = JSON.parse(e.data);
-        output.innerHTML += "Var uids: "          + obj.uids        + "\n";
-        output.innerHTML += "Var tags: "          + obj.tags        + "\n";
-        output.innerHTML += "Var uniqueids: "     + obj.uniqueids   + "\n";
-        output.innerHTML += "Var you sent: "      + obj.p1          + "\n";
-        output.innerHTML += "Var script said: "   + obj.p2          + "\n";
-        output.innerHTML += "Var Caller: "        + obj.caller      + "\n";
-    };
-
-    // Socket Send
-    function send() {
-        var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:"sw_10"};
-
-        socket.send( JSON.stringify(obj) );
-        input.value = "";
-    }
-</script>
+    <input id="msg" type="text" />
+    <button onclick="send()">Send</button>
+    <div id="out"></div>
+    <script>
+        var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG");
+        var msg = document.getElementById("msg");
+        var out = document.getElementById("out");
+        // Handle when socket is connected
+        socket.onopen = function () {out.innerHTML += "Connection Established\n";};
+        // Handle when socket recieves a message
+        socket.onmessage = function (e) { out.innerHTML += "Server: " + e.data + "\n"; };
+        function send() {
+            var obj = {sw_var_array:[msg.value],sw_action:""};
+            socket.send( JSON.stringify(obj) );
+            msg.value = "";
+        }
+    </script>
 */
 
 ?>

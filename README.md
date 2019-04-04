@@ -840,13 +840,52 @@ PHP, MySQL, Javascript, and CSS framework
         
         - CLIENT
             - javascript
-                // You'll find a full example in the socket script tempalte
                 The connection:
                     var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID");
                 Send your variable string - could be JSON:
-                    var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:"sw_10"};
+                    var obj = {sw_var:"{\"input\":\""+msg.value+"\"}",sw_action:"sw_10"};
                     socket.send( JSON.stringify(obj) );
-
+                // Full HTML JS Example: Replace YOUR_SERVER:PORT UID TAG and UNIQUEID
+                <input id="msg" type="text" />
+                <button onclick="send()">Send</button>
+                <div id="out"></div>
+                <script>
+                    var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG");
+                    var msg = document.getElementById("msg");
+                    var out = document.getElementById("out");
+                    // Handle when socket is connected
+                    socket.onopen = function () {out.innerHTML += "Connection Established\n";};
+                    // Handle when socket recieves a message
+                    socket.onmessage = function (e) { out.innerHTML += "Server: " + e.data + "\n"; };
+                    function send() {
+                        var obj = {sw_var_array:[msg.value],sw_action:""};
+                        socket.send( JSON.stringify(obj) );
+                        msg.value = "";
+                    }
+                </script>
+            - php
+                // Turns out it's really ugly to have php connect to a websocket, so I created an app you call from php to handle it for you.
+                // To use this you must have php_websockets_client in your project root folder, and it must be executable.
+                // It will take a message, connect to the websocket server, send your message, close the connection and return the string resopnce to you.
+                // I wrote this because, say you want your queue manager to handle something, then you want to report to all watchers that the
+                // funciton has completed. You could also use curl to call a javascript/python script but this seems like the easiest solution for most situations.
+                Send a message like this:
+                    $reply = $this->_tool->broadcast($sw_var='',$sw_action='',$host='',$port='',$uid='',$tag='',$uniqueid='',$sendhost='',$sendport='');
+                Parameters:
+                    $sw_var = (string) Your message, you can send JSON but as a string, then json_decode it in your socket script.
+                    $sw_action = (string) You can use one of the sw_ commands like above, or use it for your own purposes.
+                    $host = (string) If you do not provide a host, we'll use the one you set up in config: $this->_s->websocket_server  Default:127.0.0.1
+                    $port = (string) If you do not provide a port, we'll use the one you set up in config: $this->_s->websocket_port    Default:8090
+                    $uid = (string) Set the Callers user id for this connection.
+                    $tag = (string) Set the Callers tag for this connection.
+                    $uniqueid = (string) Set the Callers unique id for this connection.
+                    // You may not need to use the following to in most situations. Websockets accept the sender host and port, the default
+                    // is localhost and blank, which will just use a random open port. If for some reason the defaults will not work for you
+                    // you can set these to a specific host and open port.
+                    $sendhost = (string)(optional)
+                    $sendport = (string)(optional)
+                Response:
+                    The response is a string that you sent from your socket script file.
 
 # SITE_WORKS_ESSENTIALS
     You may find yourself wishing you didn't have to rewrite vanilla php code to access

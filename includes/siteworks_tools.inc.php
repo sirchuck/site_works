@@ -80,6 +80,16 @@ class siteworks_tools
     $r->insertData();
   }
 
+  public function broadcast($sw_var='',$sw_action='',$host='',$port='',$uid='',$tag='',$uniqueid='',$sendhost='',$sendport=''){
+    // php_websockets must be running and php_websockets_client must be in your project root folder.
+    $host = ($host == '') ? $this->_s->websocket_server : $host;
+    $port = ($port == '') ? $this->_s->websocket_port : $port;
+    $shost = ($sendhost == '') ? '' : ' -sh=' . $sendhost;
+    $sport = ($sendport == '') ? '' : ' -sp=' . $sendport;
+    if($host == ''){$host = }
+    return exec('bash -c "'. SITEWORKS_DOCUMENT_ROOT.'/php_websockets_client -m="' . $sw_var . '" -a="' . $sw_action . '" -h='.$host.' -p='.$port.' -u='.$uid.' -t='.$tag.' -uq='.$uniqueid.$shost.$sport);
+  }
+
   public function listFiles($dir,$ftype=0,$recursive=true,&$results=array()){
     // ftype( 0 all, 1 files only, 2 folders only )
     if(!is_dir($dir)){return false;}
