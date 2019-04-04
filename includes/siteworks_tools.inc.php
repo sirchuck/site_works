@@ -86,7 +86,6 @@ class siteworks_tools
     $port = ($port == '') ? $this->_s->websocket_port : $port;
     $shost = ($sendhost == '') ? '' : ' -sh=' . $sendhost;
     $sport = ($sendport == '') ? '' : ' -sp=' . $sendport;
-    if($host == ''){$host = }
     return exec('bash -c "'. SITEWORKS_DOCUMENT_ROOT.'/php_websockets_client -m="' . $sw_var . '" -a="' . $sw_action . '" -h='.$host.' -p='.$port.' -u='.$uid.' -t='.$tag.' -uq='.$uniqueid.$shost.$sport);
   }
 

@@ -171,7 +171,9 @@
     <button onclick="send()">Send</button>
     <div id="out"></div>
     <script>
-        var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG");
+        var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID");
+        // Secure port usage:
+        //var socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID");
         var msg = document.getElementById("msg");
         var out = document.getElementById("out");
         // Handle when socket is connected
