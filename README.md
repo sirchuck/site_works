@@ -873,6 +873,8 @@ PHP, MySQL, Javascript, and CSS framework
                 // funciton has completed. You could also use curl to call a javascript/python script but this seems like the easiest solution for most situations.
                 Send a message like this:
                     $reply = $this->_tool->broadcast($sw_var='',$sw_action='',$uid='',$tag='',$uniqueid='',$host='',$port='',$sendhost='',$sendport='');
+                    # Note, if you return something like {"key":"val"}, you may want to addslashes in some contexts.
+                    Ex: $this->_console[] = addslashes( $this->_tool->broadcast('hello','','1','tag','38483') );
                 Parameters:
                     $sw_var = (string) Your message, you can send JSON but as a string, then json_decode it in your socket script.
                     $sw_action = (string) You can use one of the sw_ commands like above, or use it for your own purposes.
