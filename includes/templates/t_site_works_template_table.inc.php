@@ -3,7 +3,7 @@ if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed
 
 class t_site_works_template_table extends SiteWorks\siteworks_db_tools
 {
-    public function __construct($id = 0, $odb = false){
+    public function __construct($id = NULL, $odb = false){
         parent::__construct();
         if($odb){$this->c =& $odb;} else {$this->c = $GLOBALS['_odb'];}
 
@@ -16,7 +16,7 @@ class t_site_works_template_table extends SiteWorks\siteworks_db_tools
            ,'FIELD_NAME2'               => array( 'value' => null , 'error' => null)   // Notes on this field
         );
 
-        if($id != '' && $id !== 0)
+        if($id != NULL)
             $this->fillData($id);
         return true;
     }
@@ -28,7 +28,7 @@ class t_site_works_template_table extends SiteWorks\siteworks_db_tools
                 $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `FIELD_NAME1` = "' . $this->odb->dbClean( $this->f['FIELD_NAME1']['value'] ) . '"';
             break;
             default:
-                $sqlFn = false;
+                $sqlFn = NULL;
         }
         return $sqlFn;
     }

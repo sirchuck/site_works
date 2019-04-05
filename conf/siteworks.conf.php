@@ -138,6 +138,15 @@ class siteworks_config extends siteworks_startup
     public $websocket_cert_path            = '';          // If empty you will only be able to connect on the insecure port
     public $websocket_certkey_path         = '';          // If empty you will only be able to connect on the insecure port
 
+    // Networks and some browsers may kill a socket connection after some amount of time. Typically it seems to be 30 seconds.
+    // You have a few choices on how you want to keep the socket alive. Set keepalive > 0 if you want the server
+    // to send the pong string on an interval you set in seconds. If you don't want to use a keepalive, you can use
+    // the ping/pong method. In this case set the ping and pong string, then have your client send the ping string to the server with
+    // and the server will respond with the pong string.
+    public $websocket_keepalive = '0' // Default 0 , 0 = off, # of seconds to wait before broadcasking keepalive (pong) string. 
+    public $websocket_ping      = '1' // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
+    public $websocket_pong      = '1' // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
+
 
     /*********************************************************************************************************
     **                               U R I    C O M P O N E N T S                                           **

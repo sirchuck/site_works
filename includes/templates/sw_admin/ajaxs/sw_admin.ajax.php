@@ -38,13 +38,13 @@ class sw_admin_ajax extends _s
                 $r->f[$_POST['lang']]['value']      = $r->clean($_POST['nlang']);
                 $r->updateData();
             }else{
-                $t = new SiteWorks\t_site_works_lang(0,$this->_odb);
+                $t = new SiteWorks\t_site_works_lang(,$this->_odb);
                 $result = $t->selectALL("sw_lang_category='" . $t->clean($_POST['category']) . "' AND sw_origional='". $t->clean($_POST['nlang']) . "'");
                 if($result){
                     echo '{"v":0}';
                     return false;
                 }
-                $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
+                $r = new SiteWorks\t_site_works_lang(,$this->_odb);
                 if($_POST['keep'] == 1){ $r->f['sw_lang_keep']['value'] = 1; }
                 $r->f['sw_lang_category']['value']          = $r->clean($_POST['category']);
                 $r->f[$_POST['sw_origional']]['value']      = $r->clean($_POST['nlang']);
@@ -56,7 +56,7 @@ class sw_admin_ajax extends _s
     }
 
     public function delete_marked(){
-        $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
+        $r = new SiteWorks\t_site_works_lang(,$this->_odb);
         $r->deleteData('sw_lang_keep=3');
         echo '{"v":1}';
     }
@@ -66,10 +66,10 @@ class sw_admin_ajax extends _s
             $swv = 'SiteWorks\\'.$_POST['p'];
             $r = null;
             if( class_exists($swv) ){
-                $r = new $swv(0,$this->_odb);
+                $r = new $swv(,$this->_odb);
             } else {
                 $swv = $_POST['p'];
-                $r = new $swv(0,$this->_odb);
+                $r = new $swv(,$this->_odb);
             }
             $j = new stdClass();
             $o = array(); 

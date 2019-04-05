@@ -4,7 +4,7 @@ if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed
 
 class t_site_works_lang extends siteworks_db_tools
 {
-    public function __construct($id = 0, $odb = false){
+    public function __construct($id = NULL, $odb = false){
     	parent::__construct();
     	if($odb){$this->c =& $odb;} else {$this->c = $GLOBALS['_odb'];}
         
@@ -21,7 +21,7 @@ class t_site_works_lang extends siteworks_db_tools
 		    ,'english'                    => array( 'value' => null , 'error' => null) // Default Lang - add more as neccessary.
 	    );
 
-		if($id != '' && $id !== 0)
+        if($id != NULL)
 	    	$this->fillData($id);
 		return true;
     }
@@ -35,7 +35,7 @@ class t_site_works_lang extends siteworks_db_tools
 			break;
 
 	    default:
-		    $sqlFn = false;
+		    $sqlFn = NULL;
     	}
 	    return $sqlFn;
     }

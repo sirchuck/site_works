@@ -2,6 +2,21 @@
 namespace SiteWorks;
 if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
 
+/*
+    query($sqlFn=NULL) -> $result | False
+    getFieldNames($doInsert=0) -> No return, sets values, unused by end users
+    getRows($_result=false,$returnArray=false) -> $result
+    clean($s) -> string
+    cleanAll() -> No return, cleans current $this->f values
+    clearFields() -> Sets $this->f values to 0 or NULL
+    fillData($id) -> true/false
+    selectAll($where = NULL, $what = '*') -> $result
+    insertData() -> $this->c->getInsertID();
+    insertUpdateData() - $this->c->getInsertID();
+    updateData($where=NULL,$values=NULL) -> true/false
+    deleteData($where=NULL) -> true/false
+*/
+
 abstract class siteworks_db_tools
 {
     public $c;
@@ -22,7 +37,7 @@ abstract class siteworks_db_tools
     {
     }
 
-    public function query($sqlFn=false){
+    public function query($sqlFn=NULL){
         if( substr_count(trim($sqlFn), ' ') < 1){
             $sqlFn = $this->buildQueryArray( $sqlFn );
         }
@@ -40,12 +55,11 @@ abstract class siteworks_db_tools
             return $resultArray;
         }
         else{
-            if($sqlFn !== false){
+            if( is_null($sqlFn) ){
+                return false;
+            }else{
                 if (($result = $this->c->q( $sqlFn ) )  && $this->c->numRows() > 0 ) {
                     return $result;
-                }
-                else{
-                    return false;
                 }
             }
         }
@@ -98,18 +112,18 @@ abstract class siteworks_db_tools
 
     public function clean($s){ return $this->c->c($s); }
     public function cleanAll(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = $this->clean($v['value']);} foreach($this->p as $k => $v){ $this->p[$k] = $this->clean($v);} }
-    public function clearFields(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = (is_numeric($this->f[$k]['value'])) ? 0 : null;} unset($this->p); }
+    public function clearFields(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = ( gettype($this->f[$k]['value']) == 'integer' || gettype($this->f[$k]['value']) == 'double' ) ? 0 : null;} unset($this->p); }
     
-    public function fillData($id=0){
+    public function fillData($id=NULL){
 
         if($id === true ){
             // Typically a database with one table and no key
             $sql = 'SELECT * FROM `'.$this->tableName.'`';
         }
-        elseif( is_numeric($id) && $id > 0 ){
+        elseif( gettype($id) == 'integer' ){
             $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = '.$id;
         }
-        elseif( !is_numeric($id) && $id != '' ){
+        elseif( gettype($id) == 'string' ){
             if(strrpos($id,'=')===false && strrpos($id,'>')===false && strrpos($id,'<')===false){
                 $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
             } else {
@@ -135,8 +149,8 @@ abstract class siteworks_db_tools
     
     }
     
-    public function selectAll($where = false, $what = '*'){
-        if( $where !== false && $where != '' ){$where = ' WHERE '.$where;}else{$where = '';}
+    public function selectAll($where = NULL, $what = '*'){
+        if( is_null($where) ){ $where = ''; }else{ $where = ' WHERE '.$where; }
 
         $sql = 'SELECT ' . $what . ' FROM `'.$this->tableName.'` '.$where;
         if (($result = $this->c->q($sql))  && $this->c->numRows() > 0) {
@@ -165,11 +179,11 @@ abstract class siteworks_db_tools
         return $this->c->getInsertID(); // Not sure this will ever return a good id.
     }
     
-    public function updateData($where = false,$values=false){ // $where can be id or where clause, $values 'x=y AND z=r' OR no where to use current t_class id and empty values to update all fields
-        if($where === false){$where = $this->f[$this->keyField]['value'];}
-        if( is_numeric($where) && $where > 0){
+    public function updateData($where=NULL,$values=NULL){ // $where can be id or where clause, $values 'x=y AND z=r' OR no where to use current t_class id and empty values to update all fields
+        if( is_null($where) ){$where = $this->f[$this->keyField]['value'];}
+        if( gettype($where) == 'integer' ){
             $where = ' WHERE `'.$this->keyField.'` = '.$where; 
-        } elseif( $where == 0 || is_null($where) ) {
+        } elseif( is_null($where) ) {
             $where = '';
         } else {
             if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
@@ -186,14 +200,16 @@ abstract class siteworks_db_tools
         return true;
     }
     
-    public function deleteData($where = ''){ // Where could be an id, if you dont use a comparitor we assume id.
-        if($where == ''){
-            if(isset($this->f[$this->keyField]['value']) && ($this->f[$this->keyField]['value'] > 0 || $this->f[$this->keyField]['value'] != null) ){
+    public function deleteData($where=NULL){ // Where could be an id, if you dont use a comparitor we assume id.
+        if( is_null($where) ){
+            if( isset($this->f[$this->keyField]['value']) && $this->f[$this->keyField]['value'] != null ){
                 $where = $this->f[$this->keyField]['value'];
             } else { return false; }
         }
-        if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
-            if(is_numeric($where)){$where = '`'.$this->keyField.'` = '.$where;}else{$where = '`'.$this->keyField.'` = \''.$where.'\'';}
+        if( gettype($where) == 'integer' ){
+            $where = '`'.$this->keyField.'` = '.$where;
+        } else if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
+            $where = '`'.$this->keyField.'` = \''.$where.'\'';
         }
         $sql = 'DELETE FROM `'.$this->tableName.'` WHERE '.$where.';';
         $result = $this->c->q($sql);

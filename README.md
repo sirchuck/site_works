@@ -321,14 +321,14 @@ PHP, MySQL, Javascript, and CSS framework
         siteworks/dev/dbtables
     Your database tables should follow the this class template, and be placed in the /dev/dbtables folder
     If you want to access one of my frameworks dbtables be sure and use the namespace
-        Ex: $r = new SiteWorks\t_site_works_lang(0,$this->_odb);
+        Ex: $r = new SiteWorks\t_site_works_lang(null,$this->_odb);
     To access yours:
-        Pass the ID if you want to pull a specific one, or 0, and the database connection you want to use.
+        Pass the ID if you want to pull a specific one, or null, and the database connection you want to use.
         Ex: $r = new t_mytable();
             That will load the mytable object using the $this->_odb connection. ( the default )
         Ex: $r = new t_mytable(5,$this->_odb);
             That will autofill your object with mytables infromation where the id = 5
-        Ex: $r = new t_mytable(0,$this->_dbo['DB_SERVER_2']);
+        Ex: $r = new t_mytable(,$this->_dbo['DB_SERVER_2']);
             That will load the empty object table using your specified database connection
     Note: The autoloader checks if your file starts with t_site_works_. If it does we load it from /includes,
     so for your personal table files in /dev/dbtables do not start filenames with t_site_works_
@@ -742,6 +742,19 @@ PHP, MySQL, Javascript, and CSS framework
             -c       = path to your siteworks config. /var/www/html/YOURSITE/conf/siteworks.YOURSERVER.pconf.php
             -cert    = (optional) path to your ssl cert. Only needed for secure connection.
             -certkey = (optional) path to your ssl cert key. Only needed for secure connection
+
+            // Websockets have a problem. The client and server can get disconnected for many reasons unexpectedly.
+            // In some situaitons settig a keepalive timer can work, this will tell the php_websocket server to send out a 
+            // pong to each connected client every (keepalive) seconds. I suggest setting it to less than 30 if you use 
+            // the keepalive method. Note, if you have 10000 clients connected, you'll be sending the pong string to 10000 people every
+            // (keepalive) seconds. Not a real issue, but something to think about.
+            // Your other option is to set keepalive to 0 and not use it, but have the connected client servers call the socket server
+            // with a ping. The server will respond with the string you set in the pong. Once you recieve your pong on the client,
+            // you restart the clients timer to send another ping. If for some reason you do not recieve a pong from the server
+            // you can attempt to reestablish the websocket connection. I provide a javascript example with some robustness below.
+            -keepalive   = Number of seconds to loop a brodcast of the pong string to all clients. 0 to turn off Default 0
+            -ping   = This is the string you plan to send to the websocket server to request a pong. Anything else gets passed to your php socket script.
+            -pong   = This is the string the server will resopnd with when pinged, and the string sent with keepalive.
         - Why
             You want a chat component for your site, or you want to brodcast an event. (This is not a streamer) Techincally you could
             probalby use it to stream but it would be really ineffeicnet for that. Use it more to send and recieve messages from
@@ -850,6 +863,12 @@ PHP, MySQL, Javascript, and CSS framework
                     var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID/" + n);
 
                     That will create a new socket connection for each new browser they open.
+                    NOTE: Allowing duplicates just means your user can open multipul connections with the same credentials: UID/TAG/UNIQUEID
+                         Don't confuse that with UNIQUEID which is only passed for you to run security checks on. Each connection made is
+                         of course a unique connection, that's why we need the unique + n segment above to open multipule connections.
+                         Setting allow_duplicates to false means when user Frost opens two browsr windows with the same UID/TAG/UNIQUEID
+                         but a differnet +n segment, only the newest connection will be open, the rest will be closed for him if they
+                         have the same UID/TAG/UNIQUEID.
 
                 Send your variable string - could be JSON:
                     var obj = {sw_var:"{\"input\":\""+msg.value+"\"}",sw_action:"sw_10"};
@@ -859,15 +878,57 @@ PHP, MySQL, Javascript, and CSS framework
                 <button onclick="send()">Send</button>
                 <div id="out"></div>
                 <script>
-                    var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID");
-                    // Secure port usage:
-                    //var socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID");
+                    var socket = null;
+                    // If you set the config to allow dupes(duplicates), then you can add additional unique segments to the websocket url
+                    // For example, Frost want's to open two browser windows to monitor the same chat server. Your code is set up to
+                    // check Frosts UID and UNIQUEID for secuirty, but Frost only has one unique id associated with his account.
+                    // If you allow dupes, you just add another unique segment to the calling websocket url - EX: socket_unique
+                    // If you do not want to allow dulicates, the /socket_unique is not neccessary because the server will kick
+                    // any new connection that matches UID/TAG/UNIQUEID.
+                    var socket_unique = new Date().getTime();
+                    function socket_connect(){
+                        socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID/" + socket_unique );
+                        // Secure port usage:
+                        //socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID/" + socket_unique );
+                    }
+
+                    // If you want to use a ping / pong to keep connections alive, do something like this
+                    pong_recieved = true;
+                    NUM_SECONDS_BEFORE_KEEPALIVE_CHECK = 20;
+                    var iTimer = {};
+                    iTimer.keepalive = 0;
+                    function iTimerF(){
+                        if(iTimer.keepalive > NUM_SECONDS_BEFORE_KEEPALIVE_CHECK){
+                            if(pong_recieved){
+                                // Send Ping
+                                socket.send( "YOUR PING STRING SET IN CONFIG" );
+                                pong_recieved = false;
+                            }else{
+                                // Re-establish connection
+                                socket_connect();
+                            }
+                            iTimer.keepalive = 0;
+                        }
+                        iTimer.keepalive++;
+                    }
+                    var SecondTimer = setInterval(iTimerF, 1000);
+                    // To Stop the timer: clearInterval(SecondTimer);
+
+                    socket_connect();
                     var msg = document.getElementById("msg");
                     var out = document.getElementById("out");
                     // Handle when socket is connected
                     socket.onopen = function () {out.innerHTML += "Connection Established\n";};
                     // Handle when socket recieves a message
-                    socket.onmessage = function (e) { out.innerHTML += "Server: " + e.data + "\n"; };
+                    socket.onmessage = function (e) {
+                        // Handle Pong return from our Ping
+                        if(e.data == "YOUR PONG STRING SET IN CONFIG"){
+                            pong_recieved = true;
+                        }else{
+                            // Non-pong responce, handle normally
+                            out.innerHTML += "Server: " + e.data + "\n";
+                        }
+                    };
                     function send() {
                         var obj = {sw_var_array:[msg.value],sw_action:""};
                         socket.send( JSON.stringify(obj) );

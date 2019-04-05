@@ -131,12 +131,22 @@ class siteworks_override extends siteworks_config
     $this->thread_php_path    = '';    //  Ex: /usr/bin/
     $this->thread_php_version = '';    //  Ex: 7.2
 
+    // Websocket Server Config
     $this->websocket_server               = '127.0.0.1'; // Your websocket server address
     $this->websocket_port                 = '8090';      // Default ws:// port 8090
     $this->websocket_secure_port          = '8091';      // Default wss:// port 8091
     $this->websocket_allow_duplicates     = 'false';     // Allow same uid/tag/uniqueid to connect more than once: true or false, default false.
     $this->websocket_cert_path            = '';          // If empty you will only be able to connect on the insecure port
     $this->websocket_certkey_path         = '';          // If empty you will only be able to connect on the insecure port
+
+    // Networks and some browsers may kill a socket connection after some amount of time. Typically it seems to be 30 seconds.
+    // You have a few choices on how you want to keep the socket alive. Set keepalive > 0 if you want the server
+    // to send the pong string on an interval you set in seconds. If you don't want to use a keepalive, you can use
+    // the ping/pong method. In this case set the ping and pong string, then have your client send the ping string to the server with
+    // and the server will respond with the pong string.
+    $this->websocket_keepalive = '0' // Default 0 , 0 = off, # of seconds to wait before broadcasking keepalive (pong) string. 
+    $this->websocket_ping      = '1' // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
+    $this->websocket_pong      = '1' // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
 
 
 

@@ -5,7 +5,7 @@ if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed
 class t_site_works_queue extends siteworks_db_tools
 {
     
-    public function __construct($id = 0, $odb = false){
+    public function __construct($id = NULL, $odb = false){
     	parent::__construct();
     	if($odb){$this->c =& $odb;} else {$this->c = $GLOBALS['_odb'];}
 
@@ -23,7 +23,7 @@ class t_site_works_queue extends siteworks_db_tools
 		    ,'sw_timeout'                    => array( 'value' => 0       , 'error' => null) // Default Timeout 30 seconds for script to run
 	    );
 	
-		if($id != '' && $id !== 0)
+        if($id != NULL)
 	    	$this->fillData($id);
 		return true;
     }
@@ -37,7 +37,7 @@ class t_site_works_queue extends siteworks_db_tools
 			break;
 
 	    default:
-		    $sqlFn = false;
+		    $sqlFn = NULL;
     	}
 	    return $sqlFn;
     }

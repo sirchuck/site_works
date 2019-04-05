@@ -171,15 +171,57 @@
     <button onclick="send()">Send</button>
     <div id="out"></div>
     <script>
-        var socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID");
-        // Secure port usage:
-        //var socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID");
+        var socket = null;
+        // If you set the config to allow dupes(duplicates), then you can add additional unique segments to the websocket url
+        // For example, Frost want's to open two browser windows to monitor the same chat server. Your code is set up to
+        // check Frosts UID and UNIQUEID for secuirty, but Frost only has one unique id associated with his account.
+        // If you allow dupes, you just add another unique segment to the calling websocket url - EX: socket_unique
+        // If you do not want to allow dulicates, the /socket_unique is not neccessary because the server will kick
+        // any new connection that matches UID/TAG/UNIQUEID.
+        var socket_unique = new Date().getTime();
+        function socket_connect(){
+            socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID/" + socket_unique );
+            // Secure port usage:
+            //socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID/" + socket_unique );
+        }
+
+        // If you want to use a ping / pong to keep connections alive, do something like this
+        pong_recieved = true;
+        NUM_SECONDS_BEFORE_KEEPALIVE_CHECK = 20;
+        var iTimer = {};
+        iTimer.keepalive = 0;
+        function iTimerF(){
+            if(iTimer.keepalive > NUM_SECONDS_BEFORE_KEEPALIVE_CHECK){
+                if(pong_recieved){
+                    // Send Ping
+                    socket.send( "YOUR PING STRING SET IN CONFIG" );
+                    pong_recieved = false;
+                }else{
+                    // Re-establish connection
+                    socket_connect();
+                }
+                iTimer.keepalive = 0;
+            }
+            iTimer.keepalive++;
+        }
+        var SecondTimer = setInterval(iTimerF, 1000);
+        // To Stop the timer: clearInterval(SecondTimer);
+
+        socket_connect();
         var msg = document.getElementById("msg");
         var out = document.getElementById("out");
         // Handle when socket is connected
         socket.onopen = function () {out.innerHTML += "Connection Established\n";};
         // Handle when socket recieves a message
-        socket.onmessage = function (e) { out.innerHTML += "Server: " + e.data + "\n"; };
+        socket.onmessage = function (e) {
+            // Handle Pong return from our Ping
+            if(e.data == "YOUR PONG STRING SET IN CONFIG"){
+                pong_recieved = true;
+            }else{
+                // Non-pong responce, handle normally
+                out.innerHTML += "Server: " + e.data + "\n";
+            }
+        };
         function send() {
             var obj = {sw_var_array:[msg.value],sw_action:""};
             socket.send( JSON.stringify(obj) );
