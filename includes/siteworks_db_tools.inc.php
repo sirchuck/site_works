@@ -189,7 +189,7 @@ abstract class siteworks_db_tools
                 $where = ' WHERE '.$where; 
             }
         }
-        if($values === false){$this->getFieldNames(2); $values = $this->updateFieldValue;}
+        if( is_null($values) ){$this->getFieldNames(2); $values = $this->updateFieldValue;}
         $sql = 'UPDATE `'.$this->tableName.'` SET '.$values.' '.$where;
         $result = $this->c->q($sql);
         if($result === false)
