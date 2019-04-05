@@ -142,7 +142,7 @@ class sw_admin_ajax extends _s
             $o[] = '';
             $o[] = '---------------- DBO C H E A T   S H E E T -------------';
             $o[] = 'Create the table object, if it is a siteworks table preface it with the SiteWorks\\ namespace.';
-            $o[] = '|tab|$o = new SiteWorks\\t_site_works_lang( [0 for blank ID to auto fill fields] , [DB Connection $this->_odb or $this->_dbo[\'default\'] ] );';
+            $o[] = '|tab|$o = new SiteWorks\\t_site_works_lang( [null for blank ID to auto fill fields] , [DB Connection $this->_odb or $this->_dbo[\'default\'] ] );';
             $o[] = '';
             $o[] = 'Strait Up Query the Database, accept no substitute';
             $o[] = '|tab|$result = $o->query(\'SELECT thing FROM table WHERE key = "\' . $o->clean( $MyVar ) . \'"\');';

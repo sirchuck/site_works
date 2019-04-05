@@ -73,36 +73,33 @@ abstract class siteworks_db_tools
         $this->insertValueList  = '';
         $this->updateFieldValue = '';
         $fCount = count($this->f);
-        $fCount = ( array_key_exists('iTemp', $this->f) ) ? $fCount-1 : $fCount ;
         foreach($this->f as $fKey => $fVal){
-            if($fKey != 'iTemp'){ // Ignore iTemp to pass values to table
-                if($iCount != 1 || $this->autoInc === false){
-                    if($doInsert==1 || $doInsert==3){
-                        $this->insertFieldNames .= '`'.$fKey.'`';
-                        if(is_null($fVal['value'])){
-                            $this->insertValueList  .= ' NULL ';
-                        }
-                        else{
-                            $this->insertValueList  .= '"'.$this->c->c($fVal['value']).'"';
-                        }
-
-                        if($fCount > $iCount ){
-                            $this->insertFieldNames .= ',';
-                            $this->insertValueList  .= ',';
-                        }
+            if($iCount != 1 || $this->autoInc === false){
+                if($doInsert==1 || $doInsert==3){
+                    $this->insertFieldNames .= '`'.$fKey.'`';
+                    if(is_null($fVal['value'])){
+                        $this->insertValueList  .= ' NULL ';
                     }
-                    if($doInsert==2 || $doInsert==3){
-                        if(is_null($fVal['value'])){
-                            $this->updateFieldValue .= '`'.$fKey.'` = NULL ';
-                        }
-                        else{
-                            $this->updateFieldValue .= '`'.$fKey.'` = "'.$this->c->c($fVal['value']).'"';
-                        }
-                        if($fCount > $iCount ){ $this->updateFieldValue .= ','; }
+                    else{
+                        $this->insertValueList  .= '"'.$this->c->c($fVal['value']).'"';
+                    }
+
+                    if($fCount > $iCount ){
+                        $this->insertFieldNames .= ',';
+                        $this->insertValueList  .= ',';
                     }
                 }
-                $iCount++;
+                if($doInsert==2 || $doInsert==3){
+                    if(is_null($fVal['value'])){
+                        $this->updateFieldValue .= '`'.$fKey.'` = NULL ';
+                    }
+                    else{
+                        $this->updateFieldValue .= '`'.$fKey.'` = "'.$this->c->c($fVal['value']).'"';
+                    }
+                    if($fCount > $iCount ){ $this->updateFieldValue .= ','; }
+                }
             }
+            $iCount++;
         }
     }
 
