@@ -842,6 +842,15 @@ PHP, MySQL, Javascript, and CSS framework
             - javascript
                 The connection:
                     var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID");
+
+                    If you wanted to let someone make multipul connections with the same uid/tag/uniqueid set
+                    $this->websocket_allow_duplicates to true in config then you could write something like this
+                    in your javascript client:
+                    var n = new Date().getTime();
+                    var socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID/" + n);
+
+                    That will create a new socket connection for each new browser they open.
+
                 Send your variable string - could be JSON:
                     var obj = {sw_var:"{\"input\":\""+msg.value+"\"}",sw_action:"sw_10"};
                     socket.send( JSON.stringify(obj) );
