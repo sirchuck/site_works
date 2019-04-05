@@ -144,9 +144,9 @@ class siteworks_override extends siteworks_config
     // to send the pong string on an interval you set in seconds. If you don't want to use a keepalive, you can use
     // the ping/pong method. In this case set the ping and pong string, then have your client send the ping string to the server with
     // and the server will respond with the pong string.
-    $this->websocket_keepalive = '0' // Default 0 , 0 = off, # of seconds to wait before broadcasking keepalive (pong) string. 
-    $this->websocket_ping      = '1' // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
-    $this->websocket_pong      = '1' // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
+    $this->websocket_keepalive = '0'; // Default 0 , 0 = off, # of seconds to wait before broadcasking keepalive (pong) string. 
+    $this->websocket_ping      = '1'; // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
+    $this->websocket_pong      = '1'; // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
 
 
 
