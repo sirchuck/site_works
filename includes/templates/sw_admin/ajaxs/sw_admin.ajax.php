@@ -47,8 +47,8 @@ class sw_admin_ajax extends _s
                 $r = new SiteWorks\t_site_works_lang(null,$this->_odb);
                 if($_POST['keep'] == 1){ $r->f['sw_lang_keep']['value'] = 1; }
                 $r->f['sw_lang_category']['value']          = $r->clean($_POST['category']);
-                $r->f[$_POST['sw_origional']]['value']      = $r->clean($_POST['nlang']);
-                $r->f[$_POST['english']]['value']           = $r->clean($_POST['nlang']);
+                $r->f['sw_origional']['value']              = $r->clean($_POST['nlang']);
+                $r->f['english']['value']                   = $r->clean($_POST['nlang']);
                 $r->insertData();
             }
         }
