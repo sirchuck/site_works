@@ -103,7 +103,7 @@ window.addEventListener(\'load\', function(){
 		
 		$this->_p['language_options'] = '';
 		$this->_p['language_text_opitons'] = '';
-		$r = new SiteWorks\t_site_works_lang(,$this->_odb);
+		$r = new SiteWorks\t_site_works_lang(null,$this->_odb);
 		foreach( $r->f as $k=>$v ){	if(substr($k, 0,3) != 'sw_'){ $this->_p['language_options'] .= '<option value="' . $k . '">' . $k . '</option>'; } }
 
 		$result = $r->selectAll('sw_lang_key>0 ORDER BY sw_lang_category, sw_lang_keep DESC','sw_lang_key, sw_lang_keep, sw_lang_category, SUBSTRING(sw_origional,1,50) as sw_lang');

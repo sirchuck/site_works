@@ -113,14 +113,14 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		// Handle language table creation if needed.
 		// If $db_load is true, we'll check to see if the following tables exist, if not create them but we dont pull anything.
 		if($db_load){
-			$r = new t_site_works_lang(,$this->odb);
+			$r = new t_site_works_lang(null,$this->odb);
 			$r->query("SHOW TABLES LIKE 'site_works_lang';");
 			if($r->c->numRows()<1){
 				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_lang` ( `sw_lang_key` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_lang_keep` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0', `sw_lang_category` CHAR(40) NULL , `sw_origional` TEXT NULL , `english` TEXT NULL, PRIMARY KEY (`sw_lang_key`)) ENGINE = InnoDB;");
 				$had_to_build_databases = true;
 			}
 
-			$r = new t_site_works_queue(,$this->odb);
+			$r = new t_site_works_queue(null,$this->odb);
 			$r->query("SHOW TABLES LIKE 'site_works_queue';");
 			if($r->c->numRows()<1){
 				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_queue` ( `sw_ts` BIGINT(13) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_tag` TEXT NOT NULL , `sw_script` TEXT NOT NULL , `sw_vars` LONGTEXT NOT NULL , `sw_waitstart` INT(11) NOT NULL DEFAULT '0' , `sw_timeout` INT(11) NOT NULL DEFAULT '0' , PRIMARY KEY (`sw_ts`)) ENGINE = InnoDB;");
@@ -141,7 +141,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$radmin->updateData();
 
 			// Build Language Files
-			$r = new t_site_works_lang(,$this->odb);
+			$r = new t_site_works_lang(null,$this->odb);
 			$r->p['list'] = array();
 			$r->query('SELECT sw_lang_key, sw_lang_keep, sw_origional FROM `' . $dbc_database_name . '`.`site_works_lang` WHERE sw_lang_category = \'\'');
 			while($row = $r->getRows()){$r->p['list'][]=$row;}
@@ -179,7 +179,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					}else{
 						$vx = $this->site_works_db_classes[$k]['value'];
 					}
-					$tmp = new $vx(,$this->odb);
+					$tmp = new $vx(null,$this->odb);
 					$this->site_works_db_classes[$k]['primary'] = $tmp->keyField;
 					foreach($tmp->f as $k2 => $v2){
 						$farray[] = array('value'=>$k2,'type'=>$v2['value']);

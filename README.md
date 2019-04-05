@@ -114,13 +114,17 @@ PHP, MySQL, Javascript, and CSS framework
     The framework needs to be able to write to certain folders
 
     sudo chmod -R 775 conf
-    sudo chgrp -R www-data conf
+    sudo chgrp -R $USER:www-data conf
 
     sudo chmod -R 775 private
-    sudo chgrp -R www-data private
+    sudo chgrp -R $USER:www-data private
 
     sudo chmod -R 775 public
-    sudo chgrp -R www-data public
+    sudo chgrp -R $USER:www-data public
+
+    // One Line
+    sudo chmod -R 775 conf && chmod -R 775 private && chmod -R 775 public && chgrp -R $USER:www-data conf && chgrp -R $USER:www-data private && chgrp -R $USER:www-data public
+
 
 # Initial Site Load:
     Once you completed the setup above, open your new site in a browser.
@@ -328,7 +332,7 @@ PHP, MySQL, Javascript, and CSS framework
             That will load the mytable object using the $this->_odb connection. ( the default )
         Ex: $r = new t_mytable(5,$this->_odb);
             That will autofill your object with mytables infromation where the id = 5
-        Ex: $r = new t_mytable(,$this->_dbo['DB_SERVER_2']);
+        Ex: $r = new t_mytable(null,$this->_dbo['DB_SERVER_2']);
             That will load the empty object table using your specified database connection
     Note: The autoloader checks if your file starts with t_site_works_. If it does we load it from /includes,
     so for your personal table files in /dev/dbtables do not start filenames with t_site_works_

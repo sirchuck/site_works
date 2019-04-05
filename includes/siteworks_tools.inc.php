@@ -71,7 +71,7 @@ class siteworks_tools
   public function queue($path='',$vars='',$tag='',$waitstart=0,$timeout=0){
     // This function works with php_q_it server
     if($vars != ''){$vars = base64_encode(json_encode($vars));}
-    $r = new t_site_works_queue(,$this->_s->odb);
+    $r = new t_site_works_queue(null,$this->_s->odb);
     $r->f['sw_tag']['value'] = $tag;
     $r->f['sw_script']['value'] = SITEWORKS_DOCUMENT_ROOT . '/private/queue_scripts/'.$path.'.php';
     $r->f['sw_vars']['value'] = $vars;
@@ -164,7 +164,7 @@ class siteworks_tools
     $language = ($language==false)? $_SESSION['language'] : $language;
     $holdSQL = $this->_s->printSQL;
     $this->_s->printSQL = false;
-    $r = new t_site_works_lang(,$this->_s->odb);
+    $r = new t_site_works_lang(null,$this->_s->odb);
     $r->query('SELECT  `' . $language . '` as l FROM `site_works_lang` WHERE sw_lang_key = ' . $index);
     $row = $r->getRows();
     $this->_s->printSQL = $holdSQL;
