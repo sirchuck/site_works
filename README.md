@@ -940,6 +940,9 @@ PHP, MySQL, Javascript, and CSS framework
                         socket.send( JSON.stringify(obj) );
                         msg.value = "";
                     }
+                    socket.onclose = function () {
+                        // You could attempt to reestablish connection here for example
+                    };
                 </script>
             - php
                 // Turns out it's really ugly to have php connect to a websocket, so I created an app you call from php to handle it for you.
