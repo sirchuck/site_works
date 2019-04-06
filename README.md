@@ -707,7 +707,7 @@ PHP, MySQL, Javascript, and CSS framework
             -t   : Database type ( mysqli / postgres ) - not currently used.
             Not Collected by your Config, you provide them in UPSTART or SYSTEMD or Command line
             -c   : Full path to your configuration file, Ex: /var/www/YOURSITE/conf/siteworks.YOURSITECOM.pconf.php
-            -s   : Seconds to wait between calls to read your database for new queue items to manage. Default is to check ever 1 second.
+            -s   : Seconds to wait between calls to read your database for new queue items to manage. Default is to check every 1 second.
         - SYSTEMD Example for php_q_it
             sudo chmod +x /path/to/php_q_it
             sudo nano /lib/systemd/system/myservice.service
