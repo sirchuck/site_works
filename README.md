@@ -745,6 +745,7 @@ PHP, MySQL, Javascript, and CSS framework
             -script  = /var/www/html/YOURSITE/private/socket_scripts/YOUR_FILE.php The file the socket server should call for processing.
             -to      = Script Timeout, default 30 seconds.
             -debug   = true / false, default false
+            -dupes   = Default: false, Allow duplicate connections for identical UID/TAG/UNIQUEID
             -c       = path to your siteworks config. /var/www/html/YOURSITE/conf/siteworks.YOURSERVER.pconf.php
             -cert    = (optional) path to your ssl cert. Only needed for secure connection.
             -certkey = (optional) path to your ssl cert key. Only needed for secure connection
@@ -761,6 +762,8 @@ PHP, MySQL, Javascript, and CSS framework
             -keepalive   = Number of seconds to loop a brodcast of the pong string to all clients. 0 to turn off Default 0
             -ping   = This is the string you plan to send to the websocket server to request a pong. Anything else gets passed to your php socket script.
             -pong   = This is the string the server will resopnd with when pinged, and the string sent with keepalive.
+            -nopong = Default: false, If true the server will trash incomming pings, meaning you can run a client side keepalive.
+
         - Why
             You want a chat component for your site, or you want to brodcast an event. (This is not a streamer) Techincally you could
             probalby use it to stream but it would be really ineffeicnet for that. Use it more to send and recieve messages from
@@ -879,71 +882,126 @@ PHP, MySQL, Javascript, and CSS framework
                 Send your variable string - could be JSON:
                     var obj = {sw_var:"{\"input\":\""+msg.value+"\"}",sw_action:"sw_10"};
                     socket.send( JSON.stringify(obj) );
-                // Full HTML JS Example: Replace YOUR_SERVER:PORT UID TAG and UNIQUEID
-                <input id="msg" type="text" />
+
+                JAVASCRIPT CLIENT EXAMPLE:
+                <!-- Example Javascript for a browser client. Replace YOUR_SERVER:[PORT/SPORT] UID TAG UNIQUEID-->
+                <input id="input" type="text" />
                 <button onclick="send()">Send</button>
-                <div id="out"></div>
+                <pre id="output"></pre>
                 <script>
+                    var input = document.getElementById("input");
+                    var output = document.getElementById("output");
+
                     var socket = null;
+
                     // If you set the config to allow dupes(duplicates), then you can add additional unique segments to the websocket url
-                    // For example, Frost want's to open two browser windows to monitor the same chat server. Your code is set up to
-                    // check Frosts UID and UNIQUEID for secuirty, but Frost only has one unique id associated with his account.
-                    // If you allow dupes, you just add another unique segment to the calling websocket url - EX: socket_unique
+                    // For example, Frost would like to open two browser windows to monitor the same chat server. Your code is set up to
+                    // check Frosts UID and UNIQUEID for secuirty, but Frost only has one uniqueid associated with his account.
+                    // If you allow dupes, you just add another unique segment to the calling websocket url as show below
                     // If you do not want to allow dulicates, the /socket_unique is not neccessary because the server will kick
-                    // any new connection that matches UID/TAG/UNIQUEID.
+                    // any old connection that matches UID/TAG/UNIQUEID.
+
+                    // I use socket_unique if I plan to allow duplicates
                     var socket_unique = new Date().getTime();
+
                     function socket_connect(){
-                        socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID/" + socket_unique );
-                        // Secure port usage:
-                        //socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID/" + socket_unique );
+                        socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID" + "/" + socket_unique );
+
+                        // To use a secure websocket
+                        // socket = new WebSocket("wss://YOUR_SERVER:SPORT/UID/TAG/UNIQUEID" + "/" + socket_unique );
                     }
 
-                    // If you want to use a ping / pong to keep connections alive, do something like this
-                    pong_recieved = true;
-                    NUM_SECONDS_BEFORE_KEEPALIVE_CHECK = 20;
+                    // If you want to use a ping / pong to keep connections alive, set up an interval timer to send your ping.
+                    var pong_recieved = true;
+                    var NUM_SECONDS_BEFORE_KEEPALIVE_CHECK = 20;
                     var iTimer = {};
                     iTimer.keepalive = 0;
+
                     function iTimerF(){
-                        if(iTimer.keepalive > NUM_SECONDS_BEFORE_KEEPALIVE_CHECK){
+                        if(iTimer.keepalive >= NUM_SECONDS_BEFORE_KEEPALIVE_CHECK){
+
+                            // If using ping/pong or ping/nopong 
                             if(pong_recieved){
-                                // Send Ping
-                                socket.send( "YOUR PING STRING SET IN CONFIG" );
+                                console.log("Sending the Ping");
+                                socket.send( "1" );
+
+                                // If you exect to recieve a pong set pong_recieved to false
+                                // However if you set nopong to true in config, comment this next line out.
                                 pong_recieved = false;
+
                             }else{
-                                // Re-establish connection
+                                // Hmm we sent a ping, but did not recieve an expected pong
+                                // That likely means we have been disconnected so lets try to reconnect
+
+                                // Make sure the socket is closed
+                                socket.close();
+
+                                // Reset our pong_recieved starter status
+                                pong_recieved = true;
+
+                                // Reconnect
                                 socket_connect();
                             }
                             iTimer.keepalive = 0;
                         }
                         iTimer.keepalive++;
                     }
-                    var SecondTimer = setInterval(iTimerF, 1000);
-                    // To Stop the timer: clearInterval(SecondTimer);
 
+                    // Start our initial websocket connection
                     socket_connect();
-                    var msg = document.getElementById("msg");
-                    var out = document.getElementById("out");
-                    // Handle when socket is connected
-                    socket.onopen = function () {out.innerHTML += "Connection Established\n";};
-                    // Handle when socket recieves a message
+
+                    // Use a javascript timer for ping/pong and ping/nopong client side keepalive stratagies
+                    // Comment the next line out if you just plan on using server side keepalive
+                    // To Stop the timer use: clearInterval(SecondTimer);
+                    var SecondTimer = setInterval(iTimerF, 1000);
+
+                    socket.onopen = function () {
+                        output.innerHTML += "Status: Connected\n";
+                    };
+
+                    socket.onclose = function () {
+                        // The client thinks it was disconnected
+                        // You could do a socket_connect() here to reconnect
+                        // Or if you are using the interval timer above it should reconnect automatically
+                        console.log("closed");
+                    };
+
                     socket.onmessage = function (e) {
                         // Handle Pong return from our Ping
-                        if(e.data == "YOUR PONG STRING SET IN CONFIG"){
+                        if(e.data == "1"){
+                            // If you are using server side keepalive, or ping pong you should handle the incoming pong.
                             pong_recieved = true;
+                            console.log("pong");
                         }else{
-                            // Non-pong responce, handle normally
-                            out.innerHTML += "Server: " + e.data + "\n";
+                           // Non-pong responce, This is your php socket script file responce
+                            output.innerHTML += "Server: " + e.data + "\n";
+
+                            // If you sent back JSON, parse it
+                            var obj = JSON.parse(e.data);
+                            output.innerHTML += "p: " + obj.p + "\n";
+                            output.innerHTML += "i: " + obj.i + "\n";
+                            output.innerHTML += "w: " + obj.w + "\n";
+
+                            // You can have JSON within JSON and parse that too
+                            var obj2 = JSON.parse(obj.w);
+                            output.innerHTML += "w2: " + obj2[2] + "\n";
                         }
                     };
+
                     function send() {
-                        var obj = {sw_var_array:[msg.value],sw_action:""};
+                        // Lets send the socket server some json for the sw_var and an empty sw_action
+                        var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:""};
+
+                        // Now we JSON encode the above object and send it off to the server.
                         socket.send( JSON.stringify(obj) );
-                        msg.value = "";
+
+                        // Clear the input textbox
+                        input.value = "";
                     }
-                    socket.onclose = function () {
-                        // You could attempt to reestablish connection here for example
-                    };
                 </script>
+
+
+
             - php
                 // Turns out it's really ugly to have php connect to a websocket, so I created an app you call from php to handle it for you.
                 // To use this you must have php_websockets_client in your project root folder, and it must be executable.

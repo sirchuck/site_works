@@ -147,6 +147,7 @@ class siteworks_override extends siteworks_config
     $this->websocket_keepalive = '0'; // Default 0 , 0 = off, # of seconds to wait before broadcasking keepalive (pong) string. 
     $this->websocket_ping      = '1'; // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
     $this->websocket_pong      = '1'; // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
+    $this->websocket_no_pong   = 'false'; // Default: false, If true no pong will be returned when sending a ping to the server. (Client Keepalive Method)
 
 
 

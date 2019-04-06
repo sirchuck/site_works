@@ -166,68 +166,121 @@
 
 
 /*
-<!-- Example Javascript for a browser client. Replace YOUR_SERVER:PORT UID TAG UNIQUEID-->
-    <input id="msg" type="text" />
-    <button onclick="send()">Send</button>
-    <div id="out"></div>
-    <script>
-        var socket = null;
-        // If you set the config to allow dupes(duplicates), then you can add additional unique segments to the websocket url
-        // For example, Frost want's to open two browser windows to monitor the same chat server. Your code is set up to
-        // check Frosts UID and UNIQUEID for secuirty, but Frost only has one unique id associated with his account.
-        // If you allow dupes, you just add another unique segment to the calling websocket url - EX: socket_unique
-        // If you do not want to allow dulicates, the /socket_unique is not neccessary because the server will kick
-        // any new connection that matches UID/TAG/UNIQUEID.
-        var socket_unique = new Date().getTime();
-        function socket_connect(){
-            socket = new WebSocket("ws://YOUR_SERVER:8080/UID/TAG/UNIQUEID/" + socket_unique );
-            // Secure port usage:
-            //socket = new WebSocket("wss://YOUR_SERVER:8081/UID/TAG/UNIQUEID/" + socket_unique );
-        }
+<!-- Example Javascript for a browser client. Replace YOUR_SERVER:[PORT/SPORT] UID TAG UNIQUEID-->
+<input id="input" type="text" />
+<button onclick="send()">Send</button>
+<pre id="output"></pre>
+<script>
+    var input = document.getElementById("input");
+    var output = document.getElementById("output");
 
-        // If you want to use a ping / pong to keep connections alive, do something like this
-        pong_recieved = true;
-        NUM_SECONDS_BEFORE_KEEPALIVE_CHECK = 20;
-        var iTimer = {};
-        iTimer.keepalive = 0;
-        function iTimerF(){
-            if(iTimer.keepalive > NUM_SECONDS_BEFORE_KEEPALIVE_CHECK){
-                if(pong_recieved){
-                    // Send Ping
-                    socket.send( "YOUR PING STRING SET IN CONFIG" );
-                    pong_recieved = false;
-                }else{
-                    // Re-establish connection
-                    socket_connect();
-                }
-                iTimer.keepalive = 0;
-            }
-            iTimer.keepalive++;
-        }
-        var SecondTimer = setInterval(iTimerF, 1000);
-        // To Stop the timer: clearInterval(SecondTimer);
+    var socket = null;
 
-        socket_connect();
-        var msg = document.getElementById("msg");
-        var out = document.getElementById("out");
-        // Handle when socket is connected
-        socket.onopen = function () {out.innerHTML += "Connection Established\n";};
-        // Handle when socket recieves a message
-        socket.onmessage = function (e) {
-            // Handle Pong return from our Ping
-            if(e.data == "YOUR PONG STRING SET IN CONFIG"){
-                pong_recieved = true;
+    // If you set the config to allow dupes(duplicates), then you can add additional unique segments to the websocket url
+    // For example, Frost would like to open two browser windows to monitor the same chat server. Your code is set up to
+    // check Frosts UID and UNIQUEID for secuirty, but Frost only has one uniqueid associated with his account.
+    // If you allow dupes, you just add another unique segment to the calling websocket url as show below
+    // If you do not want to allow dulicates, the /socket_unique is not neccessary because the server will kick
+    // any old connection that matches UID/TAG/UNIQUEID.
+
+    // I use socket_unique if I plan to allow duplicates
+    var socket_unique = new Date().getTime();
+
+    function socket_connect(){
+        socket = new WebSocket("ws://YOUR_SERVER:PORT/UID/TAG/UNIQUEID" + "/" + socket_unique );
+
+        // To use a secure websocket
+        // socket = new WebSocket("wss://YOUR_SERVER:SPORT/UID/TAG/UNIQUEID" + "/" + socket_unique );
+    }
+
+    // If you want to use a ping / pong to keep connections alive, set up an interval timer to send your ping.
+    var pong_recieved = true;
+    var NUM_SECONDS_BEFORE_KEEPALIVE_CHECK = 20;
+    var iTimer = {};
+    iTimer.keepalive = 0;
+
+    function iTimerF(){
+        if(iTimer.keepalive >= NUM_SECONDS_BEFORE_KEEPALIVE_CHECK){
+
+            // If using ping/pong or ping/nopong 
+            if(pong_recieved){
+                console.log("Sending the Ping");
+                socket.send( "1" );
+
+                // If you exect to recieve a pong set pong_recieved to false
+                // However if you set nopong to true in config, comment this next line out.
+                pong_recieved = false;
+
             }else{
-                // Non-pong responce, handle normally
-                out.innerHTML += "Server: " + e.data + "\n";
+                // Hmm we sent a ping, but did not recieve an expected pong
+                // That likely means we have been disconnected so lets try to reconnect
+
+                // Make sure the socket is closed
+                socket.close();
+
+                // Reset our pong_recieved starter status
+                pong_recieved = true;
+
+                // Reconnect
+                socket_connect();
             }
-        };
-        function send() {
-            var obj = {sw_var_array:[msg.value],sw_action:""};
-            socket.send( JSON.stringify(obj) );
-            msg.value = "";
+            iTimer.keepalive = 0;
         }
-    </script>
+        iTimer.keepalive++;
+    }
+
+    // Start our initial websocket connection
+    socket_connect();
+
+    // Use a javascript timer for ping/pong and ping/nopong client side keepalive stratagies
+    // Comment the next line out if you just plan on using server side keepalive
+    // To Stop the timer use: clearInterval(SecondTimer);
+    var SecondTimer = setInterval(iTimerF, 1000);
+
+    socket.onopen = function () {
+        output.innerHTML += "Status: Connected\n";
+    };
+
+    socket.onclose = function () {
+        // The client thinks it was disconnected
+        // You could do a socket_connect() here to reconnect
+        // Or if you are using the interval timer above it should reconnect automatically
+        console.log("closed");
+    };
+
+    socket.onmessage = function (e) {
+        // Handle Pong return from our Ping
+        if(e.data == "1"){
+            // If you are using server side keepalive, or ping pong you should handle the incoming pong.
+            pong_recieved = true;
+            console.log("pong");
+        }else{
+           // Non-pong responce, This is your php socket script file responce
+            output.innerHTML += "Server: " + e.data + "\n";
+
+            // If you sent back JSON, parse it
+            var obj = JSON.parse(e.data);
+            output.innerHTML += "p: " + obj.p + "\n";
+            output.innerHTML += "i: " + obj.i + "\n";
+            output.innerHTML += "w: " + obj.w + "\n";
+
+            // You can have JSON within JSON and parse that too
+            var obj2 = JSON.parse(obj.w);
+            output.innerHTML += "w2: " + obj2[2] + "\n";
+        }
+    };
+
+    function send() {
+        // Lets send the socket server some json for the sw_var and an empty sw_action
+        var obj = {sw_var:"{\"input\":\""+input.value+"\"}",sw_action:""};
+
+        // Now we JSON encode the above object and send it off to the server.
+        socket.send( JSON.stringify(obj) );
+
+        // Clear the input textbox
+        input.value = "";
+    }
+</script>
 */
 
 ?>
