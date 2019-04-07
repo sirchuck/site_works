@@ -143,7 +143,8 @@ class siteworks_config extends siteworks_startup
     // to send the pong string on an interval you set in seconds. If you don't want to use a keepalive, you can use
     // the ping/pong method. In this case set the ping and pong string, then have your client send the ping string to the server with
     // and the server will respond with the pong string.
-    public $websocket_keepalive = '0'; // Default 0 , 0 = off, # of seconds to wait before broadcasking keepalive (pong) string. 
+    // **** NOTE: You really do not want to set the keepalive to 1 Millisecond, remember 1000 Milliseconds is 1 second.
+    public $websocket_keepalive = '0'; // Default 0 , 0 = off, # of Milliseconds to wait before broadcasking keepalive (pong) string. 1(s) = 1000(ms)
     public $websocket_ping      = '1'; // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
     public $websocket_pong      = '1'; // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
     public $websocket_no_pong   = 'false'; // Default: false, If true no pong will be returned when sending a ping to the server. (Client Keepalive Method)
