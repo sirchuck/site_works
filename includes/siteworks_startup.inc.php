@@ -31,6 +31,8 @@ class siteworks_startup
 
 	public $site_works_db_classes = [];
 
+	public $apcu_is_set = false;
+
     public function __construct(){
     	$this->softwareTimer = microtime(true);
 		spl_autoload_register(array($this, 'handle_autoload'));
@@ -71,10 +73,11 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		$this->printSQL = false;
 
 		// Handle Admin Table and APCu
+		$this->apcu_is_set = ( $this->APCuTimeoutMinutes > 0 && extension_loaded('apcu') ) ? true : false;
 		$db_load = true;
 		$had_to_build_databases = false;
 		$apcu_hold_time = time();
-		if( extension_loaded('apcu') ){
+		if( $this->apcu_is_set ){
 			$db_load = false;
 			$this->admin = apcu_fetch($this->uri->fixedapcu.'admin');
 			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
@@ -89,11 +92,11 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->admin = null;
 			$this->admin = ['apcu_start_time' => $apcu_hold_time];
 			foreach($radmin->f as $k => $v){ $this->admin[$k] = $v['value']; }
-			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'admin', $this->admin); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
+			if( $this->apcu_is_set ){ apcu_store($this->uri->fixedapcu.'admin', $this->admin); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
 		}
 		// Handle Memory Table and APCu
 		$db_load2 = true;
-		if( extension_loaded('apcu') ){
+		if( $this->apcu_is_set ){
 			$db_load2 = false;
 			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
 			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load2 = true; }
@@ -108,7 +111,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->mem = null;
 			$this->mem = ['apcu_start_time' => $apcu_hold_time];
 			foreach($r->f as $k => $v){ $this->mem[$k] = $v['value']; }
-			if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.'mem', $this->mem); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
+			if( $this->apcu_is_set ){ apcu_store($this->uri->fixedapcu.'mem', $this->mem); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
 		}
 		// Handle language table creation if needed.
 		// If $db_load is true, we'll check to see if the following tables exist, if not create them but we dont pull anything.
@@ -442,7 +445,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		}
 	}
 	public function handle_shutdown(){
-		if( extension_loaded('apcu') ){
+		if( $this->apcu_is_set ){
 			apcu_store($this->uri->fixedapcu.'admin', $this->admin);
 			apcu_store($this->uri->fixedapcu.'mem', $this->admin);
 		}
