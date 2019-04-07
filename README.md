@@ -643,15 +643,17 @@ PHP, MySQL, Javascript, and CSS framework
     php_threader
         This is a linux only app, you need to leave it in your site_works root folder so the framework can find it.
         - Parameters
-            File: This is the filename of the file in your thread_scripts folder you want to run. We add the path and .php for you.
-            Seconds before starting the script: Integer number of seconds to wait before starting your thread.
-            Variables: Send an array of key => value pairs to retrieve in your thread script.
+            File = This is the filename of the file in your thread_scripts folder you want to run. We add the path and .php for you.
+            Wait =  before starting the script: Integer number of Milliseconds to wait before starting your thread. 1(s) = 1000(ms)
+            Vars = Send an array of key => value pairs to retrieve in your thread script.
         - Why
             Say you want to let a user visit your page, but you want to do some behind the scenes work without making them wait.
             Now you can run a script like the following to run a background script, starting 20 seconds from now, with an array of variables.
             You'll find an example of this in the template controller.
         - Usage
-            $this->_tool->thread( 'MyFile', 20, ['key1'=>'var1','key2'=>'var2'] );
+            $this->_tool->thread( 'MyFile', 20000, ['key1'=>'var1','key2'=>'var2'] );
+            // File, WaitTimer(ms), Vars 
+            Will run private/thread_scripts/MyFile.php in 20 seconds
         - Your threaded script
             Your thread scripts should be located in /dev/thread_scripts
             * NOTE: When your page is processed by the framework you reference it in the private/thread_scripts folder. 
@@ -669,17 +671,18 @@ PHP, MySQL, Javascript, and CSS framework
         This is the queue manager. When you put something in the site_works_queue database, and you have the php_q_it queue manager running
         it will run the script in the order it was put in.
         - Parameters
-            File: This is the filename of the file in your queue_scripts folder you want to run. We add the path and .php for you.
-            Variables: Send an array of key => value pairs to retrieve in your thread script.
-            Tag: You can run multipul queues at once by giving each queue item a tag it belongs to. Queue tag A and B can run at the same time
+            File = This is the filename of the file in your queue_scripts folder you want to run. We add the path and .php for you.
+            Vars = Send an array of key => value pairs to retrieve in your thread script.
+            Tag = You can run multipul queues at once by giving each queue item a tag it belongs to. Queue tag A and B can run at the same time
                 The second queue item with the tag A will come after the first queue item with the tag A.
-            WaitStart: How many seconds should we wait before starting this individual queue item?
-            Timeout: How long should we wait for your script to run? 0 for default 30 seconds. If your script needs more time tell us here
+            WaitStart = How many Milliseconds should we wait before starting this individual queue item? Deafult 0, do not wait.
+            Timeout = How many Seconds we wait for your script to run? 0 for default 30 seconds. If your script needs more time tell us here
                 or the next in line may start before your first one is complete. 
         - Why
-            You expect a high number of people to click a funciton, but you need a first come first serve action to happen in the background.
+            You need to process something that takes a while and you don't want users to see they are hung up on a page.
         - Usage
             $this->_tool->queue( 'MyFile', ['key1'=>'var1','key2'=>'var2'], 'MyQueueTag', 0, 0 );
+            // File, Vars, Tag, WaitStart(ms), Timeout(s)
         - Your queue script
             Your queue scripts should be located in /dev/queue_scripts
             * NOTE: When your page is processed by the framework you reference it in the private/queue_scripts folder. 
@@ -707,7 +710,7 @@ PHP, MySQL, Javascript, and CSS framework
             -t   : Database type ( mysqli / postgres ) - not currently used.
             Not Collected by your Config, you provide them in UPSTART or SYSTEMD or Command line
             -c   : Full path to your configuration file, Ex: /var/www/YOURSITE/conf/siteworks.YOURSITECOM.pconf.php
-            -s   : Seconds to wait between calls to read your database for new queue items to manage. Default is to check every 1 second.
+            -s   : Milliseconds to wait between calls to read your database for new queue items to manage. Default is to check every 1 second, 1000(ms).
         - SYSTEMD Example for php_q_it
             sudo chmod +x /path/to/php_q_it
             sudo nano /lib/systemd/system/myservice.service
@@ -716,7 +719,7 @@ PHP, MySQL, Javascript, and CSS framework
 
                 [Service]
                 type=simple
-                ExecStart=/bin/bash /path/to/php_q_it "-c /path/to/siteworks.YOURSITE.pconf.php -s 10"
+                ExecStart=/bin/bash /path/to/php_q_it "-c /path/to/siteworks.YOURSITE.pconf.php -s 10000"
                 Restart=always
                 RestartSec=3
 
@@ -752,14 +755,14 @@ PHP, MySQL, Javascript, and CSS framework
 
             // Websockets have a problem. The client and server can get disconnected for many reasons unexpectedly.
             // In some situaitons settig a keepalive timer can work, this will tell the php_websocket server to send out a 
-            // pong to each connected client every (keepalive) seconds. I suggest setting it to less than 30 if you use 
+            // pong to each connected client every (keepalive) Milliseconds. I suggest setting it to less than 30(s) 30000(ms) if you use 
             // the keepalive method. Note, if you have 10000 clients connected, you'll be sending the pong string to 10000 people every
-            // (keepalive) seconds. Not a real issue, but something to think about.
+            // (keepalive) Milliseconds. Not a real issue at a reasonable setting (20000), but something to think about.
             // Your other option is to set keepalive to 0 and not use it, but have the connected client servers call the socket server
             // with a ping. The server will respond with the string you set in the pong. Once you recieve your pong on the client,
             // you restart the clients timer to send another ping. If for some reason you do not recieve a pong from the server
             // you can attempt to reestablish the websocket connection. I provide a javascript example with some robustness below.
-            -keepalive   = Number of seconds to loop a brodcast of the pong string to all clients. 0 to turn off Default 0
+            -keepalive   = Number of Milliseconds to loop a brodcast of the pong string to all clients. 0 to turn off Default 0
             -ping   = This is the string you plan to send to the websocket server to request a pong. Anything else gets passed to your php socket script.
             -pong   = This is the string the server will resopnd with when pinged, and the string sent with keepalive.
             -nopong = Default: false, If true the server will trash incomming pings, meaning you can run a client side keepalive.
