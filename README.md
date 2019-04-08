@@ -833,7 +833,9 @@ PHP, MySQL, Javascript, and CSS framework
             their user id / tag / and unique id against your database. If you echo a "1" the user will be allowed to finish the connection. If you echo anything
             other than "1", the user will be disconnected.
 
-        - Note: The socet server only sends you unique uids/tags/uniqueid's. So if Frost has uid 1 and has 100 clients, and you send sw_1, you'll get 1, one time in the uid array.
+        - NOTES
+            * The socet server only sends you unique uids/tags/uniqueid's. So if Frost has uid 1 and has 100 clients, and you send sw_1, you'll get 1, one time in the uid array.
+            * Swapping around between php/javascript JSON_encode and decoding, be carful of special characters like /n, you'll probably want to nl2br at some point for example.
         - SYSTEMD Example for php_websockets
             sudo chmod +x /path/to/php_websockets
             sudo nano /lib/systemd/system/myservice2.service
