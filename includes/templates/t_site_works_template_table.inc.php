@@ -25,7 +25,7 @@ class t_site_works_template_table extends SiteWorks\siteworks_db_tools
         switch ($sqlName) {
             // Set up your queries here that can be called by name.
             case 'FriendlySQLName':
-                $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `FIELD_NAME1` = "' . $this->odb->dbClean( $this->f['FIELD_NAME1']['value'] ) . '"';
+                $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `FIELD_NAME1` = "' . $this->odb->clean( $this->f['FIELD_NAME1']['value'] ) . '"';
             break;
             default:
                 $sqlFn = NULL;

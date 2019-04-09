@@ -28,7 +28,7 @@ class t_site_works_admin extends siteworks_db_tools
 
         	// Set up your queries here that can be called by name.
 	        case 'pullByVersion':
-	            $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->dbClean( $this->f['sw_version']['value'] ) . '"';
+	            $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->clean( $this->f['sw_version']['value'] ) . '"';
 			break;
 
 	    default:

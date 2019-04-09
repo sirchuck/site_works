@@ -352,7 +352,7 @@ PHP, MySQL, Javascript, and CSS framework
     At the bottom of your table object class you will notice the bulidQueryArray
     case 'pullByVersion':                           // This is the name you will use to refer to the query
                                                     // set the $sqlFn to the query you want to run.
-        $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->dbClean( $this->f['sw_version']['value'] ) . '"';
+        $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->clean( $this->f['sw_version']['value'] ) . '"';
         // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECE...'
     break;
     You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
