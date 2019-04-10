@@ -398,6 +398,12 @@ PHP, MySQL, Javascript, and CSS framework
         $r->deleteData('bob') - Delete where id = 'bob'
     Need to access a field value?
         $r->f['sw_admin_key']['value']
+
+        - Less writing shortcut - get and set - no return
+        // Set a field value - sets field value
+            $r->fset('sw_admin_key',7);
+        // Get a field value - returns field value
+            $r->fget('sw_admin_key');
     Need to access a field error?
         $r->f['sw_admin_key']['error']
 

@@ -37,6 +37,9 @@ abstract class siteworks_db_tools
     {
     }
 
+    public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $v; }
+    public function fget($f=null){ if($f==null){return;} return $this->f[$f]['value']; }
+
     public function query($sqlFn=NULL){
         if( substr_count(trim($sqlFn), ' ') < 1){
             $sqlFn = $this->buildQueryArray( $sqlFn );
