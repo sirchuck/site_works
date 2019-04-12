@@ -387,12 +387,14 @@ PHP, MySQL, Javascript, and CSS framework
     $r->insertUpdateData() - This will insert the data, unless a keyfield is matched in which case it should update it.
     $r->updateData($where = false,$values=false) - To update your data, multipul ways to use it.
         $r->updateData(); - This will simply update whatever data you have in the field array of your table object.
+        $r->updateData(false); - Putting false in the where clause will update your data without a where clause.
         $r->updateData('x=y'); This will update using your field list, and apply the where clause x=y
         $r->updateData('x=y','x'); This will only update the x field where x=y
         $r->updateData(4,'`x`') This will only update the x field where the id = 4
         $r->updateData('bob','`x`') This will only update the x field where the id = 'bob'
     $r->deleteData($where = '') - To delete data from the database
         $r->deleteData(); - Delete your currently loaded table object.
+        $r->deleteData(false); - Delete your data with no where clause.
         $r->deleteData('x=y'); - Delete all rows where x = y.
         $r->deleteData(4); - Delete where id = 4
         $r->deleteData('bob') - Delete where id = 'bob'
