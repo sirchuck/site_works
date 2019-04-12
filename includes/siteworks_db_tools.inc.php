@@ -183,7 +183,7 @@ abstract class siteworks_db_tools
         if( is_null($where) ){$where = $this->f[$this->keyField]['value'];}
         if( gettype($where) == 'integer' ){
             $where = ' WHERE `'.$this->keyField.'` = '.$where; 
-        } elseif( is_null($where) ) {
+        } elseif( is_null($where) || $where===false ) {
             $where = '';
         } else {
             if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
@@ -207,11 +207,13 @@ abstract class siteworks_db_tools
             } else { return false; }
         }
         if( gettype($where) == 'integer' ){
-            $where = '`'.$this->keyField.'` = '.$where;
+            $where = 'WHERE `'.$this->keyField.'` = '.$where;
+        } else if($where === false){
+            $where = '';
         } else if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
-            $where = '`'.$this->keyField.'` = \''.$where.'\'';
+            $where = 'WHERE `'.$this->keyField.'` = \''.$where.'\'';
         }
-        $sql = 'DELETE FROM `'.$this->tableName.'` WHERE '.$where.';';
+        $sql = 'DELETE FROM `'.$this->tableName.'` '.$where.';';
         $result = $this->c->q($sql);
         return true;
     }
