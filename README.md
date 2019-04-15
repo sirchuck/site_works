@@ -727,7 +727,7 @@ PHP, MySQL, Javascript, and CSS framework
 
                 [Service]
                 type=simple
-                ExecStart=/bin/bash /path/to/php_q_it "-c /path/to/siteworks.YOURSITE.pconf.php -s 10000"
+                ExecStart=/path/to/php_q_it -c /path/to/siteworks.YOURSITE.pconf.php -s 10000
                 Restart=always
                 RestartSec=3
 
@@ -845,6 +845,7 @@ PHP, MySQL, Javascript, and CSS framework
             * The socet server only sends you unique uids/tags/uniqueid's. So if Frost has uid 1 and has 100 clients, and you send sw_1, you'll get 1, one time in the uid array.
             * Swapping around between php/javascript JSON_encode and decoding, be carful of special characters like /n, you'll probably want to nl2br at some point for example.
         - SYSTEMD Example for php_websockets
+            // Often your ExecStart starts with /bin/bash with your options in quotes, but the programs are just binary executables so you dont call somehting else to start it.
             sudo chmod +x /path/to/php_websockets
             sudo nano /lib/systemd/system/myservice2.service
                 [Unit]
@@ -852,7 +853,7 @@ PHP, MySQL, Javascript, and CSS framework
 
                 [Service]
                 type=simple
-                ExecStart=/bin/bash /path/to/php_websockets "-c /path/to/siteworks.YOURSITE.pconf.php -script /path/to/private/socket/scripts/YOURSCRIPT.php"
+                ExecStart=/path/to/php_websockets -c /path/to/siteworks.YOURSITE.pconf.php -script /path/to/private/socket/scripts/YOURSCRIPT.php
                 Restart=always
                 RestartSec=3
 
