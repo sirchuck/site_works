@@ -37,7 +37,7 @@ abstract class siteworks_db_tools
     {
     }
 
-    public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $v; }
+    public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $this->c->c($v); }
     public function fget($f=null){ if($f==null){return;} return $this->f[$f]['value']; }
 
     public function query($sqlFn=NULL){
@@ -127,7 +127,11 @@ abstract class siteworks_db_tools
             if(strrpos($id,'=')===false && strrpos($id,'>')===false && strrpos($id,'<')===false){
                 $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
             } else {
-                $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE '.$id;
+                if( substr( $where, 0, 1 ) == '<' ){
+                    $sql = 'SELECT * FROM `'.$this->tableName.'` '.ltrim($id,'<');
+                }else{
+                    $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE '.ltrim($id,'=');
+                }
             }
         }
         else{
@@ -150,7 +154,15 @@ abstract class siteworks_db_tools
     }
     
     public function selectAll($where = NULL, $what = '*'){
-        if( is_null($where) ){ $where = ''; }else{ $where = ' WHERE '.$where; }
+        if( is_null($where) ){
+            $where = ''; 
+        }else{
+            if( substr( $where, 0, 1 ) == '<' ){
+                $where = ' '.ltrim($where,'<');
+            }else{
+                $where = ' WHERE '.ltrim($where,'=');
+            }
+        }
 
         $sql = 'SELECT ' . $what . ' FROM `'.$this->tableName.'` '.$where;
         if (($result = $this->c->q($sql))  && $this->c->numRows() > 0) {
@@ -189,7 +201,11 @@ abstract class siteworks_db_tools
             if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
                 $where = ' WHERE `' . $this->keyField .'` = \'' . $where . '\'';
             } else {
-                $where = ' WHERE '.$where; 
+                if( substr( $where, 0, 1 ) == '<' ){
+                    $where = ' '.ltrim($where,'<');
+                }else{
+                    $where = ' WHERE '.ltrim($where,'=');
+                }
             }
         }
         if( is_null($values) ){$this->getFieldNames(2); $values = $this->updateFieldValue;}
@@ -212,6 +228,12 @@ abstract class siteworks_db_tools
             $where = '';
         } else if(strrpos($where,'=')===false && strrpos($where,'>')===false && strrpos($where,'<')===false){
             $where = 'WHERE `'.$this->keyField.'` = \''.$where.'\'';
+        } else {
+            if( substr( $where, 0, 1 ) == '<' ){
+                $where = ' '.ltrim($where,'<');
+            }else{
+                $where = ' WHERE '.ltrim($where,'=');
+            }
         }
         $sql = 'DELETE FROM `'.$this->tableName.'` '.$where.';';
         $result = $this->c->q($sql);

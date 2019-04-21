@@ -392,6 +392,9 @@ PHP, MySQL, Javascript, and CSS framework
         $r->updateData('x=y','x'); This will only update the x field where x=y
         $r->updateData(4,'`x`') This will only update the x field where the id = 4
         $r->updateData('bob','`x`') This will only update the x field where the id = 'bob'
+        $r->updateData('=IN()') Adding an = sign as the first character will keep the WHERE clause but allow you to use things like user_id IN(1,2) statements if you don't have need of = > or < comparaison in your WHERE.
+        $r->updateData('<ORDER BY xfield') Adding an < sign as the first character will remove the WHERE clause and you can put what you want in place of it, like ORDER BY
+        # These examples should work anywhere there is a $where option, like selectAll, updateData, deleteData and fillData
     $r->deleteData($where = '') - To delete data from the database
         $r->deleteData(); - Delete your currently loaded table object.
         $r->deleteData(false); - Delete your data with no where clause.
@@ -402,7 +405,7 @@ PHP, MySQL, Javascript, and CSS framework
         $r->f['sw_admin_key']['value']
 
         - Less writing shortcut - get and set - no return
-        // Set a field value - sets field value
+        // Set a field value - sets field value - When you set this way, the field is automatically cleaned for database insertion.
             $r->fset('sw_admin_key',7);
         // Get a field value - returns field value
             $r->fget('sw_admin_key');
