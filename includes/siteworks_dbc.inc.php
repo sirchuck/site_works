@@ -119,6 +119,7 @@ class siteworks_dbc{
 
 
     // Clean String for db
+    public function clean($s){ return $this->c($s); } // Alias of c($s)
     public function c($s)
     {
         switch ($this->dbt) {
