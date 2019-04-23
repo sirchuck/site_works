@@ -84,7 +84,7 @@ abstract class siteworks_db_tools
                         $this->insertValueList  .= ' NULL ';
                     }
                     else{
-                        $this->insertValueList  .= '"'.$this->c->c($fVal['value']).'"';
+                        $this->insertValueList  .= '"'.$fVal['value'].'"';
                     }
 
                     if($fCount > $iCount ){
@@ -97,7 +97,7 @@ abstract class siteworks_db_tools
                         $this->updateFieldValue .= '`'.$fKey.'` = NULL ';
                     }
                     else{
-                        $this->updateFieldValue .= '`'.$fKey.'` = "'.$this->c->c($fVal['value']).'"';
+                        $this->updateFieldValue .= '`'.$fKey.'` = "'.$fVal['value'].'"';
                     }
                     if($fCount > $iCount ){ $this->updateFieldValue .= ','; }
                 }
@@ -110,6 +110,7 @@ abstract class siteworks_db_tools
         if(!$returnArray){return $this->c->fetch_object($_result);}else{return $this->c->fetch_assoc($_result);}
     }
 
+    public function c($s){ return $this->c->c($s); }
     public function clean($s){ return $this->c->c($s); }
     public function cleanAll(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = $this->clean($v['value']);} foreach($this->p as $k => $v){ $this->p[$k] = $this->clean($v);} }
     public function clearFields(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = ( gettype($this->f[$k]['value']) == 'integer' || gettype($this->f[$k]['value']) == 'double' ) ? 0 : null;} unset($this->p); }
