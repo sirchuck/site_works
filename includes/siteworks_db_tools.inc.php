@@ -37,7 +37,7 @@ abstract class siteworks_db_tools
     {
     }
 
-    public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $this->c->c($v); }
+    public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $v; }
     public function fget($f=null){ if($f==null){return;} return $this->f[$f]['value']; }
 
     public function query($sqlFn=NULL){
@@ -84,7 +84,7 @@ abstract class siteworks_db_tools
                         $this->insertValueList  .= ' NULL ';
                     }
                     else{
-                        $this->insertValueList  .= '"'.$fVal['value'].'"';
+                        $this->insertValueList  .= '"'.$this->c->c($fVal['value']).'"';
                     }
 
                     if($fCount > $iCount ){
@@ -97,7 +97,7 @@ abstract class siteworks_db_tools
                         $this->updateFieldValue .= '`'.$fKey.'` = NULL ';
                     }
                     else{
-                        $this->updateFieldValue .= '`'.$fKey.'` = "'.$fVal['value'].'"';
+                        $this->updateFieldValue .= '`'.$fKey.'` = "'.$this->c->c($fVal['value']).'"';
                     }
                     if($fCount > $iCount ){ $this->updateFieldValue .= ','; }
                 }

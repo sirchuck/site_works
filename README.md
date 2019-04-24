@@ -358,6 +358,8 @@ PHP, MySQL, Javascript, and CSS framework
     You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
 
     Database Objects provide the following Methods:
+    # Using insertData insertUpdateData and updateData method will automatically database clean your data. ( $r->c() )
+
     $r = new t_mytable(5,$this->_odb);
         This instantiation has passed an id of 5, and will automatically call the following fillData method
         id can be true, number, string, or where. If where it must have a =,>, or < symbol.
@@ -377,6 +379,7 @@ PHP, MySQL, Javascript, and CSS framework
             This will just run the query you send it.
     $r->getFieldNames($is_insert) - This is garbage to you, I use it to build INSERT and UPDATE queries from your database table object.
     $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
+    $r->c(string) - this cleans your string to make it ready for insertion to the database.
     $r->clean(string) - this cleans your string to make it ready for insertion to the database.
     $r->cleanAll() - This will traverse your table object fields and clean each value.
     $r->clearFields() - This will set your field values in the object back to your defaults.
@@ -405,7 +408,7 @@ PHP, MySQL, Javascript, and CSS framework
         $r->f['sw_admin_key']['value']
 
         - Less writing shortcut - get and set - no return
-        // Set a field value - sets field value - When you set this way, the field is automatically cleaned for database insertion.
+        // Set a field value - sets field value
             $r->fset('sw_admin_key',7);
         // Get a field value - returns field value
             $r->fget('sw_admin_key');
