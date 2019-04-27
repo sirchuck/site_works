@@ -1,11 +1,13 @@
 <?php
 namespace SiteWorks{
-	// Load Pre-Boot instructions
-	if (file_exists('sw_pre_boot.php')) { include_once('sw_pre_boot.php'); }
-
-	session_start();
 	define('SITEWORKS_TIMER_START',microtime(true));
 	define('SITEWORKS_DOCUMENT_ROOT', dirname(__FILE__));
+
+	// Load Pre-Boot instructions
+	if (file_exists(SITEWORKS_DOCUMENT_ROOT . '/sw_pre_boot.php')) { include_once(SITEWORKS_DOCUMENT_ROOT . '/sw_pre_boot.php'); }
+
+	session_start();
+
 	// Remove XSS and Injection from passed Values (tool->cleanHTMl() also, but we want this done even before we load our _s object tools)
 	function siteworks_htmlSpecialChars_recur(&$va){foreach($va as &$v){if(is_array($v)||is_object($v)){siteworks_htmlSpecialChars_recur($v);}else{$v=htmlspecialchars($v);}}}
 	siteworks_htmlSpecialChars_recur($_REQUEST);
