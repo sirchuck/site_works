@@ -1,5 +1,8 @@
 <?php
 namespace SiteWorks{
+	// Load Pre-Boot instructions
+	if (file_exists('sw_pre_boot.php')) { include_once('sw_pre_boot.php'); }
+
 	session_start();
 	define('SITEWORKS_TIMER_START',microtime(true));
 	define('SITEWORKS_DOCUMENT_ROOT', dirname(__FILE__));

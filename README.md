@@ -208,6 +208,8 @@ PHP, MySQL, Javascript, and CSS framework
         - your_script.php
     dev/socket_scripts
         - your_script.php
+    /
+        - sw_pre_boot.php
 
     If you really want to, you can drop files in the public folder - but I overwrite the index page, assets/js/siteworks, assets/css/siteworks folders,
     everything else shoudl be safe.
@@ -217,6 +219,10 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_out['js'][] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
 
     Files you put in the thread_scripts will be called if you use the threading tool shown below. Files in this directory should have the .php extention.
+
+    Note: If you put sw_pre_boot.php in your siteworks root folder you can run instructions before anything else happens with the framework. This could be 
+    important if you want to use things like ini_set('session.gc_maxlifetime', 3600); and session_set_cookie_params(3600); for example. The file doesn't exist
+    so you will have to create it to use it.
 
 # File Extentions:
     For the framework to find your files, and for readability on your end, give your files the following extentions
