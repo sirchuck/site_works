@@ -291,6 +291,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_out['header'][]
     $this->_out['title'][]
     $this->_out['meta'][]
+    $this->_out['link'][]
     $this->_out['css'][]
     $this->_out['js'][]
     $this->_out['body'][]

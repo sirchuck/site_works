@@ -528,6 +528,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 implode( ' ', $this->out['header'] ) .
 implode( ' ', $this->out['title'] ) .
 implode( ' ', $this->out['meta'] ) .
+implode( ' ', $this->out['link'] ) .
 implode( ' ', $this->out['css'] ) .
 implode( ' ', $this->out['js'] ) .
 '</head>
