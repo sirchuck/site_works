@@ -15,6 +15,7 @@ class siteworks_startup
 		 'header'=>array()	// Stuff after <html> and before title
 		,'title'=>array()	// Stuff around the title area, like <title>
 		,'meta'=>array()	// Meta tags
+		,'link'=>array()	// Link tags
 		,'css'=>array()		// CSS links and even inpage css if you want.
 		,'js'=>array()		// JS links and inpage js
 		,'body'=>array()    // Between body tags
