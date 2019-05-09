@@ -107,6 +107,7 @@ class siteworks_tools
           $sc->k = $k;
           $sc->v = $v;
           $sc->t = $t;
+          $tmp = fgets($fp);
           fwrite($fp, $this->_s->ramvar_app_key . "\n");
           fwrite($fp, json_encode($sc)."\n");
           $ret = fgets($fp);
