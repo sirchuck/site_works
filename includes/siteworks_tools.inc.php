@@ -102,7 +102,7 @@ class siteworks_tools
         if (!$fp) {
           if($this->_s->debugMode){ $this->dmsg( 'Failed to connect to the local ramvar server.' ); }
         } else {
-          $sc = new stdClass;
+          $sc = new \stdClass;
           $sc->a = $a;
           $sc->k = $k;
           $sc->v = $v;
