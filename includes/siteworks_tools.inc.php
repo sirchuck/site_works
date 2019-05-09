@@ -90,11 +90,11 @@ class siteworks_tools
   }
 
 
-  public function setRamvar($k, $v, $t){ return ramvar('1',$k,$v,$t); }
-  public function getRamvar($k, $v, $t){ return ramvar('2',$k,$v,$t); }
-  public function getOrRamvar($k, $v, $t){ return ramvar('2.1',$k,$v,$t); }
-  public function deleteRamvar($k, $v, $t){ return ramvar('3',$k,$v,$t); }
-  public function deleteOrRamvar($k, $v, $t){ return ramvar('3.1',$k,$v,$t); }
+  public function setRamvar($k, $v, $t){ return $this->ramvar('1',$k,$v,$t); }
+  public function getRamvar($k, $v, $t){ return $this->ramvar('2',$k,$v,$t); }
+  public function getOrRamvar($k, $v, $t){ return $this->ramvar('2.1',$k,$v,$t); }
+  public function deleteRamvar($k, $v, $t){ return $this->ramvar('3',$k,$v,$t); }
+  public function deleteOrRamvar($k, $v, $t){ return $this->ramvar('3.1',$k,$v,$t); }
   public function ramvar($a, $k, $v, $t){
       $ret = '';
       try{
