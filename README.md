@@ -1127,8 +1127,8 @@ PHP, MySQL, Javascript, and CSS framework
                       Ex: $this->_tool->ramvar( 2, '', 'dog', 'dogtag');
                       Evaluates to SELECT ALL WHERE value = dog AND value = dogtag
             $this->_tool->setRamvar($key, $value, $tag) Returns 1 if value was set
-            $this->_tool->getRamvar($key, $value, $tag) Returns object {"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"} (AND)
-            $this->_tool->getOrRamvar($key, $value, $tag) Returns object {"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"} (OR)
+            $this->_tool->getRamvar($key, $value, $tag) Returns object array [{"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"}] (AND)
+            $this->_tool->getOrRamvar($key, $value, $tag) Returns object array [{"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"}] (OR)
             $this->_tool->deleteRamvar($key, $value, $tag) Returns 1 if delete was successful (AND)
             $this->_tool->deleteOrRamvar($key, $value, $tag) Returns 1 if delete was successful (OR)
         - SYSTEMD Example for php_ramvar
