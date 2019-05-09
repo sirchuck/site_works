@@ -263,8 +263,30 @@ PHP, MySQL, Javascript, and CSS framework
         You should use lower case when setting up routes.
         Ex: 'dogs/like/friends' => 'template/template/about_dogs'
         Note: anything following the swapped portion will fall into the proper segment - pass_var pass_vars if you provide modual/contorller/method 
+
+    // Threader
     $this->thread_php_path - The path to your version of php. Ex: /usr/bin/ (Only needed if you want to use the php_threader or php_q_it queue manager)
     $this->thread_php_version - The version of your php. Ex: 7.2 (Only needed if you want to use the php_threader or php_q_it queue manager)
+
+    // Websocket Server
+    $this->websocket_server               = '127.0.0.1'; // Your websocket server address
+    $this->websocket_port                 = '8090';      // Default ws:// port 8090
+    $this->websocket_secure_port          = '8091';      // Default wss:// port 8091
+    $this->websocket_allow_duplicates     = 'false';     // Allow same uid/tag/uniqueid to connect more than once: true or false, default false.
+    $this->websocket_cert_path            = '';          // If empty you will only be able to connect on the insecure port
+    $this->websocket_certkey_path         = '';          // If empty you will only be able to connect on the insecure port
+    $this->websocket_keepalive = '0'; // Default 0 , 0 = off, # of Milliseconds to wait before broadcasking keepalive (pong) string. 1(s) = 1000(ms)
+    $this->websocket_ping      = '1'; // Default 1 , The string you will send to the websocket server from the client to initiate a pong response
+    $this->websocket_pong      = '1'; // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
+    $this->websocket_no_pong   = 'false'; // Default: false, If true no pong will be returned when sending a ping to the server. (Client Keepalive Method)
+
+    // Ramvar
+    $this->ramvar_local_server        = '127.0.0.1';   // Default 127.0.0.1, normally you wouldnt change this unless thats not your localhost.
+    $this->ramvar_local_port          = '8092';   // Default 8092, the starting port for your ramvar server on this machine.
+    $this->ramvar_quarantine_seconds  = '600';    // Default 600, Number of seconds to quarentine a servers IP that did not supply the app_key.
+    $this->ramvar_app_key             = 'admin';  // Default admin, Set this for some additional security. Your key must be set the same on all servers
+    $this->ramvar_servers             = '127.0.0.1:8092';  // Comma separated list of ramvar server ip:ports. 192.168.10.10:8092,192.168.10.20:9090
+
     $this->debug_server - The IP of the server running your debug_server app.
     $this->debug_server_port - the default port I use is 9200, whatever you set make sure you port forward.
     $this->cPaths - tell the system some basics about your server and asset server paths.
@@ -1054,6 +1076,87 @@ PHP, MySQL, Javascript, and CSS framework
                     $sendport = (string)(optional)
                 Response:
                     The response is a string that you sent from your socket script file.
+    php_ramvar
+        This is the multiserver ram key value pair server. Somewhat similar to Memcache but nothing to install, just run the app, set the config
+        and use it. Along with sending a key and a value, you can also send a tag. That may help for some projects where you want to pull or 
+        delete similar types of variables all at once. When you call to access a variable you do it locally, then the software shares the
+        information to the other servers, that way all your php code accesses a local server making it faster than connecting to another server
+        holding your database for example.
+        - Security
+            Keep in mind you are currently passing plain text data over TCP sockets with this. I'd score it a B for security, but if someone has access
+            to your internal system, it could be comprimised. I would not use this for critical or sensitive data.
+            Secondly, anyone with access to the ramvar server and port will be able to attempt a connection.
+            To make you a little safer, when someone attempts to connect, but does not provide the proper
+            app_key you set in your configuration file, their IP will be qurantined for 600 seconds by default. That means they get one guess at your password
+            before having to wait the deault 600 seconds to try again from the same IP. Set your app_key to something people won't guess, the default is admin.
+        - Config
+            $this->ramvar_local_server        '127.0.0.1', likely you'll leave this alone, unless you really want to access a report ramserver from the framework.
+            $this->ramvar_local_port          Set the port you want your localhost ramserver to run on.
+            $this->ramvar_quarantine_seconds  The default is likely fine, but change it as you see fit, number of seconds an IP remains in quarantine
+            $this->ramvar_app_key             Use a key people won't easily guessed.
+            $this->ramvar_servers             Comma separated list of ramvar servers: 192.168.10.10:8092,192.168.10.11:8093
+
+        - Parameters
+            $action  = (Insert/Update) 1, (GET) 2/2.0 (AND) 2.1 (OR), (DELETE) 3/3.0 (AND) 3.1 (OR)
+            $key     = This is your app key, default admin
+            $value   = This is the number of seconds to quarantine an ip, default 600 seconds
+            $tag     = true or false, default false
+            Note: $action is not needed when you use one of the wrapper functions ( setRamvar, getRamvar, getOrRamvar, deleteRamvar, deleteOrRamvar )
+        - Command Line Action
+            -c       = path to your siteworks config. /var/www/html/YOURSITE/conf/siteworks.YOURSERVER.pconf.php
+            -k       = This is your app key, default admin
+            -qs      = This is the number of seconds to quarantine an ip, default 600 seconds
+            -debug   = true or false, default false, just putting -debug sets this argument as true, set it last to avoid argument conflict. 
+            -p       = This is the port your local server will listen on
+            -s       = This is a comma separated list of servers that will sync with each other. Ex: 192.168.10.10:8092,192.168.10.11:9090 Default 127.0.0.1:8092
+        - Why
+            Your service wants a fast way to store key value pairs without using a database, perhaps Rasberry Pi project and you need to access
+            the data on many machines locally.
+        - Usage
+            $this->_tool->ramvar( $action, $key, $value, $tag )
+                 Actions:
+                      1: Insert or Update if already inserted
+                      2: Get where key = key AND value = value AND tag = tag, leaving a value empty excludes it from the evaluation
+                      2.1: Same as 2, but OR instead of AND
+                      3: Delete where key = key AND value = value AND tag = tag, leaving a value empty excludes it from the evaluation
+                      3.1: Same as 3, but OR instead of AND
+                      Ex: $this->_tool->ramvar( 2.1, 'pluto', 'dog', '');
+                      Evaluates to SELECT ALL WHERE key = pluto OR value = dog
+                      Ex: $this->_tool->ramvar( 2, 'pluto', 'dog', '');
+                      Evaluates to SELECT ALL WHERE key = pluto AND value = dog
+                      Ex: $this->_tool->ramvar( 2, '', 'dog', 'dogtag');
+                      Evaluates to SELECT ALL WHERE value = dog AND value = dogtag
+            $this->_tool->setRamvar($key, $value, $tag) Returns 1 if value was set
+            $this->_tool->getRamvar($key, $value, $tag) Returns object {"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"} (AND)
+            $this->_tool->getOrRamvar($key, $value, $tag) Returns object {"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"} (OR)
+            $this->_tool->deleteRamvar($key, $value, $tag) Returns 1 if delete was successful (AND)
+            $this->_tool->deleteOrRamvar($key, $value, $tag) Returns 1 if delete was successful (OR)
+        - SYSTEMD Example for php_ramvar
+            sudo chmod +x /path/to/php_ramvar
+            sudo nano /lib/systemd/system/myservice.service
+                [Unit]
+                Description=Example Systemd Service.
+
+                [Service]
+                type=simple
+                ExecStart=/path/to/php_ramvar -c /path/to/siteworks.YOURSITE.pconf.php
+                Restart=always
+                RestartSec=3
+
+                [Install]
+                WantedBy=multi-user.target
+            # Start The service for testing
+            sudo systemctl start myservice
+            # Check the Status
+            sudo systemctl status myservice
+            # To stop it
+            sudo systemctl stop myservice
+            # To restart it
+            sudo systemctl restart myservice
+            # If its all good, enable it
+            sudo systemctl enable myservice
+            # Reboot and Check if its running
+            sudo systemctl status myservice
 
 # SITE_WORKS_ESSENTIALS
     You may find yourself wishing you didn't have to rewrite vanilla php code to access

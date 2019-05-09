@@ -89,6 +89,36 @@ class siteworks_tools
     return exec('bash -c \''. SITEWORKS_DOCUMENT_ROOT.'/php_websockets_client -m="'.$sw_var.'" -a="'.$sw_action.'" -h="'.$host.'" -p="'.$port.'" -u="'.$uid.'" -t="'.$tag.'" -uq="'.$uniqueid.'"'.$shost.$sport.'\'');
   }
 
+
+  public function setRamvar($k, $v, $t){ return ramvar('1',$k,$v,$t); }
+  public function getRamvar($k, $v, $t){ return ramvar('2',$k,$v,$t); }
+  public function getOrRamvar($k, $v, $t){ return ramvar('2.1',$k,$v,$t); }
+  public function deleteRamvar($k, $v, $t){ return ramvar('3',$k,$v,$t); }
+  public function deleteOrRamvar($k, $v, $t){ return ramvar('3.1',$k,$v,$t); }
+  public function ramvar($a, $k, $v, $t){
+      $ret = '';
+      try{
+        $fp=@fsockopen($this->_s->ramvar_local_server, $this->_s->ramvar_local_port, $errno, $errstr, 30);
+        if (!$fp) {
+          if($this->_s->debugMode){ $this->dmsg( 'Failed to connect to the local ramvar server.' ); }
+        } else {
+          $sc = new stdClass;
+          $sc->a = $a;
+          $sc->k = $k;
+          $sc->v = $v;
+          $sc->t = $t;
+          fwrite($fp, $this->_s->ramvar_app_key . "\n");
+          fwrite($fp, json_encode($sc)."\n");
+          $ret = fgets($fp);
+          fclose($fp);
+       }
+      } catch (Exception $e) {
+          if($this->_s->debugMode){ $this->dmsg( 'Failed to connect to the local ramvar server.' ); }
+      }
+      return $ret;
+  }
+
+
   public function listFiles($dir,$ftype=0,$recursive=true,&$results=array()){
     // ftype( 0 all, 1 files only, 2 folders only )
     if(!is_dir($dir)){return false;}

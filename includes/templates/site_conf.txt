@@ -150,6 +150,14 @@ class siteworks_override extends siteworks_config
     $this->websocket_pong      = '1'; // Default 1, The string the server responds with from a ping, or the string the server broadcasts during a keepalive.
     $this->websocket_no_pong   = 'false'; // Default: false, If true no pong will be returned when sending a ping to the server. (Client Keepalive Method)
 
+    // If you want to use the included multi-server ram key value pair storage system set these variables.
+    $this->ramvar_local_server        = '127.0.0.1';   // Default 127.0.0.1, normally you wouldnt change this unless thats not your localhost.
+    $this->ramvar_local_port          = '8092';   // Default 8092, the starting port for your ramvar server on this machine.
+    $this->ramvar_quarantine_seconds  = '600';    // Default 600, Number of seconds to quarentine a servers IP that did not supply the app_key.
+    $this->ramvar_app_key             = 'admin';  // Default admin, Set this for some additional security. Your key must be set the same on all servers
+    $this->ramvar_servers             = '127.0.0.1:8092';  // Comma separated list of ramvar server ip:ports. 192.168.10.10:8092,192.168.10.20:9090
+    // The ramvar_servers is a comma separated list of reachable servers running the php_ramvar program. For example, in reality it looks something like this:
+    // '192.168.10.1:9090,192.168.1.7:7030,192.168.1.4:8092' Each server should have the same comma separated list of servers so they can communicat and sync.
 
 
     /*********************************************************************************************************
