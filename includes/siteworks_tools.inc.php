@@ -119,11 +119,13 @@ class siteworks_tools
           fwrite($fp, $this->_s->ramvar_app_key . "\n");
           if($m===false){
             fwrite($fp, json_encode($sc)."\n");
+            $ret = fgets($fp);
+            fclose($fp);
           }else{
             fwrite($fp, $m."\n");
+            fclose($fp);
+            $ret = '1';
           }
-          $ret = fgets($fp);
-          fclose($fp);
        }
       } catch (Exception $e) {
           if($this->_s->debugMode){ $this->dmsg( 'Failed to connect to the local ramvar server.' ); }
