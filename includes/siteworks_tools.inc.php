@@ -90,15 +90,23 @@ class siteworks_tools
   }
 
 
+  public function exitRamvar(){ return $this->ramvar('','','','','sw_exit'); }
+  public function clearRamvar(){ return $this->ramvar('','','','','sw_clearData'); }
+  public function syncRamvar(){ return $this->ramvar('','','','','sw_sync'); }
+  public function fullsyncRamvar(){ return $this->ramvar('','','','','sw_fullsync'); }
   public function setRamvar($k, $v, $t){ return $this->ramvar('1',$k,$v,$t); }
   public function getRamvar($k, $v, $t){ return $this->ramvar('2',$k,$v,$t); }
   public function getOrRamvar($k, $v, $t){ return $this->ramvar('2.1',$k,$v,$t); }
   public function deleteRamvar($k, $v, $t){ return $this->ramvar('3',$k,$v,$t); }
   public function deleteOrRamvar($k, $v, $t){ return $this->ramvar('3.1',$k,$v,$t); }
-  public function ramvar($a, $k, $v, $t){
+  public function ramvar($a, $k, $v, $t, $m=false){
       $ret = '';
       try{
-        $fp=@fsockopen($this->_s->ramvar_local_server, $this->_s->ramvar_local_port, $errno, $errstr, 30);
+        if($this->_s->ramvar_cert_crt != '' && $this->_s->ramvar_cert_key != ''){
+          $fp=@fsockopen("tls://".$this->_s->ramvar_local_server, $this->_s->ramvar_local_port, $errno, $errstr, 30);
+        }else{
+          $fp=@fsockopen($this->_s->ramvar_local_server, $this->_s->ramvar_local_port, $errno, $errstr, 30);
+        }
         if (!$fp) {
           if($this->_s->debugMode){ $this->dmsg( 'Failed to connect to the local ramvar server.' ); }
         } else {
@@ -109,7 +117,11 @@ class siteworks_tools
           $sc->t = $t;
           $tmp = fgets($fp);
           fwrite($fp, $this->_s->ramvar_app_key . "\n");
-          fwrite($fp, json_encode($sc)."\n");
+          if($m===false){
+            fwrite($fp, json_encode($sc)."\n");
+          }else{
+            fwrite($fp, $m."\n");
+          }
           $ret = fgets($fp);
           fclose($fp);
        }

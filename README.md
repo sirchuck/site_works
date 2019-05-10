@@ -1089,19 +1089,38 @@ PHP, MySQL, Javascript, and CSS framework
             To make you a little safer, when someone attempts to connect, but does not provide the proper
             app_key you set in your configuration file, their IP will be qurantined for 600 seconds by default. That means they get one guess at your password
             before having to wait the deault 600 seconds to try again from the same IP. Set your app_key to something people won't guess, the default is admin.
+
+            Example Localhost certificate and Key creation:
+                openssl req -x509 -out localhost.crt -keyout localhost.key -newkey rsa:2048 -nodes -sha256 -subj '/CN=localhost' -extensions EXT -config <(printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
+            If you pass a certificate crt and key, then the server will listen on secure tls; however, all of your ramvar servers will need to listen securly and it will be slower, but not too bad.
+
         - Config
             $this->ramvar_local_server        '127.0.0.1', likely you'll leave this alone, unless you really want to access a report ramserver from the framework.
             $this->ramvar_local_port          Set the port you want your localhost ramserver to run on.
             $this->ramvar_quarantine_seconds  The default is likely fine, but change it as you see fit, number of seconds an IP remains in quarantine
             $this->ramvar_app_key             Use a key people won't easily guessed.
             $this->ramvar_servers             Comma separated list of ramvar servers: 192.168.10.10:8092,192.168.10.11:8093
+            $this->ramvar_cert_crt            Full path to your certificate crt /my/path/localhost.crt, leave empty to use non secure
+            $this->ramvar_cert_key            Full path to your certificate key /my/path/localhost.key, leave empty to use non secure
 
         - Parameters
             $action  = (Insert/Update) 1, (GET) 2/2.0 (AND) 2.1 (OR), (DELETE) 3/3.0 (AND) 3.1 (OR)
             $key     = This is your app key, default admin
             $value   = This is the number of seconds to quarantine an ip, default 600 seconds
             $tag     = true or false, default false
-            Note: $action is not needed when you use one of the wrapper functions ( setRamvar, getRamvar, getOrRamvar, deleteRamvar, deleteOrRamvar )
+            $message = false, you would ues a ramvar command here like sw_exit, sw_clearData, sw_sync, sw_fullsync (Or just use one of the wrappers)
+            Note: $action is not needed when you use one of the wrapper functions ( setRamvar, getRamvar, getOrRamvar, deleteRamvar, deleteOrRamvar, exitRamvar, clearRamvar, syncRamvar, fullsyncRamvar )
+        - Wrappers, used like $this->_tool->setRamvar($key, $value, $tag)
+            setRamvar($key, $value, $tag)      See Usage below
+            getRamvar($key, $value, $tag)      See Usage below
+            getOrRamvar($key, $value, $tag)    See Usage below
+            deleteRamvar($key, $value, $tag)   See Usage below
+            deleteOrRamvar($key, $value, $tag) See Usage below
+            exitRamvar()    = This will force the ramvar server to exit, but if you have systemD or upstart be aware it may restart on you. I don't think you'll ever use this
+            clearRamvar()   = This will clear all variables held by the local ramvar, you would likely call syncRamvar() after clearing. You might do this if you thought your ramvar was corrupted
+            syncRamvar()    = This will call the first available ramvar server and update the local ramvar variables. It does not clear any of its old variables.
+            fullsyncRamvar() = This will call every available ramvar server and update its current variables. It will not clear any old variables on its own.
         - Command Line Action
             -c       = path to your siteworks config. /var/www/html/YOURSITE/conf/siteworks.YOURSERVER.pconf.php
             -k       = This is your app key, default admin
@@ -1109,23 +1128,30 @@ PHP, MySQL, Javascript, and CSS framework
             -debug   = true or false, default false, just putting -debug sets this argument as true, set it last to avoid argument conflict. 
             -p       = This is the port your local server will listen on
             -s       = This is a comma separated list of servers that will sync with each other. Ex: 192.168.10.10:8092,192.168.10.11:9090 Default 127.0.0.1:8092
+            -cc      = This is the full path to your certificate crt
+            -ck      = This is the full path to your certificate key
         - Why
             Your service wants a fast way to store key value pairs without using a database, perhaps Rasberry Pi project and you need to access
             the data on many machines locally.
         - Usage
-            $this->_tool->ramvar( $action, $key, $value, $tag )
-                 Actions:
-                      1: Insert or Update if already inserted
-                      2: Get where key = key AND value = value AND tag = tag, leaving a value empty excludes it from the evaluation
-                      2.1: Same as 2, but OR instead of AND
-                      3: Delete where key = key AND value = value AND tag = tag, leaving a value empty excludes it from the evaluation
-                      3.1: Same as 3, but OR instead of AND
-                      Ex: $this->_tool->ramvar( 2.1, 'pluto', 'dog', '');
-                      Evaluates to SELECT ALL WHERE key = pluto OR value = dog
-                      Ex: $this->_tool->ramvar( 2, 'pluto', 'dog', '');
-                      Evaluates to SELECT ALL WHERE key = pluto AND value = dog
-                      Ex: $this->_tool->ramvar( 2, '', 'dog', 'dogtag');
-                      Evaluates to SELECT ALL WHERE value = dog AND value = dogtag
+            $this->_tool->ramvar( $action, $key, $value, $tag, $message )
+                $action = The action to perform 1, 2/2.0, 2.1, 3/3.0, 3.1
+                $key = Your variable key of the key value pair
+                $value = Your key value pair value
+                $tag = Your key value pair tag to group values if you desire
+                $message = You should just use the wrappers, but you could send a ramvar command. 
+                Actions:
+                    1: Insert or Update if already inserted
+                    2: Get where key = key AND value = value AND tag = tag, leaving a value empty excludes it from the evaluation
+                    2.1: Same as 2, but OR instead of AND
+                    3: Delete where key = key AND value = value AND tag = tag, leaving a value empty excludes it from the evaluation
+                    3.1: Same as 3, but OR instead of AND
+                    Ex: $this->_tool->ramvar( 2.1, 'pluto', 'dog', '');
+                    Evaluates to SELECT ALL WHERE key = pluto OR value = dog
+                    Ex: $this->_tool->ramvar( 2, 'pluto', 'dog', '');
+                    Evaluates to SELECT ALL WHERE key = pluto AND value = dog
+                    Ex: $this->_tool->ramvar( 2, '', 'dog', 'dogtag');
+                    Evaluates to SELECT ALL WHERE value = dog AND value = dogtag
             $this->_tool->setRamvar($key, $value, $tag) Returns 1 if value was set
             $this->_tool->getRamvar($key, $value, $tag) Returns object array [{"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"}] (AND)
             $this->_tool->getOrRamvar($key, $value, $tag) Returns object array [{"a":"action","k":"key","v":"value","t":"tag","d1":"TimeStamp","d2":"Initial Ramvar ServerID"}] (OR)
