@@ -94,12 +94,12 @@ class siteworks_tools
   public function clearRamvar(){ return $this->ramvar('','','','','sw_clearData'); }
   public function syncRamvar(){ return $this->ramvar('','','','','sw_sync'); }
   public function fullsyncRamvar(){ return $this->ramvar('','','','','sw_fullsync'); }
-  public function setRamvar($k, $v, $t){ return $this->ramvar('1',$k,$v,$t); }
-  public function getRamvar($k, $v, $t){ return $this->ramvar('2',$k,$v,$t); }
-  public function getOrRamvar($k, $v, $t){ return $this->ramvar('2.1',$k,$v,$t); }
-  public function deleteRamvar($k, $v, $t){ return $this->ramvar('3',$k,$v,$t); }
-  public function deleteOrRamvar($k, $v, $t){ return $this->ramvar('3.1',$k,$v,$t); }
-  public function ramvar($a, $k, $v, $t, $m=false){
+  public function setRamvar($k='', $v='', $t=''){ return $this->ramvar('1',$k,$v,$t); }
+  public function getRamvar($k='', $v='', $t=''){ return $this->ramvar('2',$k,$v,$t); }
+  public function getOrRamvar($k='', $v='', $t=''){ return $this->ramvar('2.1',$k,$v,$t); }
+  public function deleteRamvar($k='', $v='', $t=''){ return $this->ramvar('3',$k,$v,$t); }
+  public function deleteOrRamvar($k='', $v='', $t=''){ return $this->ramvar('3.1',$k,$v,$t); }
+  public function ramvar($a='', $k='', $v='', $t='', $m=false){
       $ret = '';
       try{
         if($this->_s->ramvar_cert_crt != '' && $this->_s->ramvar_cert_key != ''){
