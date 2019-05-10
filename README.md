@@ -1109,8 +1109,8 @@ PHP, MySQL, Javascript, and CSS framework
             $key     = This is your app key, default admin
             $value   = This is the number of seconds to quarantine an ip, default 600 seconds
             $tag     = true or false, default false
-            $message = false, you would ues a ramvar command here like sw_exit, sw_clearData, sw_sync, sw_fullsync (Or just use one of the wrappers)
-            Note: $action is not needed when you use one of the wrapper functions ( setRamvar, getRamvar, getOrRamvar, deleteRamvar, deleteOrRamvar, exitRamvar, clearRamvar, syncRamvar, fullsyncRamvar )
+            $message = false, you would ues a ramvar command here like sw_exit, sw_clearData, sw_clearAllData, sw_sync, sw_fullsync (Or just use one of the wrappers)
+            Note: $action is not needed when you use one of the wrapper functions ( setRamvar, getRamvar, getOrRamvar, deleteRamvar, deleteOrRamvar, exitRamvar, clearRamvar, clearAllRamvar, syncRamvar, fullsyncRamvar )
         - Wrappers, used like $this->_tool->setRamvar($key, $value, $tag)
             setRamvar($key, $value, $tag)      See Usage below
             getRamvar($key, $value, $tag)      See Usage below
@@ -1119,6 +1119,7 @@ PHP, MySQL, Javascript, and CSS framework
             deleteOrRamvar($key, $value, $tag) See Usage below
             exitRamvar()    = This will force the ramvar server to exit, but if you have systemD or upstart be aware it may restart on you. I don't think you'll ever use this
             clearRamvar()   = This will clear all variables held by the local ramvar, you would likely call syncRamvar() after clearing. You might do this if you thought your ramvar was corrupted
+            clearAllRamvar() = This will clear all variables held by all ramvar servers. 
             syncRamvar()    = This will call the first available ramvar server and update the local ramvar variables. It does not clear any of its old variables.
             fullsyncRamvar() = This will call every available ramvar server and update its current variables. It will not clear any old variables on its own.
         - Command Line Action

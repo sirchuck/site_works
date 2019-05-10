@@ -92,6 +92,7 @@ class siteworks_tools
 
   public function exitRamvar(){ return $this->ramvar('','','','','sw_exit'); }
   public function clearRamvar(){ return $this->ramvar('','','','','sw_clearData'); }
+  public function clearAllRamvar(){ return $this->ramvar('','','','','sw_clearAllData'); }
   public function syncRamvar(){ return $this->ramvar('','','','','sw_sync'); }
   public function fullsyncRamvar(){ return $this->ramvar('','','','','sw_fullsync'); }
   public function setRamvar($k='', $v='', $t=''){ return $this->ramvar('1',$k,$v,$t); }
