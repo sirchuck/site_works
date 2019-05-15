@@ -501,12 +501,15 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if((isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest") || $this->uri->calltypes == 'ajaxs'){$x='';foreach($this->out as $v){$x .= implode('',$v);}echo $x;return false;}
 
 		// Handle Console Output
-		$this->console[] = str_replace(["\n","\r"],'','
-		 ___ _ _     __      __       _       \n
-		/ __(_) |_ __\\\ \\\    / /__ _ _| |__ ___\n
-		\\\__ \\\ |  _/ -_) \\\/\\\/ / _ \\\ \'_| / /(_-<\n
-		|___/_|\\\__\\\___|\\\_/\\\_/\\\___/_| |_\\\_\\\/__/\n');
-		$this->console[] = 'Page Execution took: '.number_format(microtime(true) - $this->softwareTimer, 5, '.','').' seconds ';
+		if($this->showConsoleExecutionTime){
+			$this->console[] = str_replace(["\n","\r"],'','
+			 ___ _ _     __      __       _       \n
+			/ __(_) |_ __\\\ \\\    / /__ _ _| |__ ___\n
+			\\\__ \\\ |  _/ -_) \\\/\\\/ / _ \\\ \'_| / /(_-<\n
+			|___/_|\\\__\\\___|\\\_/\\\_/\\\___/_| |_\\\_\\\/__/\n');
+			$this->console[] = 'Page Execution took: '.number_format(microtime(true) - $this->softwareTimer, 5, '.','').' seconds ';
+		}
+
 		if($this->debugMode){
 			$this->console[] = ($this->debugMode)?'Debug Mode: ON':'Debug Mode: OFF';
 		}

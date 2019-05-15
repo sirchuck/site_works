@@ -30,6 +30,7 @@ class siteworks_override extends siteworks_config
     $this->showPHPErrors        = true;       // Turn on php Errors on browser;
     $this->showPHPErrors_debug  = true;       // Print php Errors to debug_server;
     $this->printSQL             = true;       // Prints SQL to debug_server if debugMode is on;
+    $this->showConsoleExecutionTime = true;   // Prints SITE_WORKS & Page Execution time in console window.
 
     // Turning this on will make yoru page loads slower, you might run it once before pushing to production servers
     $this->css_js_minify        = false;      // Minify css&js, only in debug mode and when loading a controller 

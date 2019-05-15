@@ -29,6 +29,7 @@ class siteworks_config extends siteworks_startup
     public $showPHPErrors        = true;       // Turn on php Errors on browser;
     public $showPHPErrors_debug  = true;       // Print php Errors to debug_server;
     public $printSQL             = true;       // Prints SQL to debug_server if debugMode is on;
+    public $showConsoleExecutionTime = true;   // Prints SITE_WORKS & Page Execution time in console window.
 
     // Turning this on will make yoru page loads slower, you might run it once before pushing to production servers
     public $css_js_minify        = false;      // Minify css&js, only in debug mode and when loading a controller 

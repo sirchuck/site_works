@@ -247,6 +247,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->showPHPErrors - sends php errors to your web browser, like normal php error enabled scripts.
     $this->showPHPErrors_debug - sends php error messages to the debug_server.
     $this->printSQL - Do you like seeing what your MySQL commands are doing? Enable this.
+    $this->showConsoleExecutionTime - Prints SITE_WORKS & Page Execution time in console window.
     $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
