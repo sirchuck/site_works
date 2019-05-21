@@ -75,7 +75,7 @@ class siteworks_uri
 		if( $_s->cPaths['project_name'] == '' ){
 			$this->fixeduri = strtolower(trim(str_replace('public','',trim($uri, '/')), '/'));
 		}else{
-			$this->fixeduri = strtolower(trim(str_replace([$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']],'',trim($uri, '/')), '/'));
+			$this->fixeduri = strtolower(trim( preg_replace( [$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']], '' ,trim($uri, '/'), 1 ), '/'));
 		}
 
 		// The Router will automatically swap the largest key match with the sent URI segments. 
