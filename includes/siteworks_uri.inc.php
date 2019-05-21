@@ -68,14 +68,14 @@ class siteworks_uri
 		$this->asset->css_vendor  = $this->asset_url . '/css/vendor';
 	}
 
-
 	public function uri_finish(&$_s){
 		$uri = $_SERVER['DOCUMENT_URI'];
 
 		if( $_s->cPaths['project_name'] == '' ){
 			$this->fixeduri = strtolower(trim(str_replace('public','',trim($uri, '/')), '/'));
 		}else{
-			$this->fixeduri = strtolower(trim( preg_replace( [$_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']], '' ,trim($uri, '/'), 1 ), '/'));
+			 $from = '/'.preg_quote($from, '/').'/';
+			$this->fixeduri = strtolower(trim( preg_replace( array($_s->cPaths['project_name'].'/public',$_s->cPaths['project_name']), '' ,trim($uri, '/'), 1 ), '/'));
 		}
 
 		// The Router will automatically swap the largest key match with the sent URI segments. 
