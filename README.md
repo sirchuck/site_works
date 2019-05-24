@@ -585,10 +585,11 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_p - This is an array of parameters you want to pass around between your controller, modual, and view pages
 
 # Loading: Helpers, View Pages, Modles, Includes
-    The load functions use the PHP require_once() function. The following loaded files must be found under the Modual your current controller is in.
+    The load functions use the PHP require_once() function. The following loaded files by default come from your current loaded controller.
+    If you want to load a view or model from another modual, just provide the modual name in the modual variable.
     filename should be just the start of the file name, so myfile.view.php should be sent as load_view('myfile'); only.
-    $this->load_view(filename) - Loads modual/views/name.view.php - if left empty, it loads the view with the same name as the current controller.
-    $this->load_model(filename) - Loads modual/views/name.model.php - if empty, loads model with the same name as controller; However, it should already be loaded.
+    $this->load_view(filename,modual) - Loads modual/views/name.view.php - if left empty, it loads the view with the same name as the current controller.
+    $this->load_model(filename,modual) - Loads modual/views/name.model.php - if empty, loads model with the same name as modual; However, it should already be loaded.
     To load something that you want available to multipul controller, try using a helper, or include.
     $this->load_helper(filename) - This will load a file from the helper folder, accessable from all your controllers.
     $this->load_path(full_path) - You should never need this, but you could use it to require_once on a path.
