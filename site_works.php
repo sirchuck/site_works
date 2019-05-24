@@ -148,11 +148,13 @@ namespace{
 				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false);}catch(Exception $e){unset($e);}
 			}else{}
 	    }
-	    public function load_view($path=false,$useModual=$this->_uri->module){
+	    public function load_view($path=false,$useModual=''){
+	    	if($useModual==''){ $useModual = $this->_uri->module; }
 	    	// Views are not classes just html to be dropped directly in your code as output.
 	    	return $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $useModual . '/views/' . (($path) ? $path : $this->_s->uri->controller) . '.view.php');
 	    }
-	    public function load_model($path=false,$useModual=$this->_uri->module){
+	    public function load_model($path=false,$useModual=''){
+	    	if($useModual==''){ $useModual = $this->_uri->module; }
 	    	// Models are classes with access to the framework. Model cars becomes $this->_m_cars->your_function();
 	    	if( $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $useModual . '/models/' . (($path) ? $path : $this->_s->uri->controller) . '.model.php') ){
 	    		$tmp = '_m_'.$path;
