@@ -70,6 +70,11 @@ class template_controller extends _s
         // You can handle it with a statement like this
         if( $this->_uri->pass_var == 'error_permission' ){
             $this->_out['body'][] = 'You do not have permission to view that area of the site.<br><br>';
+        } 
+        // If someone goes to a uri that does not exist, it will be redirected back to your default moduals controller.
+        // You can test against an unexpected pass_var to give some sort of error if you wish.
+        else if( $this->_uri->pass_var != '' ) {
+            $this->_out['body'][] = 'You entered a bad URL. That\'s ok, we brought you back home.';
         }
 
         // Do you like Jquery? How about loading it from a CDN like google? You can do this in the config if you want it global
