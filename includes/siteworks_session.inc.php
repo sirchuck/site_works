@@ -19,8 +19,9 @@ class siteworks_session
     private function read($sid){
         $sid = md5($sid);
         $r = new t_site_works_session($sid, $this->_s->odb);
+        if($r->fget('sw_sess_data')===null){return '';}
         if($this->_s->sess_secure_password != ''){
-          return $this->_s->tool->iEncrypt($r->fget('sw_sess_data'), $this->_s->sess_secure_password, $sid, 'AES-256-CBC');
+          return $this->_s->tool->iDecrypt($r->fget('sw_sess_data'), $this->_s->sess_secure_password, $sid, 'AES-256-CBC');
         }
         return $r->fget('sw_sess_data'); 
     }
