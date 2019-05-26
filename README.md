@@ -251,6 +251,14 @@ PHP, MySQL, Javascript, and CSS framework
     $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
+    $this->SessionUseDatabase - If you make a multi-server app, you should store your php $_SESSION array on a database instead of only the current active server.
+
+    *NOTE: The next four use ini_set to set values.
+    $this->save_path - Some of you insane people may have a separate drive for faster small reads, the rest of us will leave this at the default
+    $this->gc_probability - This sets the gc_probability with ini_set (php session garbage cleanup) Set to 0 if you do your own cleanup thru cron or something
+    $this->gc_divisor - This creates a percentage for how often gc_probability will trigger. 1/100 = 1% chance to trigger cleanup when page loads.
+    $this->gc_maxlifetime - default 0 will use the php default number of seconds to recognize a sesson as old.
+
     $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
     $this->allow_auto_delete_language - If db language entry is not found in the code, it is automatically removed instead of marking for deletion.
     $this->log_files - An array of log files you set. ['NickName','log/file/path']
@@ -338,10 +346,11 @@ PHP, MySQL, Javascript, and CSS framework
     You can set a log file in the config and assign it a friendly name to write a log file.
     $this->_log['PRETTY_NAME'][] = 'You can do this to write to a log file of your choosing in the config.'
 
-
 # Important $_SESSION variables
-    Sometimes the framework needs to get some information from your user.
-    To do that we use session variables that you can control, usually when you create a login scheme for your user.
+    The framework uses a few session variables to handle routing. If you use a multipul server setup, you should set
+    the frameworks session database useage to true in the config. That way each app server can see the value of a
+    users session. If you choose not to use session, handle your own verification for letting users access moduals
+    and controllers.
     $_SESSION['is_loggedin'] - (booleen) this is used to decide if I should even bother looking at your admin_level. 
         Set it to true if your user is logged in, and false if not
     $_SESSION['admin_level'] - (int) This is the level we test against to see if your user has access to moduals and controllers.
@@ -349,7 +358,6 @@ PHP, MySQL, Javascript, and CSS framework
         Ex: $_SESSION['admin_level'] = $this->_admin_level_options['admin'];
     $_SESSION['theme'] - (string) You can use this if you want to switch between multipul themes, site_works needs at least one theme you set as the default.
     $_SESSION['language'] - (string) When your user selects a language, you set this and pow, we start using the correct language for that user.
-
 
 # dbtables
     dbtables are the class represention of your database tables

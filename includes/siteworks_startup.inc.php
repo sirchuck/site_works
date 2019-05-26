@@ -59,6 +59,17 @@ class siteworks_startup
 		// Protect Database Connection Passwords from being revield later.
 		unset($this->dbc);
 
+
+		// Start the PHP SESSION array
+    	if($this->save_path!=''){ini_set('session.save_path',$this->save_path);}
+    	if($this->gc_probability!=1){ini_set('session.gc_probability',$this->gc_probability);}
+    	if($this->gc_divisor!=100){ini_set('session.gc_divisor',$this->gc_divisor);}
+    	if($this->gc_maxlifetime!=0){ini_set('session.gc_maxlifetime',$this->gc_maxlifetime);}
+		if($this->SessionUseDatabase){$this->sess = new siteworks_session($this);}
+		session_start();
+		// Use session_write_close() in user scripts if you want to end early.
+
+
 		// Start-up output for debug
 		$debug_out = '';
 		if($this->debugMode){
@@ -67,8 +78,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 ";
 		}
 
-		// Not using sessions this way.
-		//$this->sess = new siteworks_session($this->odb);
 
 		$hold_printSQL = $this->printSQL;
 		$this->printSQL = false;
@@ -128,6 +137,13 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$r->query("SHOW TABLES LIKE 'site_works_queue';");
 			if($r->c->numRows()<1){
 				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_queue` ( `sw_ts` BIGINT(13) UNSIGNED NOT NULL AUTO_INCREMENT , `sw_tag` TEXT NOT NULL , `sw_script` TEXT NOT NULL , `sw_vars` LONGTEXT NOT NULL , `sw_waitstart` INT(11) NOT NULL DEFAULT '0' , `sw_timeout` INT(11) NOT NULL DEFAULT '0' , PRIMARY KEY (`sw_ts`)) ENGINE = InnoDB;");
+				$had_to_build_databases = true;
+			}
+
+			$r = new t_site_works_session(null,$this->odb);
+			$r->query("SHOW TABLES LIKE 'site_works_session';");
+			if($r->c->numRows()<1){
+				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_session` (`sw_sess_key` CHAR(64) NOT NULL , `sw_sess_data` TEXT NULL , `sw_sess_ts` INT(10) UNSIGNED NOT NULL DEFAULT '0' , PRIMARY KEY (`sess_id`)) ENGINE = InnoDB;");
 				$had_to_build_databases = true;
 			}
 

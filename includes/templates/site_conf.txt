@@ -41,6 +41,19 @@ class siteworks_override extends siteworks_config
 
 
     /*********************************************************************************************************
+    **                                      P H P   S E S S I O N S                                         **
+    *********************************************************************************************************/
+    // The php $_SESSION[''] array allows you to set some variables, and if you use a multi-server setup 
+    // you should consider storing your sessions on a database so all application servers can reach the data.
+    $this->SessionUseDatabase     = false; // Default false, set to true to use site_works_session database
+    // The following variables control ini_set commands, so if your php does not allow ini_set changes they
+    // will not work. 
+    $this->save_path             = '';  // Default ''; Ex: reiserfs may provide better performance than ext2fs
+    $this->gc_probability        = 1;   // Default 1; If you do your own garbage collection you should set to 0
+    $this->gc_divisor            = 100; // Default 100; 1/100 (1%) chance your gc will fire normally.
+    $this->gc_maxlifetime        = 0;   // Default 0; That will use whatever php default seconds are
+
+    /*********************************************************************************************************
     **                                      A D M I N I S T A T I O N                                       **
     *********************************************************************************************************/
     // This array lets use enumerate uesr login levels with readable names
