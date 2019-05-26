@@ -143,7 +143,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$r = new t_site_works_session(null,$this->odb);
 			$r->query("SHOW TABLES LIKE 'site_works_session';");
 			if($r->c->numRows()<1){
-				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_session` (`sw_sess_key` CHAR(64) NOT NULL , `sw_sess_data` TEXT NULL , `sw_sess_ts` INT(10) UNSIGNED NOT NULL DEFAULT '0' , PRIMARY KEY (`sess_id`)) ENGINE = InnoDB;");
+				$this->odb->q("CREATE TABLE IF NOT EXISTS `" . $dbc_database_name . "`.`site_works_session` (`sw_sess_key` CHAR(64) NOT NULL , `sw_sess_data` TEXT NULL , `sw_sess_ts` INT(10) UNSIGNED NOT NULL DEFAULT '0' , PRIMARY KEY (`sw_sess_key`)) ENGINE = InnoDB;");
 				$had_to_build_databases = true;
 			}
 
