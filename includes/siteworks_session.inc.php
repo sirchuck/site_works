@@ -35,16 +35,15 @@ class siteworks_session
         $data = ($this->_s->sess_secure_password != '') ? $this->_s->tool->iEncrypt($data, $this->_s->sess_secure_password, $sid, 'AES-256-CBC') : $data;
         $r->fset('sw_sess_data',$data);
         $r->fset('sw_sess_ts',time());
-        $r->insertUpdateData();
+        if($r->insertUpdateData()===false){ return false; }
         return true;
     }
-    private function destroy($sid) : bool { $r = new t_site_works_session(md5($sid),$this->_s->odb); $r->deleteData(); return true; }
-    private function md5destroy($sid) : bool { $r = new t_site_works_session($sid,$this->_s->odb); $r->deleteData(); return true; }
+    private function destroy($sid) : bool { $r = new t_site_works_session(md5($sid),$this->_s->odb); return $r->deleteData(); }
+    private function md5destroy($sid) : bool { $r = new t_site_works_session($sid,$this->_s->odb); return $r->deleteData(); }
     private function gc($expire) : bool {
         if( $this->_s->gc_probability == 0 ){ return true; }
         $r = new t_site_works_session(null,$this->_s->odb);
-        $r->deleteData('sw_sess_ts < ' . time() - (int) $expire);
-        return true;
+        return $r->deleteData('sw_sess_ts < ' . time() - (int) $expire);
     }
     
 }
