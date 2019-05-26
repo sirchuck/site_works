@@ -251,13 +251,18 @@ PHP, MySQL, Javascript, and CSS framework
     $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
+
     $this->SessionUseDatabase - If you make a multi-server app, you should store your php $_SESSION array on a database instead of only the current active server.
     *NOTE: The next four use ini_set to set values.
     $this->save_path - Some of you insane people may have a separate drive for faster small reads, the rest of us will leave this at the default
     $this->gc_probability - This sets the gc_probability with ini_set (php session garbage cleanup) Set to 0 if you do your own cleanup thru cron or something
     $this->gc_divisor - This creates a percentage for how often gc_probability will trigger. 1/100 = 1% chance to trigger cleanup when page loads.
     $this->gc_maxlifetime - default 0 will use the php default number of seconds to recognize a sesson as old.
+    *NOTE: Changing the secure sesson password will break old sessions, so you'll want to delete sessions. I do this automatically, but only after they
+         initially load the page once. Also, this secure password is only used when you send data to the db. By secure I only mean as secure
+         as the default php openssl_encrypt. 
     $this->sess_secure_password - if you provide a password, we encrypt the session data for the database.
+
     $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
     $this->allow_auto_delete_language - If db language entry is not found in the code, it is automatically removed instead of marking for deletion.
     $this->log_files - An array of log files you set. ['NickName','log/file/path']
