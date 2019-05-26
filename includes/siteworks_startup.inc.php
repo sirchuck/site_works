@@ -65,8 +65,7 @@ class siteworks_startup
     	if($this->gc_probability!=1){ini_set('session.gc_probability',$this->gc_probability);}
     	if($this->gc_divisor!=100){ini_set('session.gc_divisor',$this->gc_divisor);}
     	if($this->gc_maxlifetime!=0){ini_set('session.gc_maxlifetime',$this->gc_maxlifetime);}
-		if($this->SessionUseDatabase){$this->sess = new siteworks_session($this);}
-		session_start();
+		if($this->SessionUseDatabase){$this->sess = new siteworks_session($this);}else{session_start();}
 		// Use session_write_close() in user scripts if you want to end early.
 
 

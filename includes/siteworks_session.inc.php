@@ -10,6 +10,7 @@ class siteworks_session
     function __construct($_s){
         $this->_s = $_s;
         session_set_save_handler(array(&$this, 'read'), array(&$this, 'write'), array(&$this, 'destroy'), array(&$this, 'gc'));
+        session_start();
     }
     function __destruct(){ if($this->alive){ session_write_close(); $this->alive = false; } }
     // Open & Close are not being used right now, i'm only interested in database storage of sessions.
