@@ -230,8 +230,8 @@ class siteworks_tools
   }
 
   // Always changing security
-  public function iEncrypt($s, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){ return encrypt_decrypt($s, 'encrypt', $secret_key, $secret_iv, $encrypt_method); }
-  public function iDecrypt($s, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){ return encrypt_decrypt($s, 'decrypt', $secret_key, $secret_iv, $encrypt_method); }
+  public function iEncrypt($s, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){ return $this->encrypt_decrypt($s, 'encrypt', $secret_key, $secret_iv, $encrypt_method); }
+  public function iDecrypt($s, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){ return $this->encrypt_decrypt($s, 'decrypt', $secret_key, $secret_iv, $encrypt_method); }
   public function encrypt_decrypt($s,$a, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){
     $output = false;
     $key = hash('sha256', $secret_key);
