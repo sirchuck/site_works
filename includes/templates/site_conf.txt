@@ -52,6 +52,8 @@ class siteworks_override extends siteworks_config
     $this->gc_probability        = 1;   // Default 1; If you do your own garbage collection you should set to 0
     $this->gc_divisor            = 100; // Default 100; 1/100 (1%) chance your gc will fire normally.
     $this->gc_maxlifetime        = 0;   // Default 0; That will use whatever php default seconds are
+    $this->sess_secure_password  = '';  // Default ''; To encrypt session data in the database, provide a password.
+
 
     /*********************************************************************************************************
     **                                      A D M I N I S T A T I O N                                       **

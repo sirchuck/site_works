@@ -51,6 +51,7 @@ class siteworks_config extends siteworks_startup
     public $gc_probability        = 1;   // Default 1; If you do your own garbage collection you should set to 0
     public $gc_divisor            = 100; // Default 100; 1/100 (1%) chance your gc will fire normally.
     public $gc_maxlifetime        = 0;   // Default 0; That will use whatever php default seconds are
+    public $sess_secure_password  = '';  // Default ''; To encrypt session data in the database, provide a password.
 
 
     /*********************************************************************************************************

@@ -252,13 +252,12 @@ PHP, MySQL, Javascript, and CSS framework
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
     $this->SessionUseDatabase - If you make a multi-server app, you should store your php $_SESSION array on a database instead of only the current active server.
-
     *NOTE: The next four use ini_set to set values.
     $this->save_path - Some of you insane people may have a separate drive for faster small reads, the rest of us will leave this at the default
     $this->gc_probability - This sets the gc_probability with ini_set (php session garbage cleanup) Set to 0 if you do your own cleanup thru cron or something
     $this->gc_divisor - This creates a percentage for how often gc_probability will trigger. 1/100 = 1% chance to trigger cleanup when page loads.
     $this->gc_maxlifetime - default 0 will use the php default number of seconds to recognize a sesson as old.
-
+    $this->sess_secure_password - if you provide a password, we encrypt the session data for the database.
     $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
     $this->allow_auto_delete_language - If db language entry is not found in the code, it is automatically removed instead of marking for deletion.
     $this->log_files - An array of log files you set. ['NickName','log/file/path']
@@ -500,7 +499,14 @@ PHP, MySQL, Javascript, and CSS framework
             This is supposed to remove XSS injecton from a html string. You probably won't use it in your code.
         $this->_tool->p_r($array)
             This lets you pretty print your arrays to the browser by encapsulating your array in 'pre' tags.
-
+        $this->_tool->iRnd( $lenght, $keyspace )
+            This will return a string of length $length using the characters you define in $keyspace. Default keyspace is US letters and numbers
+        // PHP Basic Encryption 
+        $this->_tool->iEncrypt($string, $secret_key, $secret_iv, $encryption_method )
+            Send your plain text string along with a secret key (salt), and a secret_iv (salt2), method default 'AES-256-CBC'
+            Your secret key is probably reused and set in your config. the secret_iv is generally unique per thing being encrypted. You can store it in plain text to use for decryption.
+        $this->_tool->iDecrypt($string, $secret_key, $secret_iv, $encryption_method)
+            This decrypts your encryption. You use the same key and iv and method you did when you encrpted. 
     $this->_uri
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly
         Your URI will have this structure:

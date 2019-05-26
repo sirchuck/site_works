@@ -220,5 +220,31 @@ class siteworks_tools
   public function cleanHTML(&$va){foreach($va as &$v){if(is_array($v)||is_object($v)){siteworks_htmlSpecialChars_recur($v);}else{$v=htmlspecialchars($v);}}}
   public function p_r($array = []){ echo '<pre>'; print_r ($array); echo '</pre>'; }
 
+  public function iRnd($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'){
+    $pieces = [];
+    $max = mb_strlen($keyspace, '8bit') - 1;
+    for ($i = 0; $i < $length; ++$i) {
+      $pieces []= $keyspace[random_int(0, $max)];
+    }
+    return implode('', $pieces);
+  }
+
+  // Always changing security
+  public function iEncrypt($s, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){ return encrypt_decrypt($s, 'encrypt', $secret_key, $secret_iv, $encrypt_method); }
+  public function iDecrypt($s, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){ return encrypt_decrypt($s, 'decrypt', $secret_key, $secret_iv, $encrypt_method); }
+  public function encrypt_decrypt($s,$a, $secret_key = 'EuhriejirjijLL', $secret_iv = 'djkRKoejORjohgh', $encrypt_method = 'AES-256-CBC'){
+    $output = false;
+    $key = hash('sha256', $secret_key);
+    // iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+    $iv = substr(hash('sha256', $secret_iv), 0, 16);
+    if ( $a == 'encrypt' ) {
+        $output = openssl_encrypt($s, $encrypt_method, $key, 0, $iv);
+    } else if( $a == 'decrypt' ) {
+        $output = openssl_decrypt($s, $encrypt_method, $key, 0, $iv);
+    }
+    return $output;
+  }
+
+
 }
 ?>
