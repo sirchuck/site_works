@@ -128,7 +128,7 @@ abstract class siteworks_db_tools
             if(strrpos($id,'=')===false && strrpos($id,'>')===false && strrpos($id,'<')===false){
                 $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
             } else {
-                if( substr( $where, 0, 1 ) == '<' ){
+                if( substr( $id, 0, 1 ) == '<' ){
                     $sql = 'SELECT * FROM `'.$this->tableName.'` '.ltrim($id,'<');
                 }else{
                     $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE '.ltrim($id,'=');
