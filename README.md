@@ -503,7 +503,7 @@ PHP, MySQL, Javascript, and CSS framework
             Returns the text for the provided language from the siteworks_lang database.
         $this->_tool->cleanHTML(string)
             This is supposed to remove XSS injecton from a html string. You probably won't use it in your code.
-        $this->_tool->noHTML($input, $ops = 'ENT_QUOTES | ENT_HTML5', $encoding = 'UTF-8')
+        $this->_tool->noHTML( string, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8')
             Use this, or your own version when printing user data out to your document to help prevent XSS.
         $this->_tool->p_r($array)
             This lets you pretty print your arrays to the browser by encapsulating your array in 'pre' tags.
