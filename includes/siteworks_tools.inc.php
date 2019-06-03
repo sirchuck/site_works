@@ -217,8 +217,8 @@ class siteworks_tools
     return (isset($row->l))?$row->l:'';
   }
 
-  public function cleanHTML(&$va){foreach($va as &$v){if(is_array($v)||is_object($v)){siteworks_htmlSpecialChars_recur($v);}else{$v=htmlspecialchars($v);}}}
-  public function noHTML($input, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8'){ return htmlentities($input, $ops, $encoding); }
+  public function cleanHTML(&$va){ if(is_array($va)||is_object($va)){ foreach($va as &$v){ if(is_array($v)||is_object($v)){ $this->cleanHTML($v); }else{ $v=htmlspecialchars($v); } } }else{$va=htmlspecialchars($va);} }
+  public function noHTML(&$va, $o = ENT_QUOTES | ENT_HTML5, $e = 'UTF-8'){ if(is_array($va)||is_object($va)){ foreach($va as &$v){ if(is_array($v)||is_object($v)){ $this->noHTML($v,$o,$e); }else{ $v=htmlentities($v,$o,$e); } } }else{$va=htmlentities($va,$o,$e);} }
   public function p_r($array = []){ echo '<pre>'; print_r ($array); echo '</pre>'; }
 
   public function iRnd($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'){

@@ -501,10 +501,12 @@ PHP, MySQL, Javascript, and CSS framework
            Look Away, nothign to see here. Yes, you have access to it, but I can't see you would ever use it.
         $this->_tool->getText(index, $language)
             Returns the text for the provided language from the siteworks_lang database.
-        $this->_tool->cleanHTML(string)
+        $this->_tool->cleanHTML(string|array|object)
             This is supposed to remove XSS injecton from a html string. You probably won't use it in your code.
-        $this->_tool->noHTML( string, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8')
+            *NOTE: No return, this just modifies the values you send.
+       $this->_tool->noHTML( string|array|object, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8')
             Use this, or your own version when printing user data out to your document to help prevent XSS.
+            *NOTE: No return, this just modifies the values you send.
         $this->_tool->p_r($array)
             This lets you pretty print your arrays to the browser by encapsulating your array in 'pre' tags.
         $this->_tool->iRnd( $lenght, $keyspace )
