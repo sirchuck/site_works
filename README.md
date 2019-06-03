@@ -331,7 +331,8 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_out['js'][]
     $this->_out['body'][]
     $this->_out['footer'][]
-    The favicon is a special part of the header output, you can set it like this:
+    The html & favicon are a special part of the header output, you can set it like this:
+    $this->_out['header']['html'] = '<!DOCTYPE html>'; // Default is <!DOCTYPE html> which is the HTML5 Doctype - anything you put in here goes above <head>
     $this->_out['header']['favicon'] = '<link rel="shortcut icon" type="image/png" href="https://path_to/favicon.ico"/>';
 
     I listed the above in the order they will print out. Each is an array of it's own so you can append to any of them
@@ -502,6 +503,8 @@ PHP, MySQL, Javascript, and CSS framework
             Returns the text for the provided language from the siteworks_lang database.
         $this->_tool->cleanHTML(string)
             This is supposed to remove XSS injecton from a html string. You probably won't use it in your code.
+        $this->_tool->noHTML($input, $ops = 'ENT_QUOTES | ENT_HTML5', $encoding = 'UTF-8')
+            Use this, or your own version when printing user data out to your document to help prevent XSS.
         $this->_tool->p_r($array)
             This lets you pretty print your arrays to the browser by encapsulating your array in 'pre' tags.
         $this->_tool->iRnd( $lenght, $keyspace )

@@ -125,8 +125,7 @@ namespace{
 		public $_admin = null;                  // The site_works admin array
 		public $_mem = null;                    // The site_works mem array
 
-	    public function __construct(){
-	    }
+	    public function __construct(){}
 	    public function site_works_prefetch(&$_s,$model=false){
 	    	$this->_s 	       = $_s;
 			$this->_tool       =& $this->_s->tool;

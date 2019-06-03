@@ -12,7 +12,7 @@ class siteworks_startup
 
 	// Site Output
 	public $out = [
-		 'header'=>array()	// Stuff after <html> and before title
+		,'header'=>array()	// Stuff after <html> and before title, $out['header']['html'] is the <html> area.
 		,'title'=>array()	// Stuff around the title area, like <title>
 		,'meta'=>array()	// Meta tags
 		,'link'=>array()	// Link tags
@@ -542,7 +542,11 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if($this->uri->calltypes != 'iframes'){
 			$this->out['js'][] = '<script language="javascript">console.log("'.implode('\n',$this->console).'")</script>'; 
 		}
-		echo '<html>
+
+		$tmp = '<!DOCTYPE html>';
+		if( isset($this->_out['header']['html']) ){ $tmp = $this->_out['header']['html']; unset($this->_out['header']['html']); }
+
+		echo $tmp . '
 <head>' .
 implode( ' ', $this->out['header'] ) .
 implode( ' ', $this->out['title'] ) .
@@ -555,7 +559,7 @@ implode( ' ', $this->out['js'] ) .
 implode( ' ', $this->out['body'] ) . 
 implode( ' ', $this->out['footer'] ) . 
 '</body>
-</hmtl>';
+</html>';
 	}
 
 }

@@ -218,6 +218,7 @@ class siteworks_tools
   }
 
   public function cleanHTML(&$va){foreach($va as &$v){if(is_array($v)||is_object($v)){siteworks_htmlSpecialChars_recur($v);}else{$v=htmlspecialchars($v);}}}
+  public function noHTML($input, $ops = 'ENT_QUOTES | ENT_HTML5', $encoding = 'UTF-8'){ return htmlentities($input, $ops, $encoding); }
   public function p_r($array = []){ echo '<pre>'; print_r ($array); echo '</pre>'; }
 
   public function iRnd($length, $keyspace = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'){
