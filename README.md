@@ -504,9 +504,13 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_tool->cleanHTML(string|array|object)
             This is supposed to remove XSS injecton from a html string. You probably won't use it in your code.
             *NOTE: No return, this just modifies the values you send.
-       $this->_tool->noHTML( string|array|object, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8')
+        $this->_tool->noHTML( string|array|object, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8')
             Use this, or your own version when printing user data out to your document to help prevent XSS.
             *NOTE: No return, this just modifies the values you send.
+        $this->_tool->cleanH(string|array|object)
+            Wrapper for cleanHTML, and provides a return variable so you can apply directly in code.
+        $this->_tool->noH( string|array|object, $ops = ENT_QUOTES | ENT_HTML5, $encoding = 'UTF-8')
+            Wrapper for noHTML, and provides a return variable so you can apply directly in code.
         $this->_tool->p_r($array)
             This lets you pretty print your arrays to the browser by encapsulating your array in 'pre' tags.
         $this->_tool->iRnd( $lenght, $keyspace )
