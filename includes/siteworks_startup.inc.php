@@ -12,7 +12,7 @@ class siteworks_startup
 
 	// Site Output
 	public $out = [
-		,'header'=>array()	// Stuff after <html> and before title, $out['header']['html'] is the <html> area.
+		 'header'=>array()	// Stuff after <html> and before title, $out['header']['html'] is the <html> area.
 		,'title'=>array()	// Stuff around the title area, like <title>
 		,'meta'=>array()	// Meta tags
 		,'link'=>array()	// Link tags
