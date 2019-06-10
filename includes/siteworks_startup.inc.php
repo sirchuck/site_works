@@ -59,6 +59,8 @@ class siteworks_startup
 		// Protect Database Connection Passwords from being revield later.
 		unset($this->dbc);
 
+		$hold_printSQL = $this->printSQL;
+		$this->printSQL = false;
 
 		// Start the PHP SESSION array
     	if($this->save_path!=''){ini_set('session.save_path',$this->save_path);}
@@ -76,10 +78,6 @@ class siteworks_startup
 Start Time: " . date('Y-m-d H:i:s') . "
 ";
 		}
-
-
-		$hold_printSQL = $this->printSQL;
-		$this->printSQL = false;
 
 		// Handle Admin Table and APCu
 		$this->apcu_is_set = ( $this->APCuTimeoutMinutes > 0 && extension_loaded('apcu') ) ? true : false;
@@ -479,6 +477,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		}
 		if($this->debugMode){
 			foreach($this->tail_array as $v){$this->tool->dmsg('[c_white][Tail] ' . $v[0] . "\n[c_light_purple]" . shell_exec('tail -n '.$v[1].' '.$v[0]) . "\n", false, false); }
+			$this->printSQL = false;
 			$this->tool->dmsg('************   F I N I S H   ************', false, false);
 		}
 	}
