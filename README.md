@@ -247,6 +247,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->showPHPErrors_debug - sends php error messages to the debug_server.
     $this->printSQL - Do you like seeing what your MySQL commands are doing? Enable this.
     $this->showConsoleExecutionTime - Prints SITE_WORKS & Page Execution time in console window.
+    $this->useUnitTests - true or false, enable unit testing, if on execution will be slower.
     $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
@@ -686,6 +687,52 @@ PHP, MySQL, Javascript, and CSS framework
       js Ex: $w = '' + [__My Javascript text__]; Turns into $w = '' + getText(6);
       As long as your in a js file you could do $w = [__My Words Here__] and the system will get the right getText() version
       Ex: $w = '[__My Words__]'; Will become $w = '{__6__}'; Then that will be auto-parsed by the js on page load.
+
+# Unit Testing - Reimagined
+    Typically unit testing means creating a file that you run with lines and lines of code. The trade off with my version is you will not
+    be able to just access all your tests at once in one file. Instead, each test is associated with the function it is meant to test.
+    That means to change a test you will have to locate the file and function related to your test.
+    How it works:
+    ...your code...
+        #_sw> "a","b",5,>7
+        private function MyFunc($a,$b,$c=0){
+            // Do some things
+            $x = $r->updateData(); #_sw< $x = true;
+            // More things to do
+            #_sw[
+                if( $r->updateData() ){
+                    $myInt = 8;
+                } else {
+                    $myInt = 7;
+                }
+            #_sw]
+            // Do more things
+            return $myInt;
+        }
+    ...your code...
+
+    TEST Starter:
+        #_sw> "a","b",5,>7
+        If I find #_sw> I use the rest of the line up to the ,> as your fuction input values and use everything after ,> as your expected return value.
+        The test translates this line into a call to MyFunc, MyFunc( "a", "b", 5 );
+    TEST Line Replacement:
+        $x = $r->updateData(); #_sw< $x = true;
+        When you end a php line with #_sw< we replace the php code of that line with what you put in the comment after the $_sw<
+        This line will be translated to: $x = true;
+        $this and Database calls for example, do not work while unit testing, so you can change those lines on the fly
+        so you can get the expected return value by adding the tester line replacement.
+    TEST Block Clear:
+        #_sw[
+            Whatever is between the tags will be removed for the test.
+            You may have a large query that spans multipul lines for example
+            Or a block of code you do not need to run during a unit test.
+        #_sw]
+    TEST More than one set of variables:
+        When you preceed a function call with the test starter #_sw>, it runs the test with the provided values. If you want to run
+        another test on the same function with different values, just add another $_sw> line before the function to be tested.
+    *NOTE:
+        Only .php files under your dev folder will be scanned when you do Unit Testing. Running unit tests of course take more processing power
+        so I would only turn tests on just before building for the production server. If all runs good, disable testing again.
 
 # Included Apps to help you develop faster:
     ifind

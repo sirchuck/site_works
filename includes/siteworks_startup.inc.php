@@ -367,6 +367,86 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				if (!is_dir($new_path)){mkdir($new_path,0775,true);}
 				file_put_contents($new_path.$v['name'],$tmp2,775);
 			}
+
+			// U N I T    T E S T I N G
+			if( $this->_s->useUnitTests ){
+				$tmp='';$tmp2='';$tmp3='';$wf=false;$tc=0;$tt=[];
+				foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/dev/',1,true) as $v){
+					if( stripos(strrev($v['name']), 'php.') === 0 ){
+						preg_match_all('/(?<=\#_sw>)(.*?)(?=\n)|(?<nb>[^\{\}]*){0}(function.*?)(?<bb>\{\g<nb>\}|\{(?:\g<nb>\g<bb>\g<nb>)*\})/', file_get_contents($v['path'].$v['name']), $m);
+						foreach($m[0] as $v){
+							if(strtolower(substr($v,0,8))=='function'){
+								if($wf){
+									// Pull out every function found when we found a pirior test call
+									preg_match('/function\s(.*)\(/',$v,$m2);
+									$tt[$tc][1] = trim($m2[1]);
+									$v2 = preg_replace('/(.*)(?<=\#_sw<)(.*?)(?=\n)/', '$2', $v);
+									$v2 = preg_replace('/#_sw\[(?s)(.*?)#_sw\]/', '', $v2);
+									$tt[$tc][2] = trim($v2);
+							        $tc++;
+								}
+					    	    $wf = false;
+							} else {
+								// Store list of tests to run and trigger to store the next found function
+						        $wf = true;
+								$tt[$tc][0][] = trim($v);
+								$tt[$tc][4] = $v['path'].$v['name'];
+							}
+						}
+					} // End if php file
+				} // End foreach file
+				foreach($tt as $v){
+					// Itterate through every found test and function.
+					foreach($v[0] as $vv){
+						$vx = explode(',>',$vv); $vx2 = array_pop($vx);
+$tmp2 .= '$this->tool->dmsg("\nFile: '.$v[4].'\nFunction: '.$v[1].'\n");ob_start();unset($tmp);$tmp=$this->' . $v[1] . '(' . implode(',',$vx) . ');ob_end_clean();$this->_sw_valcheck("i",'.$vx2.', $tmp );'."\n";
+					}
+					$tmp3 .= $v[2]."\n";
+				}
+$xd = '<?php
+class _sw_unit_test {
+	private $_s = null;
+	private $_sw_test_counter = 0;
+	private $_sw_test_counter_fail = 0;
+    public function __construct(&s) {$_s = s;}
+    private function _sw_do_out($s){ $this->_s->tool->dmsg($s); }
+	private function _sw_valcheck($t, $re, $rv){
+		$this->_sw_test_counter++;
+		if($re === $rv){
+			$_sw_do_out("Status: Success\n");
+		}else if($re == $rv){
+			$_sw_do_out("Status: Type Fail\n");
+			$_sw_do_out("Expected: " . var_export($re, true) . "\nRecieved: " . var_export($rv, true) . "\n");
+			$this->_sw_test_counter_fail++;
+		}else{
+			$_sw_do_out("Status: Fail\n");
+			$_sw_do_out("Expected: " . var_export($re, true) . "\nRecieved: " . var_export($rv, true) . "\n");
+			$this->_sw_test_counter_fail++;
+		}
+	}
+	public function _sw_dotest(){
+		try{
+'.$tmp2.'
+		}catch(Exception $e){
+			$_sw_do_out("Testing errror: ", $e->getMessage(), "\n");
+		}
+		$_sw_do_out("\nTotal Tests: " . $this->_sw_test_counter);
+		$_sw_do_out("\nTotal Failures: " . $this->_sw_test_counter_fail . "\n\n");
+	}
+'.$tmp3.'
+}
+?>';
+				$tfile = tmpfile();
+				fwrite($tfile, $xd);
+				require_once( stream_get_meta_data($tfile)['uri'] );
+				$xc = new _sw_unit_test($this);
+				$xc->_sw_dotest();
+				fclose($tfile);
+				unset($xc);unset($xd);unset($tc);unset($tfile);unset($wf);unset($tt);
+			} // Allow Unit testing
+
+
+
 			unset($m);
 			unset($jscode);
 			unset($jsStringArray);
