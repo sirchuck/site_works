@@ -248,6 +248,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->printSQL - Do you like seeing what your MySQL commands are doing? Enable this.
     $this->showConsoleExecutionTime - Prints SITE_WORKS & Page Execution time in console window.
     $this->useUnitTests - true or false, enable unit testing, if on execution will be slower.
+    $this->UnitTestsFile - Default '', if set, the unit test file is saved there. Useful if you need to find a parse error. Ex: /tmp/MyUnitTest.txt
     $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.

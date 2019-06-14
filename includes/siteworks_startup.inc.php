@@ -442,7 +442,8 @@ class _sw_unit_test {
 '.$tmp3.'
 }
 ?>';
-				$tfile = tmpfile();
+				$tfile=null;
+				if($this->UnitTestsFile){$tfile=fopen($this->UnitTestsFile, "w") or $this->tool->dmsg('Can not write to Unit Test File!');}else{$tfile=tmpfile();}
 				fwrite($tfile, $xd);
 				require_once( stream_get_meta_data($tfile)['uri'] );
 				$xc = new \_sw_unit_test($this);

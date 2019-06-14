@@ -31,6 +31,7 @@ class siteworks_config extends siteworks_startup
     public $printSQL             = true;       // Prints SQL to debug_server if debugMode is on;
     public $showConsoleExecutionTime = true;   // Prints SITE_WORKS & Page Execution time in console window.
     public $useUnitTests         = false;      // true / false, enable unit testing.
+    public $UnitTestsFile        = '';         // Default '', if path is set, your unit test file will be saved to this file.
 
     // Turning this on will make yoru page loads slower, you might run it once before pushing to production servers
     public $css_js_minify        = false;      // Minify css&js, only in debug mode and when loading a controller 
