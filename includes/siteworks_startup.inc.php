@@ -399,7 +399,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					// Itterate through every found test and function.
 					foreach($v[0] as $vv){
 						$vx = explode(',>',$vv); $vx2 = array_pop($vx);
-$tmp2.='$this->_tmp.="\nFile: '.$v[4].'\nFunction: '.$v[1].'\n";ob_start();unset($tmp);$tmp=$this->' . $v[1] . '(' . implode(',',$vx) . ');ob_end_clean();$this->_sw_valcheck("i",'.$vx2.', $tmp );'."\n";
+$tmp2.='$this->_tmp2="\nFile: '.$v[4].'\nFunction: '.$v[1].'\n";ob_start();unset($tmp);$tmp=$this->' . $v[1] . '(' . implode(',',$vx) . ');ob_end_clean();$this->_sw_valcheck("i",'.$vx2.', $tmp );'."\n";
 					}
 					$tmp3 .= $v[2]."\n";
 				}
@@ -408,6 +408,7 @@ $tmp2.='$this->_tmp.="\nFile: '.$v[4].'\nFunction: '.$v[1].'\n";ob_start();unset
 $xd = '<?php
 class _sw_unit_test {
 	private $_tmp = null;
+	private $_tmp2 = null;
 	private $UnitTestErrorsOnly = false;
 	private $_sw_test_counter = 0;
 	private $_sw_test_counter_fail = 0;
@@ -415,13 +416,13 @@ class _sw_unit_test {
 	private function _sw_valcheck($t, $re, $rv){
 		$this->_sw_test_counter++;
 		if($re === $rv){
-			if($this->UnitTestErrorsOnly){$this->_tmp .= "[c_cyan]Status: Success[c_clear]\n";}
+			if($this->UnitTestErrorsOnly){$this->_tmp .= $this->_tmp2 . "[c_cyan]Status: Success[c_clear]\n";}
 		}else if($re == $rv){
-			$this->_tmp .= "[c_light_red]Status: Type Fail[c_clear]\n";
+			$this->_tmp .= $this->_tmp2 . "[c_light_red]Status: Type Fail[c_clear]\n";
 			$this->_tmp .= "Expected: " . var_export($re, true) . "\nRecieved: " . var_export($rv, true) . "\n";
 			$this->_sw_test_counter_fail++;
 		}else{
-			$this->_tmp .= "[c_red]Status: Fail[c_clear]\n";
+			$this->_tmp .= $this->_tmp2 . "[c_red]Status: Fail[c_clear]\n";
 			$this->_tmp .= "Expected: " . var_export($re, true) . "\nRecieved: " . var_export($rv, true) . "\n";
 			$this->_sw_test_counter_fail++;
 		}
