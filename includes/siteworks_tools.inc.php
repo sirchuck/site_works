@@ -54,7 +54,7 @@ class siteworks_tools
         }
         $btrace = '';
         if($showArray===1){ $btrace = $this->trace(0,true); }else{ $btrace = ltrim($this->trace(1,false),"\n"); }
-        if (!$fp) { $this->_s->console[] = "You are calling dmsg() in debug mode, but your ./debug_server is not accessable. - $errstr ($errno)"; } else { fwrite($fp,(($showArray)?$btrace."-> ":'').print_r($s,true).(($showline)?"\n__________________________________________\n":'') . "\0"); fclose($fp); }
+        if (!$fp) { $this->_s->console['_sw_dmsg'] = "You are calling dmsg() in debug mode, but your ./debug_server is not accessable. - $errstr ($errno)"; } else { fwrite($fp,(($showArray)?$btrace."-> ":'').print_r($s,true).(($showline)?"\n__________________________________________\n":'') . "\0"); fclose($fp); }
       } catch (Exception $e) {
          $this->_s->console[] = 'You are in debug mode, but your ./debug_server is not accessable. ' . $e->getMessage();
       }
