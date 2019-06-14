@@ -249,6 +249,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->showConsoleExecutionTime - Prints SITE_WORKS & Page Execution time in console window.
     $this->useUnitTests - true or false, enable unit testing, if on execution will be slower.
     $this->UnitTestsFile - Default '', if set, the unit test file is saved there. Useful if you need to find a parse error. Ex: /tmp/MyUnitTest.txt
+    $this->UnitTestErrorsOnly - true or false, if true successful unit tests are reported to the debug_server, more to read but you may want it from time to time.
     $this->css_js_minify - minifys css and js. Typically, you would turn this on just before pushing to your live server so you can serve minified files.
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
@@ -689,10 +690,17 @@ PHP, MySQL, Javascript, and CSS framework
       As long as your in a js file you could do $w = [__My Words Here__] and the system will get the right getText() version
       Ex: $w = '[__My Words__]'; Will become $w = '{__6__}'; Then that will be auto-parsed by the js on page load.
 
-# Unit Testing - Reimagined
+# PHP Unit Testing - Reimagined
     Typically unit testing means creating a file that you run with lines and lines of code. The trade off with my version is you will not
     be able to just access all your tests at once in one file. Instead, each test is associated with the function it is meant to test.
-    That means to change a test you will have to locate the file and function related to your test.
+    That means to change a test you will have to locate the file and function related to your test. ( Ex: terminal:path/to/work/folder> ifind 'MyFunc' )
+    Advantages:
+        When you have your debug_mode active, the framework pre-processes all of your code files under the /dev directory. This allows me to examine each
+        function for your test code and create a test class and file to run. If you have a fatal error in one of your tests, obviously the code will break.
+        That's ok, set your unit test path variable $this->UnitTestsFile to a writable file path, you can open and read it to track the offending line. 
+        If you do not set a UnitTestsFile, the test file is automatically removed after it is used. 
+        Another advantage is the speed you can write your test. Just one line sets it up while your working on your function and it's fresh on your mind.
+        Standard success and fail messages show you the file and function in question in your debug_server output.
     How it works:
     ...your code...
         #_sw> "a","b",5,>7

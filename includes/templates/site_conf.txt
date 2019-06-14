@@ -31,7 +31,10 @@ class siteworks_override extends siteworks_config
     $this->showPHPErrors_debug  = true;       // Print php Errors to debug_server if debugMode is on;
     $this->printSQL             = true;       // Prints SQL to debug_server if debugMode is on;
     $this->showConsoleExecutionTime = true;   // Prints SITE_WORKS & Page Execution time in console window.
+
+    // Unit Testing
     $this->useUnitTests         = false;      // true / false, enable unit testing.
+    $this->UnitTestErrorsOnly   = false;      // If true we only show you the Unit Test errors (less reporting to read)
     $this->UnitTestsFile        = '';         // Default '', if path is set, your unit test file will be saved to this file.
 
     // Turning this on will make yoru page loads slower, you might run it once before pushing to production servers

@@ -408,13 +408,14 @@ $tmp2.='$this->_tmp.="\nFile: '.$v[4].'\nFunction: '.$v[1].'\n";ob_start();unset
 $xd = '<?php
 class _sw_unit_test {
 	private $_tmp = null;
+	private $UnitTestErrorsOnly = false;
 	private $_sw_test_counter = 0;
 	private $_sw_test_counter_fail = 0;
-    public function __construct(){}
+    public function __construct($UnitTestErrorsOnly){$this->UnitTestErrorsOnly = $UnitTestErrorsOnly;}
 	private function _sw_valcheck($t, $re, $rv){
 		$this->_sw_test_counter++;
 		if($re === $rv){
-			$this->_tmp .= "[c_light_blue]Status: Success[c_clear]\n";
+			if($this->UnitTestErrorsOnly){$this->_tmp .= "[c_cyan]Status: Success[c_clear]\n";}
 		}else if($re == $rv){
 			$this->_tmp .= "[c_light_red]Status: Type Fail[c_clear]\n";
 			$this->_tmp .= "Expected: " . var_export($re, true) . "\nRecieved: " . var_export($rv, true) . "\n";
@@ -446,7 +447,7 @@ class _sw_unit_test {
 				if($this->UnitTestsFile){$tfile=fopen($this->UnitTestsFile, "w") or $this->tool->dmsg('Can not write to Unit Test File!');}else{$tfile=tmpfile();}
 				fwrite($tfile, $xd);
 				require_once( stream_get_meta_data($tfile)['uri'] );
-				$xc = new \_sw_unit_test($this);
+				$xc = new \_sw_unit_test($this->UnitTestErrorsOnly);
 				$debug_out .= "\n[c_cyan]----------- U N I T   T E S T I N G ----------[c_clear]\n";
 				$debug_out .= $xc->_sw_dotest();
 				$debug_out .= "[c_cyan]------------- END UNIT TESTING --------------[c_clear]\n\n";
