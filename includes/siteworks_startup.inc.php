@@ -569,7 +569,7 @@ class _sw_unit_test {
 		if($this->debugMode){
 			foreach($this->tail_array as $v){$this->tool->dmsg('[c_white][Tail] ' . $v[0] . "\n[c_light_purple]" . shell_exec('tail -n '.$v[1].' '.$v[0]) . "\n", false, false); }
 			$this->printSQL = false;
-			$this->tool->dmsg('************   F I N I S H   ************', false, false);
+			$this->tool->dmsg('Page Execution: '.number_format(microtime(true) - $this->softwareTimer, 5, '.','').' seconds'."\n".'************   F I N I S H   ************', false, false);
 		}
 	}
 
