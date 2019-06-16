@@ -25,7 +25,7 @@ class siteworks_override extends siteworks_config
     *********************************************************************************************************/
     $this->theme                = 'default';  // Use $_SESSION['theme'] to handle theme choice for users
     $this->language             = 'english';  // Use $_SESSION['language'] to handle lang choice for users
-    $this->debugMode            = false;      // Enable Debugger $this->_tool->dmsg("debug_server output");
+    $this->debugMode            = true;       // Enable Debugger $this->_tool->dmsg("debug_server output");
     $this->allowDebugColors     = false;      // Enable colorful debugging in linux terminals. (May not work for you)
     $this->showPHPErrors        = false;      // Turn on php Errors on browser;
     $this->showPHPErrors_debug  = true;       // Print php Errors to debug_server if debugMode is on;
