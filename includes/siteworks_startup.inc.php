@@ -11,6 +11,7 @@ class siteworks_startup
 	public $p              = [];
 
 	// Site Output
+	public $clean_output = false; // If true, we only print what you tell us to print, like script pages.
 	public $out = [
 		 'header'=>array()	// Stuff after <html> and before title, $out['header']['html'] is the <html> area.
 		,'title'=>array()	// Stuff around the title area, like <title>
@@ -602,7 +603,7 @@ class _sw_unit_test {
         }
 
 		// Only output what you put in the body or echo if script or ajax.
-		if($this->uri->calltypes == 'scripts'){$x='';foreach($this->out as $v){$x .= implode('',$v);}echo $x;return false;}
+		if($this->uri->calltypes == 'scripts' || $this->clean_output){$x='';foreach($this->out as $v){$x .= implode('',$v);}echo $x;return false;}
 		if((isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && $_SERVER["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest") || $this->uri->calltypes == 'ajaxs'){$x='';foreach($this->out as $v){$x .= implode('',$v);}echo $x;return false;}
 
 		// Handle Console Output

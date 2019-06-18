@@ -353,6 +353,9 @@ PHP, MySQL, Javascript, and CSS framework
     You can set a log file in the config and assign it a friendly name to write a log file.
     $this->_log['PRETTY_NAME'][] = 'You can do this to write to a log file of your choosing in the config.'
 
+    // If you want to use gd or something you may want to fully control output.
+    $this->_s->clean_output = false; If you set this to true, your output will only include what you put in the output array, like a script.
+
 # Important $_SESSION variables
     The framework uses a few session variables to handle routing. If you use a multipul server setup, you should set
     the frameworks session database useage to true in the config. That way each app server can see the value of a
