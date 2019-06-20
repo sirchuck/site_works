@@ -150,10 +150,10 @@ class siteworks_uri
 		$_SESSION['admin_level'] = (isset($_SESSION['admin_level']))? $_SESSION['admin_level']:0;
 		$_SESSION['is_loggedin'] = (isset($_SESSION['is_loggedin']))? $_SESSION['is_loggedin']:false;
 		foreach($_s->modualLocks as $v){
-			if( ( $v[0] == $this->module ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[1]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'error_permission'; }
+			if( ( $v[0] == $this->module ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[1]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'sw_error_permission'; }
 		}
 		foreach($_s->controllerLocks as $v){
-			if( ( $v[0] == $this->module && $v[1] == $_s->uri->controller ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[2]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'error_permission'; }
+			if( ( $v[0] == $this->module && $v[1] == $_s->uri->controller ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[2]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'sw_error_permission'; }
 		}
 		if($sw_err != ''){ header('Location: ' . $this->base_url . '/' . $sw_err); exit(0);}
 

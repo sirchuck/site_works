@@ -66,9 +66,9 @@ class template_controller extends _s
         **                                                                                                             **
         ****************************************************************************************************************/
 
-        // If you use a modual or controller lock, we will return error_permission as a passvar to your default modual.
+        // If you use a modual or controller lock, we will return sw_error_permission as a passvar to your default modual.
         // You can handle it with a statement like this
-        if( $this->_uri->pass_var == 'error_permission' ){
+        if( $this->_uri->pass_var == 'sw_error_permission' ){
             $this->_out['body'][] = 'You do not have permission to view that area of the site.<br><br>';
         } 
         // If someone goes to a uri that does not exist, it will be redirected back to your default moduals controller.

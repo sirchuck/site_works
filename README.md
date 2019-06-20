@@ -527,6 +527,7 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_tool->iDecrypt($string, $secret_key, $secret_iv, $encryption_method)
             This decrypts your encryption. You use the same key and iv and method you did when you encrpted. 
     $this->_uri
+        Note: sw_error_permission is returned from the framework to the default controller as a pass_var if a permission lock for a modual or a controller was tripped.
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly
         Your URI will have this structure:
             www.MySite.com/modual/controller/method/pass_var/pass_vars
