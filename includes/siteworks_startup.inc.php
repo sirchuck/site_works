@@ -298,7 +298,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				$tmp2 = $tmp2.$tmp;
 				if($tmp2 == ''){$tmp2 = '/* S I T E    W O R K S */';}
 				if (!is_dir($new_path)){mkdir($new_path,0775,true);}
-				$tmp2 = preg_replace(['/asset_url/','/base_url/','/root_url/'],[$this->uri->asset_url,$this->uri->base_url,$this->uri->root_url],$tmp2);
+				$tmp2 = preg_replace(['/asset_url/','/base_url/','/root_url/','/public_url/'],[$this->uri->asset_url,$this->uri->base_url,$this->uri->root_url,$this->uri->public_url],$tmp2);
 				foreach($this->sw_pass as $sk => $sv){$tmp2 = preg_replace('/sw_pass\['. $sk .'\]/',$sv,$tmp2); }
 				file_put_contents($new_path.'siteworks.cs',$tmp2,775);
 				if($this->css_js_minify){

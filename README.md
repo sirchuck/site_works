@@ -547,6 +547,7 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_uri->pass_vars - This is the pass_vars segment of the URI
         $this->_uri->root_url - http(s)://subdomain.your_site.tld
         $this->_uri->base_url - http(s)://subdomain.your_site.tld/site_works (Note our Nginx just pushes this to our public folder)
+        $this->_uri->public_url - base_url + /public ( Your public folder )
         For root, base and public you can add a _n or a _s to the property to pull the secure or non_secure versions
             Example: $this->_uri->base_url_s will force the secure https version of the domain.
         $this->_uri->asset_url is built from the asset parts you gave us in the config. You can use the _s and _n to force secureness
@@ -654,7 +655,7 @@ PHP, MySQL, Javascript, and CSS framework
     you want to remove it completely without hanving to hunt down javascript files and css files.
 
 # CSS & JS
-    If you write the word asset_url, base_url, or root_url in your parsable CSS code in the dev folder,
+    If you write the word asset_url, base_url, public_url or root_url in your parsable CSS code in the dev folder,
     the system will swap those with the url with the proper http or https. 
     asset_url = https://subdomain.domain.tld/assetfolder
     base_url  = https://subdomain.domain.tld/project_folder // If no project folder, this is the same as root folder. 
