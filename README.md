@@ -656,11 +656,15 @@ PHP, MySQL, Javascript, and CSS framework
     you want to remove it completely without hanving to hunt down javascript files and css files.
 
 # CSS & JS
-    If you write the word asset_url, base_url, public_url or root_url in your parsable CSS code in the dev folder,
-    the system will swap those with the url with the proper http or https. 
-    asset_url = https://subdomain.domain.tld/assetfolder
-    base_url  = https://subdomain.domain.tld/project_folder // If no project folder, this is the same as root folder. 
+    If you write the word root_asset_url, base_asset_url, asset_url, base_url, public_url or root_url in your parsable CSS code in the dev folder,
+    the system will swap those with the url with the proper http or https.
     root_url  = https://subdomain.domain.tld/
+    base_url  = https://subdomain.domain.tld/project_folder
+    public_url = https://subdomain.doman.tld/project_folder/public
+    // assets use the asset subdomain / domain / tld set in your config
+    root_asset_url = https://subdomain.domain.tld
+    base_asset_url = https://subdomain.domain.tld/project_folder
+    asset_url = https://subdomain.domain.tld/project_folder/assetfolder
     If you plan to bounce between an Nginx setup with and without a project_folder, its best to just use base_url.
     Or, if you are using the systems public folder you can get to your files just starting with a /assets/path.
 

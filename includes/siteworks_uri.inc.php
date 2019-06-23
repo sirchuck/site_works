@@ -33,6 +33,14 @@ class siteworks_uri
 	public $asset_url_n;
 	public $asset_url_s;
 
+	public $root_asset_url;
+	public $root_asset_url_n;
+	public $root_asset_url_s;
+
+	public $base_asset_url;
+	public $base_asset_url_n;
+	public $base_asset_url_s;
+
     public $fixedapcu = '';
 	public $fixeduri = '';
 
@@ -51,7 +59,7 @@ class siteworks_uri
 		$this->root_url_n   = 'http://'  . $root_url;
 		$this->root_url_s   = 'https://' . $root_url;
 		$this->root_url     = ( $_s->secure ) ? $this->root_url_s : $this->root_url_n ;
-		
+
 		// Base gets you to your site folder http://www.example.com/siteworks
 		$base_url = ( $_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name']:'';
 		$this->base_url_n   = 'http://'  . $root_url . $base_url ;
@@ -67,6 +75,18 @@ class siteworks_uri
 		$this->asset_url_n   = 'http://'  . $asset_url ;
 		$this->asset_url_s   = 'https://' . $asset_url ;
 		$this->asset_url     = ( $_s->secure ) ? $this->asset_url_s : $this->asset_url_n ;
+
+		$root_asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a'];
+		$this->root_asset_url_n   = 'http://'  . $root_asset_url ;
+		$this->root_asset_url_s   = 'https://' . $root_asset_url ;
+		$this->root_asset_url     = ( $_s->secure ) ? $this->root_asset_url_s : $this->root_asset_url_n ;
+
+		$root_asset_url .= ( ($_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name'] : '' );
+		$this->base_asset_url_n   = 'http://'  . $root_asset_url ;
+		$this->base_asset_url_s   = 'https://' . $root_asset_url ;
+		$this->base_asset_url     = ( $_s->secure ) ? $this->base_asset_url_s : $this->base_asset_url_n ;
+
+
 
 		$this->asset = new \stdClass;
 		$this->asset->images      = $this->asset_url . '/images';
