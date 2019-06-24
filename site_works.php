@@ -126,7 +126,7 @@ namespace{
 		public $_mem = null;                    // The site_works mem array
 
 	    public function __construct(){}
-	    public function site_works_prefetch(&$_s,$model=false){
+	    public function site_works_prefetch(&$_s,$model=false,$load_preloaders=false){
 	    	$this->_s 	       = $_s;
 			$this->_tool       =& $this->_s->tool;
 			$this->_uri        =& $this->_s->uri;
@@ -139,10 +139,10 @@ namespace{
 			$this->_admin      =& $this->_s->admin;
 			$this->_mem        =& $this->_s->mem;
 
-   			require_once( SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php' );
+			if($load_preloaders){require_once( SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php' );}
 			// If your controller has the same name as a module we'll load it automaticaly into $this->_model for you to play with.
 			if($model && $_s->uri->load_the_model){
-				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false);}catch(Exception $e){unset($e);}
+				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false,false);}catch(Exception $e){unset($e);}
 			}else{}
 	    }
 	    public function load_view($path=false,$useModual=''){
@@ -156,7 +156,7 @@ namespace{
 	    	if( $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $useModual . '/models/' . (($path) ? $path : $this->_s->uri->controller) . '.model.php') ){
 	    		$tmp = '_m_'.$path;
 	    		$tmp2 = $path . '_model';
-				try{ $this->$tmp = new $tmp2; $this->$tmp->site_works_prefetch($this->_s,false); }catch(Exception $e){unset($e);}
+				try{ $this->$tmp = new $tmp2; $this->$tmp->site_works_prefetch($this->_s,false,false); }catch(Exception $e){unset($e);}
 	    		return true;
 	    	} else { return false; }
 	    }
@@ -172,7 +172,7 @@ namespace{
 	$use_controller = $_s->uri->controller . '_' . $_s->uri->calltype;
 	$use_method = $_s->uri->method;
 	$user_object = new $use_controller;
-	$user_object->site_works_prefetch($_s,$_s->uri->controller.'_model');
+	$user_object->site_works_prefetch($_s,$_s->uri->controller.'_model',true);
 	$user_object->$use_method();
 	$user_object->_s->site_works_finish();
 }
