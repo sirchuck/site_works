@@ -426,6 +426,7 @@ PHP, MySQL, Javascript, and CSS framework
         $r->query('SELECT * FROM site_works_admin')
             This will just run the query you send it.
     $r->getFieldNames($is_insert) - This is garbage to you, I use it to build INSERT and UPDATE queries from your database table object.
+    $r->getRow($result,$returnArray=false) - This is an alias for getRows, but it may make it easier when debugging and reading your code when you are selecting 1 row only.
     $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
     $r->c(string) - this cleans your string to make it ready for insertion to the database.
     $r->clean(string) - this cleans your string to make it ready for insertion to the database.

@@ -5,7 +5,7 @@ if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed
 /*
     query($sqlFn=NULL) -> $result | False
     getFieldNames($doInsert=0) -> No return, sets values, unused by end users
-    getRows($_result=false,$returnArray=false) -> $result
+    getRow|getRows($_result=false,$returnArray=false) -> $result
     clean($s) -> string
     cleanAll() -> No return, cleans current $this->f values
     clearFields() -> Sets $this->f values to 0 or NULL
@@ -106,6 +106,7 @@ abstract class siteworks_db_tools
         }
     }
 
+    public function getRow($_result=false,$returnArray=false){return $this->getRows($_result,$returnArray);}
     public function getRows($_result=false,$returnArray=false){
         if(!$returnArray){return $this->c->fetch_object($_result);}else{return $this->c->fetch_assoc($_result);}
     }
