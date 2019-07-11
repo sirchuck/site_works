@@ -406,7 +406,7 @@ PHP, MySQL, Javascript, and CSS framework
     You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
 
     Database Objects provide the following Methods:
-    # Using insertData insertUpdateData and updateData method will automatically database clean your data. ( $r->c() )
+    # Using insertData insertUpdateData and updateData method will automatically database clean your data if stored in the object. ( $r->c() ) It does not auto clean values you pass directly.
 
     $r = new t_mytable(5,$this->_odb);
         This instantiation has passed an id of 5, and will automatically call the following fillData method
@@ -442,7 +442,9 @@ PHP, MySQL, Javascript, and CSS framework
             $r = new t_my_table(null,$this->_odb);
             $result = $r->selectAll('`u_id`='.$r->c($_POST['key']));
             while($row = $r->getRows()){ $output .= $row->MyField . ' - ' . $row->MyField2; }
-    $r->insertData() - This will take the field values in your object and attempt to insert it as a new record in your database.
+    $r->insertData(insertFielNames, insertFieldValues) - This will take the field values in your object and attempt to insert it as a new record in your database.
+        insertFielNames - null (pulls from object) or your field name list. Ex: `field_1`,`field_2`
+        insertFieldValues - null (pulls from object) or your filed value list. Ex: 'one',1
     $r->insertUpdateData(insertFielNames, insertFieldValues, updateFieldValues) - This will insert the data, unless a keyfield is matched in which case it should update it.
         If any paramaters are null, they are built fromm the database class. Example:
         insertFielNames - null or `field_name1`,`field_name2`,`field_name3`

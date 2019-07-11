@@ -195,9 +195,11 @@ abstract class siteworks_db_tools
         }
     }
     
-    public function insertData(){
+    public function insertData($insertFieldNames=null, $insertValueList=null){
         $this->getFieldNames(1);
-        $sql = 'INSERT INTO `'.$this->tableName.'` ('.$this->insertFieldNames.') VALUES ('.$this->insertValueList.')';
+        $insertFieldNames=($insertFieldNames==null)? $this->insertFieldNames : $insertFieldNames;
+        $insertValueList=($insertValueList==null)? $this->insertValueList : $insertValueList;
+        $sql = 'INSERT INTO `'.$this->tableName.'` ('.$insertFieldNames.') VALUES ('.$insertValueList.')';
         $result = $this->c->q($sql);
         if($result === false)
             return false;
@@ -209,7 +211,7 @@ abstract class siteworks_db_tools
         $insertFieldNames=($insertFieldNames==null)? $this->insertFieldNames : $insertFieldNames;
         $insertValueList=($insertValueList==null)? $this->insertValueList : $insertValueList;
         $updateFieldValues=($updateFieldValues==null)? $this->updateFieldValue : $updateFieldValues;
-        $sql = 'INSERT INTO `'.$this->tableName.'` ('.$insertFieldNames.') VALUES ('.$insertValueList.') ON DUPLICATE KEY UPDATE '.$this->updateFieldValues;
+        $sql = 'INSERT INTO `'.$this->tableName.'` ('.$insertFieldNames.') VALUES ('.$insertValueList.') ON DUPLICATE KEY UPDATE '.$updateFieldValues;
         $result = $this->c->q($sql);
         if($result === false)
             return false;
