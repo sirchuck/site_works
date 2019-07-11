@@ -154,6 +154,26 @@ abstract class siteworks_db_tools
         }
     
     }
+
+    public function selectOne($where = NULL, $what = '*',$useArray=false){
+        if( is_null($where) ){
+            $where = '';
+        }else{
+            if( substr( $where, 0, 1 ) == '<' ){
+                $where = ' '.ltrim($where,'<');
+            }else{
+                $where = ' WHERE '.ltrim($where,'=');
+            }
+        }
+
+        $sql = 'SELECT ' . $what . ' FROM `'.$this->tableName.'` '.$where . ' LIMIT 1';
+        if (($result = $this->c->q($sql))  && $this->c->numRows() > 0) {
+            return $this->getRow($result,$useArray);
+        }
+        else{
+            return false;
+        }
+    }
     
     public function selectAll($where = NULL, $what = '*'){
         if( is_null($where) ){
@@ -184,13 +204,16 @@ abstract class siteworks_db_tools
         return $this->c->getInsertID();
     }
 
-    public function insertUpdateData(){
+    public function insertUpdateData($insertFieldNames=null, $insertValueList=null, $updateFieldValues=null){
         $this->getFieldNames(3);
-        $sql = 'INSERT INTO `'.$this->tableName.'` ('.$this->insertFieldNames.') VALUES ('.$this->insertValueList.') ON DUPLICATE KEY UPDATE '.$this->updateFieldValue;
+        $insertFieldNames=($insertFieldNames==null)? $this->insertFieldNames : $insertFieldNames;
+        $insertValueList=($insertValueList==null)? $this->insertValueList : $insertValueList;
+        $updateFieldValues=($updateFieldValues==null)? $this->updateFieldValue : $updateFieldValues;
+        $sql = 'INSERT INTO `'.$this->tableName.'` ('.$insertFieldNames.') VALUES ('.$insertValueList.') ON DUPLICATE KEY UPDATE '.$this->updateFieldValues;
         $result = $this->c->q($sql);
         if($result === false)
             return false;
-        return $this->c->getInsertID(); // Not sure this will ever return a good id.
+        return $this->c->getInsertID(); // Not sure this will always return a good id.
     }
     
     public function updateData($where=NULL,$values=NULL){ // $where can be id or where clause, $values 'x=y AND z=r' OR no where to use current t_class id and empty values to update all fields

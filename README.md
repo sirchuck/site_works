@@ -432,6 +432,7 @@ PHP, MySQL, Javascript, and CSS framework
     $r->clean(string) - this cleans your string to make it ready for insertion to the database.
     $r->cleanAll() - This will traverse your table object fields and clean each value.
     $r->clearFields() - This will set your field values in the object back to your defaults.
+    $r->selectOne($where = false, $values_to_return = '*', array(true)object(false) ) - Return an object or array of values for one row. Automatically adds LIMIT 1 to end of statement.
     $r->selectAll($where = false, $values_to_return = '*') - Send your WHERE clause and Value list, this returns a result set.
         Ex: $r->selectAll('x=y AND z=q ORDER BY x desc', '`x`,`y`')
         If you do not specify return values, you'll get the entire record for each row.
@@ -442,7 +443,11 @@ PHP, MySQL, Javascript, and CSS framework
             $result = $r->selectAll('`u_id`='.$r->c($_POST['key']));
             while($row = $r->getRows()){ $output .= $row->MyField . ' - ' . $row->MyField2; }
     $r->insertData() - This will take the field values in your object and attempt to insert it as a new record in your database.
-    $r->insertUpdateData() - This will insert the data, unless a keyfield is matched in which case it should update it.
+    $r->insertUpdateData(insertFielNames, insertFieldValues, updateFieldValues) - This will insert the data, unless a keyfield is matched in which case it should update it.
+        If any paramaters are null, they are built fromm the database class. Example:
+        insertFielNames - null or `field_name1`,`field_name2`,`field_name3`
+        insertFieldValues - null or 'val1',2,'val3'
+        updateFieldValues - null or `field_name1`='val1',`field_name2`=2,`field_name3`='val3'
     $r->updateData($where = false,$values=false) - To update your data, multipul ways to use it.
         $r->updateData(); - This will simply update whatever data you have in the field array of your table object.
         $r->updateData(false); - Putting false in the where clause will update your data without a where clause.
