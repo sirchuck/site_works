@@ -209,6 +209,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			// Pull all tables from all databases then match them up.
 			$check_site_works_db_classes=[];
 			foreach($this->dbo as $k => $c){
+				$c->connect();
 				$result = $c->q('SHOW TABLES;');
 				while ($row = $result->fetch_row()) {
 					unset($farray);
