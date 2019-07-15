@@ -33,8 +33,10 @@ abstract class siteworks_db_tools
     private $insertValueList  = '';
     private $updateFieldValue = '';
    
-    public function __construct()
-    {
+    public function __construct(&$odb=false){
+        // If odb is not sent, we set it to the default _odb database.
+        if(is_null($odb)){$this->c =& $GLOBALS['_odb'];}else{$this->c =& $odb;}
+        return $this->c->connect();
     }
 
     public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $v; }
