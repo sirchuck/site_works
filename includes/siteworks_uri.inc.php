@@ -110,7 +110,7 @@ class siteworks_uri
 		$uri = $_SERVER['DOCUMENT_URI'];
 
 		if( $_s->cPaths['project_name'] == '' ){
-			$this->fixeduri = strtolower(trim(preg_replace('public','',trim($uri, '/'), 1), '/'));
+			$this->fixeduri = strtolower(trim(preg_replace('/public/','',trim($uri, '/'), 1), '/'));
 		}else{
 			$this->fixeduri = strtolower(trim( preg_replace( '/'. preg_quote($_s->cPaths['project_name'].'/public','/') . '|' . preg_quote($_s->cPaths['project_name'],'/') .'/', '' ,trim($uri, '/'), 1 ), '/'));
 		}
