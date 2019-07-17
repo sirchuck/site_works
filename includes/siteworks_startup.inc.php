@@ -626,7 +626,7 @@ class _sw_unit_test {
 		$_SESSION['language'] = (isset($_SESSION['language']) && $_SESSION['language'] != '') ? $_SESSION['language'] : $this->language;
 
 		if(!$this->css_js_one_file){
-			$this->out['css'][] = '<link rel="stylesheet preload" type="text/css" href="' . $this->uri->asset->css . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' . $this->admin['sw_version'] .'.css"/>';
+			$this->out['css'][] = '<link rel="stylesheet preload" as="style" type="text/css" href="' . $this->uri->asset->css . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' . $this->admin['sw_version'] .'.css"/>';
 		}
 		$this->out['js'][]  = '<script src="' . $this->uri->asset->js . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' .$_SESSION['language'] . '_' . $this->admin['sw_version'] .'.js"></script>';
 
