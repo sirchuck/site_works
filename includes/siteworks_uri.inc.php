@@ -22,11 +22,6 @@ class siteworks_uri
 	public $base_url;
 	public $base_url_n;
 	public $base_url_s;
-
-	// Public URL mysite.com/public
-	public $public_url;
-	public $public_url_n;
-	public $public_url_s;
 	
 	public $asset;
 	public $asset_url;
@@ -40,10 +35,6 @@ class siteworks_uri
 	public $base_asset_url;
 	public $base_asset_url_n;
 	public $base_asset_url_s;
-
-	public $public_asset_url;
-	public $public_asset_url_n;
-	public $public_asset_url_s;
 
     public $fixedapcu = '';
 	public $fixeduri = '';
@@ -70,12 +61,8 @@ class siteworks_uri
 		$this->base_url_s   = 'https://' . $root_url . $base_url ;
 		$this->base_url     = ( $_s->secure ) ? $this->base_url_s : $this->base_url_n ;
 
-		$this->public_url = $this->base_url . '/public';
-		$this->public_url_n = $this->base_url_n . '/public';
-		$this->public_url_s = $this->base_url_s . '/public';
-
 		// So many ways to handle assets, you'll have to figure out the best way for your own project of course. This will work for most sites.
-		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a']. ( ($_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name'] : '' ).'/public/assets';
+		$asset_url = ( ( $_s->cPaths['subdomain_a'] != '' ) ? $_s->cPaths['subdomain_a'] . '.' : '' ).$_s->cPaths['domain_a'].'.'.$_s->cPaths['tld_a']. ( ($_s->cPaths['project_name_a'] != '' ) ? '/'.$_s->cPaths['project_name_a'] : '' ).'/assets';
 		$this->asset_url_n   = 'http://'  . $asset_url ;
 		$this->asset_url_s   = 'https://' . $asset_url ;
 		$this->asset_url     = ( $_s->secure ) ? $this->asset_url_s : $this->asset_url_n ;
@@ -85,17 +72,10 @@ class siteworks_uri
 		$this->root_asset_url_s   = 'https://' . $tmp_asset_url ;
 		$this->root_asset_url     = ( $_s->secure ) ? $this->root_asset_url_s : $this->root_asset_url_n ;
 
-		$tmp_asset_url .= ( ($_s->cPaths['project_name'] != '' ) ? '/'.$_s->cPaths['project_name'] : '' );
+		$tmp_asset_url .= ( ($_s->cPaths['project_name_a'] != '' ) ? '/'.$_s->cPaths['project_name_a'] : '' );
 		$this->base_asset_url_n   = 'http://'  . $tmp_asset_url ;
 		$this->base_asset_url_s   = 'https://' . $tmp_asset_url ;
 		$this->base_asset_url     = ( $_s->secure ) ? $this->base_asset_url_s : $this->base_asset_url_n ;
-
-		$tmp_asset_url .= '/public';
-		$this->public_asset_url_n   = 'http://'  . $tmp_asset_url ;
-		$this->public_asset_url_s   = 'https://' . $tmp_asset_url ;
-		$this->public_asset_url     = ( $_s->secure ) ? $this->public_asset_url_s : $this->public_asset_url_n ;
-
-
 
 		$this->asset = new \stdClass;
 		$this->asset->images      = $this->asset_url . '/images';
@@ -109,10 +89,8 @@ class siteworks_uri
 	public function uri_finish(&$_s){
 		$uri = $_SERVER['DOCUMENT_URI'];
 
-		if( $_s->cPaths['project_name'] == '' ){
-			$this->fixeduri = strtolower(trim(preg_replace('/public/','',trim($uri, '/'), 1), '/'));
-		}else{
-			$this->fixeduri = strtolower(trim( preg_replace( '/'. preg_quote($_s->cPaths['project_name'].'/public','/') . '|' . preg_quote($_s->cPaths['project_name'],'/') .'/', '' ,trim($uri, '/'), 1 ), '/'));
+		if( $_s->cPaths['project_name'] != '' ){
+			$this->fixeduri = strtolower(trim( preg_replace( '/'.preg_quote($_s->cPaths['project_name'],'/').'/', '' ,trim($uri, '/'), 1 ), '/'));
 		}
 
 		// The Router will automatically swap the largest key match with the sent URI segments. 

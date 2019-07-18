@@ -191,17 +191,19 @@ class siteworks_config extends siteworks_startup
 
     // The siteworks URI needs some path information.
     public $cPaths = array(
-        // Web Server Public Address: http(s)://www.MySite.com/site_works/public (Normally your Nginx Root Dir)
+    	// Nginx root example: /var/www/html/myproject/public
+        // Web Server Public Address: http(s)://www.MySite.com/site_works
          'subdomain'       => 'www'                  // Website Subdomain
         ,'domain'          => 'MySite'               // Site Domain Name
         ,'tld'             => 'com'                  // Top-Level Domain
-        ,'project_name'    => 'site_works'           // Your project folder name, '' for nothing
+        ,'project_name'    => 'site_works/public'    // Your project folder name, '' for nothing, if non-dedicated you'll want to keep the /public
 
-        // Asset Web Server Address: http(s)://assets.MySite.com/public_path
+        // Asset Web Server Address: http(s)://assets.MySite.com
         ,'subdomain_a'     => 'assets'               // Asset subdomain (Usually to avoid sending cookies to assests)
         ,'domain_a'        => 'MySite'               // Asset Site Domain Name
         ,'tld_a'           => 'com'                  // Asset Top-Level Domain
-        // Framework assets will automatically add /project_name/public at the end the asset url you give above.
+        ,'project_name_a'  => 'site_works/public'    // Your project folder name, '' for nothing, if non-dedicated you'll want to keep the /public
+        // Framework assets will automatically add /project_name at the end the asset url you give above.
     );
 
     public function __construct(){
