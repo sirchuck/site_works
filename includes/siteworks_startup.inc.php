@@ -652,7 +652,7 @@ class _sw_unit_test {
 
 		echo $this->out['html_tag'][0].'
 '.$this->out['head_tag'][0].'
-'.$this->out['favicon'].'
+'.$this->out['favicon'][0].'
 '.implode( ' ', $this->out['header'] ).'
 '.implode( ' ', $this->out['title'] ).'
 '.implode( ' ', $this->out['meta'] ).'
