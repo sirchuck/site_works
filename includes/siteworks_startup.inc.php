@@ -22,10 +22,10 @@ class siteworks_startup
 		,'body'      =>array()  // Between body tags
 		,'footer'    =>array()	// This goes just before last body tag. 
 
-		,'html_tag'  =>array()  // The html tag
-		,'head_tag'  =>array()  // The head tag
-		,'body_tag'  =>array()  // The body tag
-		,'favicon'   =>array()  // The fav icon link
+		,'html_tag'  =>array('','')  // The html tag
+		,'head_tag'  =>array('','')  // The head tag
+		,'body_tag'  =>array('','')  // The body tag
+		,'favicon'   =>array('')     // The fav icon link
 	];
 
 	// Logs are written at page end to files you specify in config.
