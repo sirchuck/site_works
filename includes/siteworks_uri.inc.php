@@ -37,9 +37,9 @@ class siteworks_uri
 	public $base_asset_url_s;
 
     public $fixedapcu = '';
-	public $fixeduri = '';
+    public $fixeduri = '';
 
-	public $sw_module_path;
+    public $sw_module_path;
 
 	public $load_the_model = 0;
 
@@ -91,6 +91,8 @@ class siteworks_uri
 
 		if( $_s->cPaths['project_name'] != '' ){
 			$this->fixeduri = strtolower(trim( preg_replace( '/'.preg_quote($_s->cPaths['project_name'],'/').'/', '' ,trim($uri, '/'), 1 ), '/'));
+		}else{
+			$this->fixeduri = strtolower(trim($uri, '/'));
 		}
 
 		// The Router will automatically swap the largest key match with the sent URI segments. 

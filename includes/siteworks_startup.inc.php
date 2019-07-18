@@ -13,7 +13,7 @@ class siteworks_startup
 	// Site Output
 	public $clean_output = false; // If true, we only print what you tell us to print, like script pages.
 	public $out = [
-		 'header'=>array()	// Stuff after <html> and before title, $out['header']['html'] is the <html> area.
+		 'header'=>array()	// Stuff after <html> and before title
 		,'title'=>array()	// Stuff around the title area, like <title>
 		,'meta'=>array()	// Meta tags
 		,'link'=>array()	// Link tags
@@ -21,6 +21,11 @@ class siteworks_startup
 		,'js'=>array()		// JS links and inpage js
 		,'body'=>array()    // Between body tags
 		,'footer'=>array()	// This goes just before last body tag. 
+
+		,'html_tag'=>array('<!DOCTYPE html>','</html>') // The html tag
+		,'head_tag'=>array('<head>','</head>') // The head tag
+		,'body_tag'=>array('<body>','</body>') // The body tag
+		,'favicon'=>'' // The fav icon link
 	];
 
 	// Logs are written at page end to files you specify in config.
@@ -620,10 +625,11 @@ class _sw_unit_test {
 		if($this->debugMode){
 			$this->console[] = ($this->debugMode)?'Debug Mode: ON':'Debug Mode: OFF';
 		}
-		$this->out['header']['favicon'] = (isset($this->out['header']['favicon']) && $this->out['header']['favicon'] != '')? $this->out['header']['favicon'] : '<link rel="shortcut icon" type="image/png" href="' . $this->uri->base_url . '/siteworks_favicon.ico"/>';
 
 		$_SESSION['theme'] = (isset($_SESSION['theme']) && $_SESSION['theme'] != '') ? $_SESSION['theme'] : $this->theme;
 		$_SESSION['language'] = (isset($_SESSION['language']) && $_SESSION['language'] != '') ? $_SESSION['language'] : $this->language;
+
+		if($this->out['favicon']==''){$this->out['favicon']='<link rel="shortcut icon" type="image/png" href="' . $this->uri->base_url . '/siteworks_favicon.ico"/>';}
 
 		if(!$this->css_js_one_file){
 			$this->out['css'][] = '<link rel="stylesheet preload" as="style" type="text/css" href="' . $this->uri->asset->css . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' . $this->admin['sw_version'] .'.css"/>';
@@ -635,23 +641,21 @@ class _sw_unit_test {
 			$this->out['js'][] = '<script language="javascript">console.log("'.implode('\n',$this->console).'")</script>'; 
 		}
 
-		$tmp = '<!DOCTYPE html>';
-		if( isset($this->_out['header']['html']) ){ $tmp = $this->_out['header']['html']; unset($this->_out['header']['html']); }
-
-		echo $tmp . '
-<head>' .
-implode( ' ', $this->out['header'] ) .
-implode( ' ', $this->out['title'] ) .
-implode( ' ', $this->out['meta'] ) .
-implode( ' ', $this->out['link'] ) .
-implode( ' ', $this->out['css'] ) .
-implode( ' ', $this->out['js'] ) .
-'</head>
-<body>' . 
-implode( ' ', $this->out['body'] ) . 
-implode( ' ', $this->out['footer'] ) . 
-'</body>
-</html>';
+		echo $this->out['html_tag'][0].'
+'.$this->out['head_tag'][0].'
+'.$this->out['favicon'].'
+'.implode( ' ', $this->out['header'] ).'
+'.implode( ' ', $this->out['title'] ).'
+'.implode( ' ', $this->out['meta'] ).'
+'.implode( ' ', $this->out['link'] ).'
+'.implode( ' ', $this->out['css'] ).'
+'.implode( ' ', $this->out['js'] ).'
+'.$this->out['head_tag'][1].'
+'.$this->out['body_tag'][0].'
+'.implode( ' ', $this->out['body'] ).'
+'.implode( ' ', $this->out['footer'] ).'
+'.$this->out['body_tag'][1].'
+'.$this->out['html_tag'][1];
 	}
 
 }
