@@ -631,7 +631,7 @@ class _sw_unit_test {
 
 		if($this->out['favicon'][0]==''){$this->out['favicon'][0]='<link rel="shortcut icon" type="image/png" href="' . $this->uri->base_url . '/siteworks_favicon.ico"/>';}
 
-		if($this->out['html_tag'][0]==''){$this->out['html_tag'][0]='<!DOCTYPE html>';}
+		if($this->out['html_tag'][0]==''){$this->out['html_tag'][0]='<!DOCTYPE html><html>';}
 		if($this->out['html_tag'][1]==''){$this->out['html_tag'][1]='</html>';}
 
 		if($this->out['head_tag'][0]==''){$this->out['head_tag'][0]='<head>';}
