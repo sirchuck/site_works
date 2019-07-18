@@ -343,7 +343,8 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_out['footer'][]
 
     *Note: favicon, HTML, HEAD and BODY tags are also set here but have defaults, change them as you wish.
-    $this->_out['favicon'] = '<link rel="shortcut icon" type="image/png" href="' . $this->_uri->base_url . '/siteworks_favicon.ico"/>';
+        These defaults are only applied to normal controllers, ajax and scripts will not be autofilled.
+    $this->_out['favicon'][0]  = '<link rel="shortcut icon" type="image/png" href="' . $this->_uri->base_url . '/siteworks_favicon.ico"/>';
     $this->_out['html_tag'][0] = '<!DOCTYPE html>';
     $this->_out['html_tag'][1] = '</html>';
     $this->_out['head_tag'][0] = '<head>';

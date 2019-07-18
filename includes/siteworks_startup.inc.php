@@ -13,19 +13,19 @@ class siteworks_startup
 	// Site Output
 	public $clean_output = false; // If true, we only print what you tell us to print, like script pages.
 	public $out = [
-		 'header'=>array()	// Stuff after <html> and before title
-		,'title'=>array()	// Stuff around the title area, like <title>
-		,'meta'=>array()	// Meta tags
-		,'link'=>array()	// Link tags
-		,'css'=>array()		// CSS links and even inpage css if you want.
-		,'js'=>array()		// JS links and inpage js
-		,'body'=>array()    // Between body tags
-		,'footer'=>array()	// This goes just before last body tag. 
+		 'header'    =>array()	// Stuff after <html> and before title
+		,'title'     =>array()	// Stuff around the title area, like <title>
+		,'meta'      =>array()	// Meta tags
+		,'link'      =>array()	// Link tags
+		,'css'       =>array()  // CSS links and even inpage css if you want.
+		,'js'        =>array()	// JS links and inpage js
+		,'body'      =>array()  // Between body tags
+		,'footer'    =>array()	// This goes just before last body tag. 
 
-		,'html_tag'=>array('<!DOCTYPE html>','</html>') // The html tag
-		,'head_tag'=>array('<head>','</head>') // The head tag
-		,'body_tag'=>array('<body>','</body>') // The body tag
-		,'favicon'=>'' // The fav icon link
+		,'html_tag'  =>array()  // The html tag
+		,'head_tag'  =>array()  // The head tag
+		,'body_tag'  =>array()  // The body tag
+		,'favicon'   =>array()  // The fav icon link
 	];
 
 	// Logs are written at page end to files you specify in config.
@@ -629,7 +629,16 @@ class _sw_unit_test {
 		$_SESSION['theme'] = (isset($_SESSION['theme']) && $_SESSION['theme'] != '') ? $_SESSION['theme'] : $this->theme;
 		$_SESSION['language'] = (isset($_SESSION['language']) && $_SESSION['language'] != '') ? $_SESSION['language'] : $this->language;
 
-		if($this->out['favicon']==''){$this->out['favicon']='<link rel="shortcut icon" type="image/png" href="' . $this->uri->base_url . '/siteworks_favicon.ico"/>';}
+		if($this->out['favicon'][0]==''){$this->out['favicon'][0]='<link rel="shortcut icon" type="image/png" href="' . $this->uri->base_url . '/siteworks_favicon.ico"/>';}
+
+		if($this->out['html_tag'][0]==''){$this->out['html_tag'][0]='<!DOCTYPE html>';}
+		if($this->out['html_tag'][1]==''){$this->out['html_tag'][1]='</html>';}
+
+		if($this->out['head_tag'][0]==''){$this->out['head_tag'][0]='<head>';}
+		if($this->out['head_tag'][1]==''){$this->out['head_tag'][1]='</head>';}
+
+		if($this->out['body_tag'][0]==''){$this->out['body_tag'][0]='<body>';}
+		if($this->out['body_tag'][1]==''){$this->out['body_tag'][1]='</body>';}
 
 		if(!$this->css_js_one_file){
 			$this->out['css'][] = '<link rel="stylesheet preload" as="style" type="text/css" href="' . $this->uri->asset->css . '/siteworks/themes/' . $_SESSION['theme'] . '/siteworks_' . $this->admin['sw_version'] .'.css"/>';
