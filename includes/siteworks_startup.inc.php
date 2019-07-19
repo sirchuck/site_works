@@ -94,6 +94,8 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$db_load = false;
 			$this->admin = apcu_fetch($this->uri->fixedapcu.'admin');
 			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
+		}else{
+			$this->admin['apcu_start_time'] = 0;
 		}
 		if($db_load){
 			$radmin = new t_site_works_admin(1,$this->odb);
@@ -113,6 +115,8 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$db_load2 = false;
 			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
 			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load2 = true; }
+		}else{
+			$this->mem['apcu_start_time'] = 0;
 		}
 		if($db_load2){
 			$r = new t_site_works_mem(1,$this->odb);
