@@ -155,7 +155,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 
 
 		// Handle Database setup and management
-		if($this->debugMode){
+		if($this->debugMode && $this->debugBuild){
 			if(strrpos($_SERVER['DOCUMENT_URI'], 'ajax_') !== false || strrpos($_SERVER['DOCUMENT_URI'], 'iframe_') !== false || strrpos($_SERVER['DOCUMENT_URI'], 'script_') !== false){$this->css_js_minify = false;}
 
 			$radmin = new t_site_works_admin(1,$this->odb);

@@ -250,6 +250,8 @@ PHP, MySQL, Javascript, and CSS framework
     $this->theme - If you want to use multipul css and js themes, you can select a default.
     $this->language - This is the default language, but you can manipulate $_SESSION['language'] to handle users choices.
     $this->debugMode - Enable Debugger, This allows us to send info to your debug_server app. Usage: $this->_tool->dmsg("debug_server output");
+    $this->debugBuild - If you want to get debug data, but you do not want to spend the time rebuilding files (on production for example) set this to false.
+        When true, this will allow the copying and processing of your Dev files.
     $this->allowDebugColors - linux debug_server app can use colors on some systems, set to true if you want to try it.
     $this->showPHPErrors - sends php errors to your web browser, like normal php error enabled scripts.
     $this->showPHPErrors_debug - sends php error messages to the debug_server.

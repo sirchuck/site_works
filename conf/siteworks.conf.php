@@ -25,6 +25,7 @@ class siteworks_config extends siteworks_startup
     public $theme                = 'default';  // Use $_SESSION['theme'] to handle theme choice for users
     public $language             = 'english';  // Use $_SESSION['language'] to handle lang choice for users
     public $debugMode            = true;       // Enable Debugger $this->_tool->dmsg("debug_server output");
+    public $debugBuild           = true;       // Allow SW to update files from Dev. Ex:(True in Dev / False in Production)
     public $allowDebugColors     = false;      // Enable colorful debugging in linux terminals. (May not work for you)
     public $showPHPErrors        = true;       // Turn on php Errors on browser;
     public $showPHPErrors_debug  = true;       // Print php Errors to debug_server;
@@ -219,6 +220,7 @@ class siteworks_config extends siteworks_startup
         if($foundDev==0){
            // If not in the approved IP array, set toggles to false, add more code here if you want.
             $this->debugMode            = false;
+            $this->debugBuild           = false;
             $this->allowDebugColors     = false;
             $this->showPHPErrors        = false;
             $this->showPHPErrors_debug  = false;
