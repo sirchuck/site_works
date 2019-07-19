@@ -95,7 +95,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->admin = apcu_fetch($this->uri->fixedapcu.'admin');
 			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
 		}else{
-			$this->admin['apcu_start_time'] = 0;
+			delete_apcu($this->uri->fixedapcu.'admin');
 		}
 		if($db_load){
 			$radmin = new t_site_works_admin(1,$this->odb);
@@ -116,7 +116,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
 			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load2 = true; }
 		}else{
-			$this->mem['apcu_start_time'] = 0;
+			delete_apcu($this->uri->fixedapcu.'mem');
 		}
 		if($db_load2){
 			$r = new t_site_works_mem(1,$this->odb);
@@ -587,7 +587,7 @@ class _sw_unit_test {
 	// APCu functions
 	public function set_apcu($apcu_var_name, $variable)   { if( extension_loaded('apcu') ){ apcu_store($this->uri->fixedapcu.$apcu_var_name, $variable); } }
 	public function get_apcu($apcu_var_name)              { if( extension_loaded('apcu') ){ return apcu_fetch($this->uri->fixedapcu.$apcu_var_name); } return ''; }
-	public function delete_admin($apcu_var_name)          { if( extension_loaded('apcu') ){ apcu_delete($this->uri->fixedapcu.$apcu_var_name); } }
+	public function delete_apcu($apcu_var_name)          { if( extension_loaded('apcu') ){ apcu_delete($this->uri->fixedapcu.$apcu_var_name); } }
 	public function clear_apcu()                          { if( extension_loaded('apcu') ){ apcu_clear_cache(); } }
 
 	public function site_works_finish(){
