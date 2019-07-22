@@ -506,6 +506,7 @@ class _sw_unit_test {
 			$this->admin['sw_version'] = $radmin->f['sw_version']['value'];
 			$tmp = SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js';
 			if(!file_exists( $tmp )){
+				$dorestart = false;
 				foreach($this->tool->listFiles(SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme,1,true) as $v){
 					$tmp2 = explode("_",$v['name']);
 					if($tmp2[0] == 'siteworks'){
@@ -513,13 +514,19 @@ class _sw_unit_test {
 						$this->admin['sw_version'] = $tmp3[0];
 						$radmin->f['sw_version']['value'] = $tmp3[0];
 						$radmin->updateData();
+						$dorestart = true;
 					}
 				}
-				die('The sw_version we have in the admin database table does not match the siteworks javascript asset file.<br>
-					' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js<br>
-					We attempted to update the database with the new sw_verison, reloading this page may fix the problem.<br>
-					If not, you may need to manually change the default database admin table to reflect your current sw_version. 
-				');
+				if($dorestart){
+					header('Location: '.$this->uri->base_url);
+					exit();
+				}else{
+					die('The sw_version we have in the admin database table does not match the siteworks javascript asset file.<br>
+						' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js<br>
+						We attempted to update the database with the new sw_verison, reloading this page may fix the problem.<br>
+						If not, you may need to manually change the default database admin table to reflect your current sw_version. 
+					');
+				}
 			}
 			$this->printSQL = $hold_printSQL;
 		}
