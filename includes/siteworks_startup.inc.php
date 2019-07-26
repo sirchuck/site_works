@@ -93,7 +93,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if( $this->apcu_is_set ){
 			$db_load = false;
 			$this->admin = apcu_fetch($this->uri->fixedapcu.'admin');
-			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < (time() - ($this->APCuTimeoutMinutes * 60 * 1000)) ){ $db_load = true; }
+			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < (time() - ($this->APCuTimeoutMinutes * 60)) ){ $db_load = true; }
 		}else{
 			$this->delete_apcu('admin');
 		}
@@ -104,7 +104,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					$this->odb->q("INSERT INTO `" . $dbc_database_name . "`.`site_works_admin` (`sw_admin_key`,`sw_version`) VALUES (1,'0');");
 					$had_to_build_databases = true;
 			}
-			$this->admin = null;
 			$this->admin = ['apcu_start_time' => $apcu_hold_time];
 			foreach($radmin->f as $k => $v){ $this->admin[$k] = $v['value']; }
 			if( $this->apcu_is_set ){ apcu_store($this->uri->fixedapcu.'admin', $this->admin); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
@@ -114,7 +113,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if( $this->apcu_is_set ){
 			$db_load2 = false;
 			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
-			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < (time() - ($this->APCuTimeoutMinutes * 60 * 1000)) ){ $db_load2 = true; }
+			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < (time() - ($this->APCuTimeoutMinutes * 60)) ){ $db_load2 = true; }
 		}else{
 			$this->delete_apcu('mem');
 		}
@@ -125,7 +124,6 @@ Start Time: " . date('Y-m-d H:i:s') . "
 				$this->odb->q("INSERT INTO `" . $dbc_database_name . "`.`site_works_mem` (`sw_mem_key`,`sw_site_visits`) VALUES (1,0);");
 				// $had_to_build_databases = true;
 			}
-			$this->mem = null;
 			$this->mem = ['apcu_start_time' => $apcu_hold_time];
 			foreach($r->f as $k => $v){ $this->mem[$k] = $v['value']; }
 			if( $this->apcu_is_set ){ apcu_store($this->uri->fixedapcu.'mem', $this->mem); } //apcu_delete('_site_works_admin'); apcu_clear_cache();
