@@ -93,7 +93,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if( $this->apcu_is_set ){
 			$db_load = false;
 			$this->admin = apcu_fetch($this->uri->fixedapcu.'admin');
-			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load = true; }
+			if(!isset($this->admin['apcu_start_time']) || $this->admin['apcu_start_time'] < (time() - ($this->APCuTimeoutMinutes * 60 * 1000)) ){ $db_load = true; }
 		}else{
 			$this->delete_apcu('admin');
 		}
@@ -114,7 +114,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 		if( $this->apcu_is_set ){
 			$db_load2 = false;
 			$this->mem = apcu_fetch($this->uri->fixedapcu.'mem');
-			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < time() - ($this->APCuTimeoutMinutes * 60 * 1000) ){ $db_load2 = true; }
+			if(!isset($this->mem['apcu_start_time']) || $this->mem['apcu_start_time'] < (time() - ($this->APCuTimeoutMinutes * 60 * 1000)) ){ $db_load2 = true; }
 		}else{
 			$this->delete_apcu('mem');
 		}
