@@ -194,7 +194,7 @@ class siteworks_dbc{
     // DB Query
     public function q($sql=false){
         if($this->_s->debugMode && $this->_s->printSQL){
-            $this->_s->tool->dmsg("[c_yellow]" .  (( strpos($this->_s->tool->trace(3),'site_works.php')===FALSE )?$this->_s->tool->trace(3):$this->_s->tool->trace(2)) .'-> '.$sql,false);
+            $this->_s->tool->dmsg("[c_gray]" .  $this->_s->tool->sw_tracesql() ."\n-> [c_yellow]".$sql."[c_gray]",false,true);
         }
         switch ($this->dbt) {
             case "mysqli":

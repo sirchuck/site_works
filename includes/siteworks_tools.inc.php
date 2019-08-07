@@ -43,6 +43,27 @@ class siteworks_tools
       return $dout;
     }
   }
+  public function sw_tracesql(){
+      $dout = '';
+      $data = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS,5);
+      foreach($data as $k => $v){
+        $d_file = '';
+        $d_line = '';
+        foreach($v as $k2 => $v2){
+          if($k2=="file"){
+            $d_file = str_replace(SITEWORKS_DOCUMENT_ROOT.'/','',$v2);
+          }
+          if($k2=="line"){
+            $d_line = $v2;
+          }
+        }
+        if( strpos($d_file, 'private/')!==FALSE ){
+          $dout .= "\n[ ". str_pad($d_line,5,' ',STR_PAD_LEFT) . ' ] '. str_replace(['private/','modules/'],'',$d_file);
+        }
+      }
+      return $dout;
+  }
+
 
 	public function dmsg($s,$showArray=true,$showline=true){
 		if($this->_s->debugMode){
