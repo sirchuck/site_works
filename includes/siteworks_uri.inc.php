@@ -87,7 +87,7 @@ class siteworks_uri
 	}
 
 	public function uri_finish(&$_s){
-		$uri = $_SERVER['DOCUMENT_URI'];
+		$uri = filter_var($_SERVER['DOCUMENT_URI'], FILTER_SANITIZE_URL);
 
 		if( $_s->cPaths['project_name'] != '' ){
 			$this->fixeduri = strtolower(trim( preg_replace( '/'.preg_quote($_s->cPaths['project_name'],'/').'/', '' ,trim($uri, '/'), 1 ), '/'));
