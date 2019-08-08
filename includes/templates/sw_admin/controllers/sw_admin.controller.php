@@ -1,6 +1,4 @@
 <?PHP
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 class sw_admin_controller extends _s
 {
     public function sw_admin(){

@@ -1,6 +1,4 @@
 <?PHP
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 class t_site_works_template_table extends SiteWorks\siteworks_db_tools
 {
     public function __construct($id = NULL, &$odb = NULL){

@@ -1,6 +1,5 @@
 <?php
 namespace SiteWorks;
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
 class siteworks_startup
 {
 	public $softwareTimer  = 0;
@@ -517,7 +516,7 @@ class _sw_unit_test {
 				}
 				if($dorestart){
 					header('Location: '.$this->uri->base_url);
-					exit();
+					exit;
 				}else{
 					die('The sw_version we have in the admin database table does not match the siteworks javascript asset file.<br>
 						' . SITEWORKS_DOCUMENT_ROOT . '/public/assets/js/siteworks/themes/' . $this->theme . '/siteworks_' . $this->language . '_' . $this->admin['sw_version'] . '.js<br>

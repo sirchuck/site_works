@@ -1,7 +1,5 @@
 <?php
 namespace SiteWorks;
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 //    This is your main configuration file, if you want to make something cross server put it in here.
 //    If you want to override anything, put it in your individual server file.
 

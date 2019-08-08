@@ -1,7 +1,5 @@
 <?php
 namespace SiteWorks;
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 /*
     query($sqlFn=NULL) -> $result | False
     getFieldNames($doInsert=0) -> No return, sets values, unused by end users

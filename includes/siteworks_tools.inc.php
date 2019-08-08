@@ -1,7 +1,5 @@
 <?php
 namespace SiteWorks;
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 // Tools are loaded for each page on your site, they should be things that are used a lot.
 // Examples might be login or authentication tools, time tools, and simple calculations
 

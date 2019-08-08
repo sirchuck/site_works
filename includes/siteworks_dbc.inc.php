@@ -1,7 +1,5 @@
 <?php
 namespace SiteWorks;
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 class siteworks_dbc{
     public $dbt = '';       // Database type mysqli | postgres
     private $c = null;      // Database Connection

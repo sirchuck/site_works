@@ -1,7 +1,5 @@
 <?php
 namespace SiteWorks;
-if ( ! defined('SITEWORKS_DOCUMENT_ROOT')) exit('No direct script access allowed');
-
 class siteworks_uri
 {
 	// Break down the request components - domain(_n / _s) / module / controller / method / pass_var / pass_vars
@@ -164,7 +162,7 @@ class siteworks_uri
 		foreach($_s->controllerLocks as $v){
 			if( ( $v[0] == $this->module && $v[1] == $_s->uri->controller ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[2]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'sw_error_permission'; }
 		}
-		if($sw_err != ''){ header('Location: ' . $this->base_url . '/' . $sw_err); exit(0);}
+		if($sw_err != ''){ header('Location: ' . $this->base_url . '/' . $sw_err); exit;}
 
 
 	}
