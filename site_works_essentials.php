@@ -39,18 +39,18 @@ namespace SiteWorks{
 					// Load Database Tables $dba['tableName'] = new t_tableName;
 					if( preg_match('/^t_/', $className) ){
 		                if( preg_match('/^t_site_works_/', $className) ){
-		    				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
+		    				require_once SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php';
 		                } else {
-		    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
+		    				require_once SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php';
 		                }
 					}
 					
 					// Load standard classes
 					else{
 		                if( preg_match('/^siteworks_/', $className) ){
-							require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php');
+							require_once SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php';
 		                } else {
-							require_once(SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php');
+							require_once SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php';
 						}
 					}
 				}
@@ -66,10 +66,10 @@ namespace SiteWorks{
 		public function clear_apcu()                          { if( extension_loaded('apcu') ){ apcu_clear_cache(); } }
 	} // End SiteWorks Startup Class
 
-	require_once(SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.conf.php');
+	require_once SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.conf.php';
 	$tmp = SITEWORKS_DOCUMENT_ROOT.'/conf/' . $use_config;
 	if(file_exists($tmp)){
-		require_once($tmp);
+		require_once $tmp;
 	} else {
 		die('Site configuration file is missing. Please set the $use_config variable. Ex: $use_config = joint_config.pconf.php  <br /><br />');
 	}

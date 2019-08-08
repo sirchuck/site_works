@@ -456,7 +456,7 @@ class _sw_unit_test {
 				$tfile=null;
 				if($this->UnitTestsFile){$tfile=fopen($this->UnitTestsFile, "w") or $this->tool->dmsg('Can not write to Unit Test File!');}else{$tfile=tmpfile();}
 				fwrite($tfile, $xd);
-				require_once( stream_get_meta_data($tfile)['uri'] );
+				require_once stream_get_meta_data($tfile)['uri'];
 				$xc = new \_sw_unit_test($this->UnitTestErrorsOnly);
 				$debug_out .= "\n[c_cyan]----------- U N I T   T E S T I N G ----------[c_clear]\n";
 				$debug_out .= $xc->_sw_dotest();
@@ -545,18 +545,18 @@ class _sw_unit_test {
 				// Load Database Tables $dba['tableName'] = new t_tableName;
 				if( preg_match('/^t_/', $className) ){
 	                if( preg_match('/^t_site_works_/', $className) ){
-	    				require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php');
+	    				require_once SITEWORKS_DOCUMENT_ROOT.'/includes/dbtables/'.$className.'.inc.php';
 	                } else {
-	    				require_once(SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php');
+	    				require_once SITEWORKS_DOCUMENT_ROOT.'/private/dbtables/'.$className.'.inc.php';
 	                }
 				}
 				
 				// Load standard classes
 				else{
 	                if( preg_match('/^siteworks_/', $className) ){
-						require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php');
+						require_once SITEWORKS_DOCUMENT_ROOT.'/includes/'.$className.'.inc.php';
 	                } else {
-						require_once(SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php');
+						require_once SITEWORKS_DOCUMENT_ROOT.'/private/includes/'.$className.'.inc.php';
 					}
 				}
 			}

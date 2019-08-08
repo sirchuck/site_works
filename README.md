@@ -653,7 +653,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->_p - This is an array of parameters you want to pass around between your controller, modual, and view pages
 
 # Loading: Helpers, View Pages, Modles, Includes
-    The load functions use the PHP require_once() function. The following loaded files by default come from your current loaded controller.
+    The load functions use the PHP require_once language construct. The following loaded files by default come from your current loaded controller.
     If you want to load a view or model from another modual, just provide the modual name in the modual variable.
     filename should be just the start of the file name, so myfile.view.php should be sent as load_view('myfile'); only.
     $this->load_view(filename,modual) - Loads modual/views/name.view.php - if left empty, it loads the view with the same name as the current controller.
@@ -1315,12 +1315,12 @@ PHP, MySQL, Javascript, and CSS framework
     your databases, configs, and site_works tools.
     - Add these lines to get the essence of the framework added to your vanilla code
         $use_config = 'joint_config.pconf.php';
-        require_once('/var/www/html/YOUR_PROJECT/site_works_essentials.php');
+        require_once '/var/www/html/YOUR_PROJECT/site_works_essentials.php';
 
     # Note, your path may differ between servers, you could do something like this php7+
         This will get the queue or threaders root_dir path and move up by two, which 
         should be your project folder root:
-        require_once(dirname(__DIR__, 2) . '/site_works_essentials.php');
+        require_once dirname(__DIR__, 2) . '/site_works_essentials.php';
 
     Requiring the essnentials file requires you to specify a configuration file. 
     Some of you will have a development server and a live server, so you'll have to create

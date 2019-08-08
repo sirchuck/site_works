@@ -168,7 +168,7 @@ class siteworks_uri
 
 
 	}
-	public function load_path($p=false){ if($p && file_exists($p)){ require_once($p); return true;} return false;}
+	public function load_path($p=false){ if($p && file_exists($p)){ require_once $p; return true;} return false;}
 
 }
 

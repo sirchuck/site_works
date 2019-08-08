@@ -9,15 +9,15 @@ namespace SiteWorks{
 	// Remove XSS and Injection from passed Values (tool->cleanHTMl() also, but we want this done even before we load our _s object tools)
 	function siteworks_htmlSpecialChars_recur(&$va){foreach($va as &$v){if(is_array($v)||is_object($v)){siteworks_htmlSpecialChars_recur($v);}else{$v=htmlspecialchars($v);}}}
 	siteworks_htmlSpecialChars_recur($_REQUEST);
-	require_once(SITEWORKS_DOCUMENT_ROOT.'/includes/siteworks_startup.inc.php');
+	require_once SITEWORKS_DOCUMENT_ROOT.'/includes/siteworks_startup.inc.php';
 	try {
 	    // Configuartion for everyone
-		require_once(SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.conf.php');
+		require_once SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.conf.php';
 		// Configuration per server
 		$tmp = SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.' . str_replace('.', '', (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '')? filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL) : filter_var($_SERVER['SERVER_NAME'], FILTER_SANITIZE_URL) ) . '.pconf.php';
 		$tmpu = posix_getpwuid(fileowner(SITEWORKS_DOCUMENT_ROOT . '/index.php'))['name'];
 		if(file_exists($tmp)){
-			require_once($tmp);
+			require_once $tmp;
 		} else {
 			if( !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/site_conf.txt',$tmp) ){
 				die('Welcome to site_works!<br><br>'
@@ -139,7 +139,7 @@ namespace{
 			$this->_admin      =& $this->_s->admin;
 			$this->_mem        =& $this->_s->mem;
 
-			if($load_preloaders){require_once( SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php' );}
+			if($load_preloaders){require_once SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php';}
 			// If your controller has the same name as a module we'll load it automaticaly into $this->_model for you to play with.
 			if($model && $_s->uri->load_the_model){
 				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false,false);}catch(Exception $e){unset($e);}
@@ -165,7 +165,7 @@ namespace{
 	    	// Helpers should be a list of functions, currently I see no reason for them to be in a class. Just load and use the functions.
 	    	return $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/helpers/' . $path . '.helper.php');
 	    }
-		public function load_path($p=false){ if($p && file_exists($p)){ require_once($p); return true;}return false;}
+		public function load_path($p=false){ if($p && file_exists($p)){ require_once $p; return true;}return false;}
 
 	}
 	if(!ob_start("ob_gzhandler")) ob_start();

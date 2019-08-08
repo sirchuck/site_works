@@ -13,7 +13,7 @@
 	// $_s->_tool->dmsg('hello'); instead of the usual $this->_tool->dmsg('hello');
 	// $_s also includes most of the configuration variables if you need them.
 	$use_config = 'joint_config.pconf.php';
-    require_once(dirname(__DIR__, 2) . '/site_works_essentials.php');
+    require_once dirname(__DIR__, 2) . '/site_works_essentials.php';
 
 
 
