@@ -63,12 +63,13 @@ class sw_admin_ajax extends _s
 
     public function build_sample(){
         if( isset($_POST['p']) && $_POST['p'] != ''){
-            $swv = 'SiteWorks\\'.$_POST['p'];
+            $post_p = filter_var($_POST['p'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
+            $swv = 'SiteWorks\\'.$post_p;
             $r = null;
             if( class_exists($swv) ){
                 $r = new $swv(null,$this->_odb);
             } else {
-                $swv = $_POST['p'];
+                $swv = $post_p;
                 $r = new $swv(null,$this->_odb);
             }
             $j = new stdClass();
@@ -95,11 +96,11 @@ class sw_admin_ajax extends _s
             $o[] = '----------------- J S ---------------------';
             $o[] = '<script>';
             $oo = '';
-            $o[] = '$(body).on(\'click\',\'' . $_POST['p'] . '_update_button\',function(event){';
+            $o[] = '$(body).on(\'click\',\'' . $post_p . '_update_button\',function(event){';
             foreach( $r->f as $k => $v ){
                 $oo .= ',"' . $k . '":$("#\''.$k.'\'").val()';
             }
-            $o[] = '|tab|var s = {"action":"' . $_POST['p'] . '_update"' . $oo . '}';
+            $o[] = '|tab|var s = {"action":"' . $post_p . '_update"' . $oo . '}';
             $o[] = '|tab|$.ajax({ type: "POST", url: \'//\' + base_url + \'/ajax_MODUAL/CONTROLLER/METHOD\', data: s, dataType: "json", failure: function(d){}, success: function(d){';
             $o[] = '|tab||tab|if(d.success == \'success\'){';
             $o[] = '|tab||tab||tab|// Handle Success';
@@ -121,7 +122,7 @@ class sw_admin_ajax extends _s
                 $o[] = '|tab||tab|</label>';
                 $o[] = '|tab|</div>';
             }
-            $o[] = '|tab|<button id="' . $_POST['p'] . '_update_button" class="form_button">Update</button>';
+            $o[] = '|tab|<button id="' . $post_p . '_update_button" class="form_button">Update</button>';
             $o[] = '</form>';
             // AJAX
             $o[] = '----------------- A J A X ---------------------';
@@ -129,7 +130,7 @@ class sw_admin_ajax extends _s
             $o[] = '|tab|$j = new stdClass();';
             $o[] = '|tab|$j->success = \'failure\';';
             $o[] = '|tab|if($_POST[\'action\'] == "t_site_works_admin_update"){';
-            $o[] = '|tab||tab|$r = new SiteWorks\\' . $_POST['p'] . '($_POST[\'KEY\'],$this->_odb);';
+            $o[] = '|tab||tab|$r = new SiteWorks\\' . $post_p . '($_POST[\'KEY\'],$this->_odb);';
             foreach( $r->f as $k => $v ){
                 $o[] = '|tab||tab|$r->f[\'' . $k . '\'][\'value\'] = $_POST[\'' . $k . '\'];';
             }
