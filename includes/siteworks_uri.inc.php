@@ -88,7 +88,10 @@ class siteworks_uri
 		$uri = filter_var($_SERVER['DOCUMENT_URI'], FILTER_SANITIZE_URL);
 
 		if( $_s->cPaths['project_name'] != '' ){
-			$this->fixeduri = strtolower(trim( preg_replace( '/'.preg_quote($_s->cPaths['project_name'],'/').'/', '' ,trim($uri, '/'), 1 ), '/'));
+			$temp_prj_parts = explode('/',strtolower(trim($_s->cPaths['project_name'],'/')));
+			$temp_url_parts = explode('/',strtolower(trim($uri,'/')));
+			foreach($temp_prj_parts as $v){ if( $v == $temp_url_parts[0] ){ array_shift($temp_url_parts); } else { break; } }
+			$this->fixeduri = implode('/',$temp_url_parts);
 		}else{
 			$this->fixeduri = strtolower(trim($uri, '/'));
 		}
