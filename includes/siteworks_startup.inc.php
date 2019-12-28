@@ -567,7 +567,7 @@ class _sw_unit_test {
 	public function handle_shutdown(){
 		if( $this->apcu_is_set ){
 			apcu_store($this->uri->fixedapcu.'admin', $this->admin);
-			apcu_store($this->uri->fixedapcu.'mem', $this->admin);
+			apcu_store($this->uri->fixedapcu.'mem', $this->mem);
 		}
 		if($this->debugMode && $this->showPHPErrors_debug){
 			$e = error_get_last();
