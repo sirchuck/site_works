@@ -268,5 +268,19 @@ class siteworks_tools
   }
 
 
+  public function get_c($v=null,$v2=null){ return $this->vc($v,$v2,$_GET); }
+  public function post_c($v=null,$v2=null){ return $this->vc($v,$v2,$_POST); }
+  public function request_c($v=null,$v2=null){ return $this->vc($v,$v2,$_REQUEST); }
+  public function vc($v=null,$v2=null,$a=null){
+    if( is_null($a) ){
+      if( is_null($v2) ){ return ( !is_null($v) && $v != '' ) ? true : false; } else { return ( !is_null($v) && $v != '' && $v == $v2 ) ? true : false; }
+    } else {
+      if( is_null($v2) ){ return ( isset($a[$v]) && !is_null($a[$v]) && $a[$v] != '' ) ? true : false; } else { return ( isset($a[$v]) && $a[$v] == $v2 ) ? true : false; }
+    }
+    return false;
+  }
+
+
+
 }
 ?>

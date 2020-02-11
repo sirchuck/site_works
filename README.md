@@ -206,6 +206,7 @@ PHP, MySQL, Javascript, and CSS framework
             - views
               - template.view.php
     dev/preloads
+        - all_preload.php
         - ajax_preload.php
         - controller_preload.php
         - iframe_preload.php
@@ -225,6 +226,8 @@ PHP, MySQL, Javascript, and CSS framework
     The preloads will be automatically included in your ajax/controller/iframe or script call. For example, if you wanted all of your controllers
     to load jquery from a google CDN you could write in the controller_preload.php file: 
         $this->_out['js'][] = '<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>';
+
+    Use the all_preload file for universal preloads for any type (ajax/controller/iframe/script)
 
     Files you put in the thread_scripts will be called if you use the threading tool shown below. Files in this directory should have the .php extention.
 
@@ -561,6 +564,14 @@ PHP, MySQL, Javascript, and CSS framework
             Your secret key is probably reused and set in your config. the secret_iv is generally unique per thing being encrypted. You can store it in plain text to use for decryption.
         $this->_tool->iDecrypt($string, $secret_key, $secret_iv, $encryption_method)
             This decrypts your encryption. You use the same key and iv and method you did when you encrpted. 
+        $this->_tool->get_c($element_name, $value_compare, $array) - wrapper for vc() to test $_GET variables as not null or blank.
+        $this->_tool->post_c($element_name, $value_compare, $array) - wrapper for vc() to test $_POST variables as not null or blank.
+        $this->_tool->request_c($element_name, $value_compare, $array) - wrapper for vc() to test $_REQUEST variables as not null or blank.
+        $this->_tool->vc($element_name, $value_compare, $array)
+            This will return true if $element_name is not null, not blank and matches $value_compare.
+            If you do not send $value_compare it will return true if $element_name is not null and not blank.
+            If you do not send $array it will return true if the $element_name variable is not null and not blank.
+
     $this->_uri
         Note: sw_error_permission is returned from the framework to the default controller as a pass_var if a permission lock for a modual or a controller was tripped.
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly
@@ -651,6 +662,8 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_m_modelname must be within the controllers Modual
 
     $this->_p - This is an array of parameters you want to pass around between your controller, modual, and view pages
+
+    $this->_csrf - Every time you load a page a new csrf token is generated and stored here.
 
 # Loading: Helpers, View Pages, Modles, Includes
     The load functions use the PHP require_once language construct. The following loaded files by default come from your current loaded controller.

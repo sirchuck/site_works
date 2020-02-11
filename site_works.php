@@ -55,6 +55,10 @@ namespace SiteWorks{
 					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
 				}
 
+				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/all_preload.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/all_preload.php',SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/all_preload.php') ){
+					unlink($tmp);
+					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
+				}
 				if( !file_exists(SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/ajax_preload.php') && !@copy(SITEWORKS_DOCUMENT_ROOT.'/includes/templates/ajax_preload.php',SITEWORKS_DOCUMENT_ROOT.'/dev/preloads/ajax_preload.php') ){
 					unlink($tmp);
 					die('We could not write the sw_admin folder in your dev/moduals folder. Try: sudo chmod -R 775 dev && sudo chown -R '.$tmpu.':www-data dev');
@@ -124,6 +128,7 @@ namespace{
 		public $_p = array();                   // The Pass array to share variables between Controller Moduals and Views
 		public $_admin = null;                  // The site_works admin array
 		public $_mem = null;                    // The site_works mem array
+		public $_csrf = null;                   // Per-load random cross-site request forgery check variable
 
 	    public function __construct(){}
 	    public function site_works_prefetch(&$_s,$model=false,$load_preloaders=false){
@@ -138,8 +143,12 @@ namespace{
 			$this->_p          =& $this->_s->p;
 			$this->_admin      =& $this->_s->admin;
 			$this->_mem        =& $this->_s->mem;
+			$this->_csrf       = substr( md5(time() . uniqid()) . md5(time() . mt_rand(10,400000000)) , 0,mt_rand(40,64));
 
-			if($load_preloaders){require_once SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php';}
+			if($load_preloaders){
+				require_once SITEWORKS_DOCUMENT_ROOT . '/private/preloads/all_preload.php';
+				require_once SITEWORKS_DOCUMENT_ROOT . '/private/preloads/' . $_s->uri->calltype . '_preload.php';
+			}
 			// If your controller has the same name as a module we'll load it automaticaly into $this->_model for you to play with.
 			if($model && $_s->uri->load_the_model){
 				try{ $this->_m = new $model; $this->_m->site_works_prefetch($_s,false,false);}catch(Exception $e){unset($e);}
