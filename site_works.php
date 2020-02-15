@@ -174,7 +174,7 @@ namespace{
 	    	// Helpers should be a list of functions, currently I see no reason for them to be in a class. Just load and use the functions.
 	    	return $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/helpers/' . $path . '.helper.php');
 	    }
-		public function load_path($p=false){ if($p && file_exists($p)){require_once $p;}return false;}
+		public function load_path($p=false){ if($p && file_exists($p)){require_once $p; return;}return false;}
 
 	}
 	if(!ob_start("ob_gzhandler")) ob_start();

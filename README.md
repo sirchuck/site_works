@@ -674,7 +674,7 @@ PHP, MySQL, Javascript, and CSS framework
     $this->load_model(filename,modual) - Loads modual/views/name.model.php - if empty, loads model with the same name as modual; However, it should already be loaded.
     To load something that you want available to multipul controller, try using a helper, or include.
     $this->load_helper(filename) - This will load a file from the helper folder, accessable from all your controllers.
-    $this->load_path(full_path) - You should never need this, but you could use it to require_once on a path.
+    $this->load_path(full_path) - You should never need this, but you could use it to require_once on a path. return false if fail, nothing if success.
 
     /dev/includes
     Do not start your includes in this folder with siteworks_ as that tells the autoloader to pull from /includes instead of /dev/includes.
