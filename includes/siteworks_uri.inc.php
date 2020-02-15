@@ -137,7 +137,7 @@ class siteworks_uri
 		}
 		$this->controller = (isset($params[1]) && $params[1]) ? $params[1] : $this->module;
 
-		if(!$this->load_path( $this->sw_module_path . '/' . $this->calltypes . '/' . $this->controller . '.' . $this->calltype . '.php' ) ){
+		if( $this->load_path( $this->sw_module_path . '/' . $this->calltypes . '/' . $this->controller . '.' . $this->calltype . '.php' ) === false ){
 			$this->controller = $this->module;
 			array_unshift($params,$this->module);
 			$this->load_path( $this->sw_module_path . '/' . $this->calltypes . '/' . $this->controller . '.' . $this->calltype . '.php' );
@@ -169,7 +169,7 @@ class siteworks_uri
 
 
 	}
-	public function load_path($p=false){ if($p && file_exists($p)){ require_once $p; return true;} return false;}
+	public function load_path($p=false){ if($p && file_exists($p)){ require_once $p;} return false;}
 
 }
 

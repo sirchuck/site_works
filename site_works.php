@@ -162,7 +162,7 @@ namespace{
 	    public function load_model($path=false,$useModual=''){
 	    	if($useModual==''){ $useModual = $this->_uri->module; }
 	    	// Models are classes with access to the framework. Model cars becomes $this->_m_cars->your_function();
-	    	if( $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $useModual . '/models/' . (($path) ? $path : $this->_s->uri->controller) . '.model.php') ){
+	    	if( $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/modules/' . $useModual . '/models/' . (($path) ? $path : $this->_s->uri->controller) . '.model.php') !== false ){
 	    		$tmp = '_m_'.$path;
 	    		$tmp2 = $path . '_model';
 				try{ $this->$tmp = new $tmp2; $this->$tmp->site_works_prefetch($this->_s,false,false); }catch(Exception $e){unset($e);}
@@ -174,7 +174,7 @@ namespace{
 	    	// Helpers should be a list of functions, currently I see no reason for them to be in a class. Just load and use the functions.
 	    	return $this->load_path(SITEWORKS_DOCUMENT_ROOT.'/private/helpers/' . $path . '.helper.php');
 	    }
-		public function load_path($p=false){ if($p && file_exists($p)){require_once $p; return true;}return false;}
+		public function load_path($p=false){ if($p && file_exists($p)){require_once $p;}return false;}
 
 	}
 	if(!ob_start("ob_gzhandler")) ob_start();
