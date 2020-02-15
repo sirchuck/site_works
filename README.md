@@ -277,6 +277,7 @@ PHP, MySQL, Javascript, and CSS framework
          initially load the page once. Also, this secure password is only used when you send data to the db. By secure I only mean as secure
          as the default php openssl_encrypt. 
     $this->sess_secure_password - if you provide a password, we encrypt the session data for the database.
+    $this->cookie_samesite - Default '', Lax/Strict php7.3+ samesite variable for phpsess cookie.
 
     $this->admin_level_options - Enumerated array of user permission levels. $_SESSION['admin_level'] to control user levels.
     $this->allow_auto_delete_language - If db language entry is not found in the code, it is automatically removed instead of marking for deletion.

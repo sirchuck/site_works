@@ -57,6 +57,7 @@ class siteworks_config extends siteworks_startup
     public $gc_divisor            = 100; // Default 100; 1/100 (1%) chance your gc will fire normally.
     public $gc_maxlifetime        = 0;   // Default 0; That will use whatever php default seconds are
     public $sess_secure_password  = '';  // Default ''; To encrypt session data in the database, provide a password.
+    public $cookie_samesite       = '';  // Default ''; Lax/Strict php7.3+ samesite variable for phpsess cookie.
 
 
     /*********************************************************************************************************
