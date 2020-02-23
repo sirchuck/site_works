@@ -426,16 +426,37 @@ PHP, MySQL, Javascript, and CSS framework
     case 'pullByVersion':                           // This is the name you will use to refer to the query
                                                     // set the $sqlFn to the query you want to run.
         $sqlFn = 'SELECT * FROM `'. $this->tableName . '` WHERE `sw_version` = "' . $this->odb->clean( $this->f['sw_version']['value'] ) . '"';
-        // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECE...'
+        // NOTE: $sqlFn can be used as an array if you want to send multipul queries. $sqlFn[] = 'SELECT...'
     break;
     You can use this area to write SQL scripts, so they are easy to find and change later as you'll see below
 
     Database Objects provide the following Methods:
     # Using insertData insertUpdateData and updateData method will automatically database clean your data if stored in the object. ( $r->c() ) It does not auto clean values you pass directly.
 
-    $r = new t_mytable(5,$this->_odb);
-        This instantiation has passed an id of 5, and will automatically call the following fillData method
-        id can be true, number, string, or where. If where it must have a =,>, or < symbol.
+    Special Conditions For: new tables, fillData, updateData, selectOne, selectAll and deleteData
+        When passing your ID or WHERE clause you can modify how it works. 
+            Case: $r = new t_mytable($id, $this->_odb) and $this->$r->filldata($id) methods
+                If ID is numeric or a litteral it will create 'WHERE key_field = ' . $id
+                If it finds an equal, less than, or greater than in the string it will create 'WHERE ' . $id ( meaning you suplly the key field and value match )
+                Use an = as the first character to force a compairson WHERE if your WHERE doesn't contain one. The beginning = will be removed.
+                $r=new t_mytable('=id IS NOT NULL',$this->_odb) becomes 'WHERE id IS NOT NULL'
+            Case: ALL Special Condition methods
+                Use a < as the first character to remove the default 'WHERE' syntax so you can add your own.
+                Ex: $r->selectOne('<ORDER BY myfield'); Translates to 'select * from table ORDER BY myfield' instead of default 'WHERE ORDER BY myfield'
+
+    $r = new t_mytable($id,$this->_odb);
+        Send an ID to automatically pull a record, or null for a blank table.
+        * NOTE $this->_odb is also the default table, so you don't have to send it. new t_mytable(null) will create a new empty table object from the default database.
+        $r = new t_mytable(5,$this->_odb);
+            New table where ID field = 5
+        $r = new t_mytable('dog',$this->_odb);
+            New table where ID field = 'dog'
+        $r = new t_mytable('field > 6',$this->_odb);
+            New table where field > 6
+        $r = new t_mytable('=field IS NOT NULL',$this->_odb);
+            New table where field IS NOT NULL
+        $r = new t_mytable('<ORDER BY field',$this->_odb);
+            < removes preceeding WHERE so you can build your own statement end clause.
     $r->fillData(overloaded)
         $r->fillData(true)
             This will pull the last record data, you would only use this typically if you had no key field and just one record.
