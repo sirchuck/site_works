@@ -117,22 +117,27 @@ abstract class siteworks_db_tools
     public function clearFields(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = ( gettype($this->f[$k]['value']) == 'integer' || gettype($this->f[$k]['value']) == 'double' ) ? 0 : null;} unset($this->p); }
     
     public function fillData($id=NULL){
-
+        $what = '*';
+        if(is_array($id)){
+            // Dangerous if you run an update, as you will have empty values for fields you didn't pull
+            $what = ( count($id) > 1 ) ? $id[1] : '*';
+            $id = $id[0];
+        }
         if($id === true ){
             // Typically a database with one table and no key
-            $sql = 'SELECT * FROM `'.$this->tableName.'`';
+            $sql = 'SELECT '.$what.' FROM `'.$this->tableName.'`';
         }
         elseif( gettype($id) == 'integer' ){
-            $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = '.$id;
+            $sql = 'SELECT '.$what.' FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = '.$id;
         }
         elseif( gettype($id) == 'string' ){
             if(strrpos($id,'=')===false && strrpos($id,'>')===false && strrpos($id,'<')===false){
-                $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
+                $sql = 'SELECT '.$what.' FROM `'.$this->tableName.'` WHERE `'.$this->keyField.'` = \''.$id.'\'';
             } else {
                 if( substr( $id, 0, 1 ) == '<' ){
-                    $sql = 'SELECT * FROM `'.$this->tableName.'` '.ltrim($id,'<');
+                    $sql = 'SELECT '.$what.' FROM `'.$this->tableName.'` '.ltrim($id,'<');
                 }else{
-                    $sql = 'SELECT * FROM `'.$this->tableName.'` WHERE '.ltrim($id,'=');
+                    $sql = 'SELECT '.$what.' FROM `'.$this->tableName.'` WHERE '.ltrim($id,'=');
                 }
             }
         }
@@ -143,7 +148,7 @@ abstract class siteworks_db_tools
         if (($result = $this->c->q($sql))  && $this->c->numRows() > 0) {
             $row = $this->c->fetch_assoc();
             foreach($this->f as $fKey => $fVal){
-                if($fKey != 'iTemp'){ // Ignore iTemp to pass values to table
+                if( isset($row[$fKey]) ){
                     $this->f[$fKey]['value'] = $row[$fKey];
                 }
             }
@@ -152,7 +157,7 @@ abstract class siteworks_db_tools
         else{
             return false;
         }
-    
+
     }
 
     public function selectOne($where = NULL, $what = '*',$useArray=false){

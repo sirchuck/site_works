@@ -457,6 +457,12 @@ PHP, MySQL, Javascript, and CSS framework
             New table where field IS NOT NULL
         $r = new t_mytable('<ORDER BY field',$this->_odb);
             < removes preceeding WHERE so you can build your own statement end clause.
+            NOTE: Only one record is filled with filldata or new table so excluding the where will just result in the last record.
+        * SPECIAL, you can send an array for $id. 
+            [$id, $what] if you send an array the first element is your id( 5, 'dog', whatever), the second element is what you want to pull '`field_name1`,`field_name2`'
+            This can be dangerous if you run $r->updateData() because the empty fields in the record would overwrite your database. You would use this if you want to pull
+            less data from  your database when you make a new table. Ex: you just want your user id, email, and password to match for a login, but you don't need the rest
+            of the database user record. 
     $r->fillData(overloaded)
         $r->fillData(true)
             This will pull the last record data, you would only use this typically if you had no key field and just one record.
@@ -466,6 +472,11 @@ PHP, MySQL, Javascript, and CSS framework
             Fill the object where the id field = 'dog'
         $r->fillData("myfield='dog'")
             Fill the object where the myfield field = 'dog'
+        * SPECIAL, you can send an array for $id. 
+            [$id, $what] if you send an array the first element is your id( 5, 'dog', whatever), the second element is what you want to pull '`field_name1`,`field_name2`'
+            This can be dangerous if you run $r->updateData() because the empty fields in the record would overwrite your database. You would use this if you want to pull
+            less data from  your database when you make a new table. Ex: you just want your user id, email, and password to match for a login, but you don't need the rest
+            of the database user record. 
     $r->query($sqlFn=false)
         $r->query('pullByVersion')
             This will load the SQL you set above in the buildQueryArray, and run that array of queries.
