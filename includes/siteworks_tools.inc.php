@@ -271,7 +271,7 @@ class siteworks_tools
   public function sodium_encrypt($m,$n=false,$k=false){ return sodium_crypto_secretbox($m, $n==false?$this->_s->sodium_nonce:$n, $k==false?$this->_s->sodium_key:$k); }
   public function sodium_decrypt($m,$n=false,$k=false){ return sodium_crypto_secretbox_open($m, $n==false?$this->_s->sodium_nonce:$n, $k==false?$this->_s->sodium_key:$k); }
   public function sodium_check($c,$m,$n=false,$k=false){ if($this->sodium_encrypt($m,$n==false?$this->_s->sodium_nonce:$n, $k==false?$this->_s->sodium_key:$k)===$c){return true;}return false;}
-  public function sodium_create_key(){ return random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES); }
+  public function sodium_create_key(){ return sodium_crypto_secretbox_keygen(); } // All sorts of keygen methods. random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES);
   public function sodium_create_nonce(){ return random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES); }
   public function sodium_create_files($p1=false,$p2=false){
     if( $p1 && !file_exists($p1) ){ $f=fopen($p1,"w"); if($f){ fwrite( $f, $this->sodium_create_key() ); fclose($f); } }
