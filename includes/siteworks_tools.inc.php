@@ -267,6 +267,26 @@ class siteworks_tools
     return $output;
   }
 
+  // PHP Sodium encryption wrapper
+  public function sodium_encrypt($m,$n=false,$k=false){ return sodium_crypto_secretbox($m, $n==false?$this->_s->sodium_nonce:$n, $k==false?$this->_s->sodium_key:$k); }
+  public function sodium_decrypt($m,$n=false,$k=false){ return sodium_crypto_secretbox_open($m, $n==false?$this->_s->sodium_nonce:$n, $k==false?$this->_s->sodium_key:$k); }
+  public function sodium_check($c,$m,$n=false,$k=false){ if($this->sodium_encrypt($m,$n==false?$this->_s->sodium_nonce:$n, $k==false?$this->_s->sodium_key:$k)===$c){return true;}return false;}
+  public function sodium_create_key(){ return random_bytes(SODIUM_CRYPTO_SECRETBOX_KEYBYTES); }
+  public function sodium_create_nonce(){ return random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES); }
+  public function sodium_create_files($p1=false,$p2=false){
+    if( $p1 && !file_exists($p1) ){ $f=fopen($p1,"w"); if($f){ fwrite( $f, $this->sodium_create_key() ); fclose($f); } }
+    if( $p2 && !file_exists($p2) ){ $f=fopen($p2,"w"); if($f){ fwrite( $f, $this->sodium_create_nonce() ); fclose($f); } }
+  }
+  public function sodium_read_key($p=false){
+    $p = $p?$p:$this->_s->sodium_key_file;
+    if(file_exists($p)){$k = file_get_contents($p); $this->_s->sodium_key = $k; return $k;} return false;
+  }
+  public function sodium_read_nonce($p=false){
+    $p = $p?$p:$this->_s->sodium_nonce_file;
+    if(file_exists($p)){$n = file_get_contents($p); $this->_s->sodium_nonce = $n; return $n;} return false;
+  }
+
+
 
   public function get_c($v=null,$v2=null){ return $this->vc($v,$v2,$_GET); }
   public function post_c($v=null,$v2=null){ return $this->vc($v,$v2,$_POST); }

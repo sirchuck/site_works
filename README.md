@@ -267,6 +267,11 @@ PHP, MySQL, Javascript, and CSS framework
     $this->css_js_one_file - this puts your css and js into one file to load instead of two. Faster browser loading typically.
     $this->APCuTimeoutMinutes - number of minutes for the apcu cache to refresh $this->mem and $this->admin db records.
 
+    $this->sodium_key - Default false, PHP Sodium Encryption Key value, should be 32 Bytes
+    $this->sodium_nonce - Default false, PHP Sodium Encryptoion Nonce value, should be 24 Bytes
+    $this->sodium_key_file - Default false, path to your readable sodium key file. 
+    $this->sodium_nonce_file - Default false, path to your readable sodium nonce file.
+
     $this->SessionUseDatabase - If you make a multi-server app, you should store your php $_SESSION array on a database instead of only the current active server.
     *NOTE: The next four use ini_set to set values.
     $this->save_path - Some of you insane people may have a separate drive for faster small reads, the rest of us will leave this at the default
@@ -597,6 +602,26 @@ PHP, MySQL, Javascript, and CSS framework
             Your secret key is probably reused and set in your config. the secret_iv is generally unique per thing being encrypted. You can store it in plain text to use for decryption.
         $this->_tool->iDecrypt($string, $secret_key, $secret_iv, $encryption_method)
             This decrypts your encryption. You use the same key and iv and method you did when you encrpted. 
+        $this->_tool->sodium_encrypt($string, $nonce=false, $key=false)
+            This will use sodium to encrypt your string. Leave $nonce or $key false to automaically use config value.
+        $this->_tool->sodium_decrypt($string, $nonce=false, $key=false)
+            This will use sodium to decrypt your string. Leave $nonce or $key false to automaically use config value.
+        $this->_tool->sodium_check($encryted_string, $string, $nonce=false, $key=false)
+            Compare an encrypted string with a plain string. Leave $nonce or $key false to automaically use config value.
+        $this->_tool->sodium_create_key()
+            Return a randomized sodium key value.
+        $this->_tool->sodium_create_nonce()
+            Return a randomized sodium nonce value.
+        $this->_tool->sodium_create_files($key_path,$nonce_path)
+            Ex: $this->_tool->sodium_create_files('/tmp/sodium_key', '/tmp/sodium_nonce');
+            You must send a key path and a nonce path for writing the files. These files will store the sodium key and sodium nonce value.
+            The files will not be written if they already exist, or the path is unwriteable.
+            You should not use the paht you provide here for your sodium reads, because if you accidently overwrite a key or nonce you can not decrypt again.
+            You should copy the files created and then paste them in another location you wish to read from, then set the read paths in your config.
+        $this->_tool->sodium_read_key($path=false)
+            Read sodium key value from file, return it and store it in config value $this->_s->sodium_key
+        $this->_tool->sodium_read_nonce($path=false)
+            Read sodium key value from file, return it and store it in config value $this->_s->sodium_nonce
         $this->_tool->get_c($element_name, $value_compare, $array) - wrapper for vc() to test $_GET variables as not null or blank.
         $this->_tool->post_c($element_name, $value_compare, $array) - wrapper for vc() to test $_POST variables as not null or blank.
         $this->_tool->request_c($element_name, $value_compare, $array) - wrapper for vc() to test $_REQUEST variables as not null or blank.

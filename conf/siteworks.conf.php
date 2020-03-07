@@ -45,6 +45,15 @@ class siteworks_config extends siteworks_startup
 
 
     /*********************************************************************************************************
+    **                                      E N C R Y P T I O N                                             **
+    *********************************************************************************************************/
+    public $sodium_key              = false; // Default false, PHP Sodium Key value, should be 32 Bytes
+    public $sodium_nonce            = false; // Default false, PHP Sodium Nonce value, should be 24 Bytes
+    public $sodium_key_file         = false; // Default false, path to your readable key file. 
+    public $sodium_nonce_file       = false; // Default false, path to your readable nonce file.
+
+
+    /*********************************************************************************************************
     **                                      P H P   S E S S I O N S                                         **
     *********************************************************************************************************/
     // The php $_SESSION[''] array allows you to set some variables, and if you use a multi-server setup 
