@@ -285,6 +285,7 @@ class siteworks_tools
     $p = $p?$p:$this->_s->sodium_nonce_file;
     if(file_exists($p)){$n = file_get_contents($p); $this->_s->sodium_nonce = $n; return $n;} return false;
   }
+  public function sodium_read_files($p1=false,$p2=false){ $this->sodium_read_key($p1); $this->sodium_read_nonce($p2); }
 
 
 

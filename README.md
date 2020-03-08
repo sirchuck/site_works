@@ -482,6 +482,14 @@ PHP, MySQL, Javascript, and CSS framework
             This can be dangerous if you run $r->updateData() because the empty fields in the record would overwrite your database. You would use this if you want to pull
             less data from  your database when you make a new table. Ex: you just want your user id, email, and password to match for a login, but you don't need the rest
             of the database user record. 
+    $r->fset($field,$value)
+        Use this to set a field value, same as $r->f['field']['value'] = 'value';
+    $r->fget($field=null)
+        Use to get a field value from a field name.
+    $r->fsset($field,$value)
+        Use this to set a sodium encrypted field value, same as $r->f['field']['value'] = 'value'; - must set sodium key and nonce or sodium files config to use
+    $r->fsget($field=null)
+        Use to get a sodium decrypted field value from a field name. - must set sodium key and nonce or sodium files config to use
     $r->query($sqlFn=false)
         $r->query('pullByVersion')
             This will load the SQL you set above in the buildQueryArray, and run that array of queries.
@@ -622,6 +630,8 @@ PHP, MySQL, Javascript, and CSS framework
             Read sodium key value from file, return it and store it in config value $this->_s->sodium_key
         $this->_tool->sodium_read_nonce($path=false)
             Read sodium key value from file, return it and store it in config value $this->_s->sodium_nonce
+        $this->_tool->sodium_read_files($key_path=false,$nonce_path=false)
+            A single call to load sodium key and nonce into the config values. Leave paths false if you want to use config path values.
         $this->_tool->get_c($element_name, $value_compare, $array) - wrapper for vc() to test $_GET variables as not null or blank.
         $this->_tool->post_c($element_name, $value_compare, $array) - wrapper for vc() to test $_POST variables as not null or blank.
         $this->_tool->request_c($element_name, $value_compare, $array) - wrapper for vc() to test $_REQUEST variables as not null or blank.

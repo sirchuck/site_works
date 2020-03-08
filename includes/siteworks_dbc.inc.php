@@ -4,7 +4,7 @@ class siteworks_dbc{
     public $dbt = '';       // Database type mysqli | postgres
     private $c = null;      // Database Connection
     private $last_result;   // Last Result run.
-    protected $_s;
+    public $_s;
 
     private $connected = false;
     private $hostname  = null;
