@@ -6,10 +6,23 @@ namespace SiteWorks;
 class siteworks_tools
 {
 	protected $_s;
+  public $chr_control_noprint = array();
 
 	function __construct($_s)
 	{
 		$this->_s =& $_s;
+
+    $this->chr_control_noprint = array(
+      // control characters
+      chr(0), chr(1), chr(2), chr(3), chr(4), chr(5), chr(6), chr(7), chr(8), chr(9), chr(10),
+      chr(11), chr(12), chr(13), chr(14), chr(15), chr(16), chr(17), chr(18), chr(19), chr(20),
+      chr(21), chr(22), chr(23), chr(24), chr(25), chr(26), chr(27), chr(28), chr(29), chr(30),
+      chr(31),
+      // non-printing characters
+      chr(127)
+    );
+
+
 	}
 
   public function trace($af=0,$fullreport=false){
@@ -303,16 +316,6 @@ class siteworks_tools
 
   // Clean special control and non-printing characters, specifically for binary encrypted sql
   public function chr_c($s,$s2="*"){ return str_replace($this->chr_control_noprint, $s2, $s); }
-  public $chr_control_noprint = array(
-      // control characters
-      chr(0), chr(1), chr(2), chr(3), chr(4), chr(5), chr(6), chr(7), chr(8), chr(9), chr(10),
-      chr(11), chr(12), chr(13), chr(14), chr(15), chr(16), chr(17), chr(18), chr(19), chr(20),
-      chr(21), chr(22), chr(23), chr(24), chr(25), chr(26), chr(27), chr(28), chr(29), chr(30),
-      chr(31),
-      // non-printing characters
-      chr(127)
-    );
-
 
 
 }
