@@ -192,20 +192,20 @@ class siteworks_dbc{
     // DB Query
     public function q($sql=false){
         if($this->_s->debugMode && $this->_s->printSQL){
-            $this->_s->tool->dmsg("[c_gray]" .  $this->_s->tool->sw_tracesql() ."\n-> [c_yellow]".$sql."[c_gray]",false,true);
+            $this->_s->tool->dmsg("[c_gray]" .  $this->_s->tool->sw_tracesql() ."\n-> [c_yellow]". $this->_s->tool->chr_c($sql) ."[c_gray]",false,true);
         }
         switch ($this->dbt) {
             case "mysqli":
                 $this->last_result = $this->c->query($sql);
                 if ($this->_s->debugMode && $this->c->error) {
-                    $this->_s->tool->dmsg('MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$sql);
+                    $this->_s->tool->dmsg('MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$this->_s->tool->chr_c($sql) );
                 }
                 return $this->last_result;
             break;
             case "postgres":
                 if(false === pg_send_query($this->c, $sql)) {
                     if ($this->debugMode && $this->c->error) {
-                        $this->_s->tool->dmsg(__CLASS__.'::'.__FUNCTION__ . ' MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$sql);
+                        $this->_s->tool->dmsg(__CLASS__.'::'.__FUNCTION__ . ' MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$this->_s->tool->chr_c($sql) );
                     }
                 }
                 $this->last_result = pg_get_result($this->c);

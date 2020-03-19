@@ -639,7 +639,10 @@ PHP, MySQL, Javascript, and CSS framework
             This will return true if $element_name is not null, not blank and matches $value_compare.
             If you do not send $value_compare it will return true if $element_name is not null and not blank.
             If you do not send $array it will return true if the $element_name variable is not null and not blank.
-
+        $this->_tool->chr_c($string, $replacement_string="*")
+            Use this in combination with dmsg if you are printing fsset() binary data if you are using the debug_server. It will replace 
+            a lot of control and unprintable characters for you. 
+        $this->_tool->chr_control_noprint - An array of chr() values that chr_c will remove. 
     $this->_uri
         Note: sw_error_permission is returned from the framework to the default controller as a pass_var if a permission lock for a modual or a controller was tripped.
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly
