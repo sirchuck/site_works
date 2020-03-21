@@ -448,6 +448,7 @@ PHP, MySQL, Javascript, and CSS framework
             Case: ALL Special Condition methods
                 Use a < as the first character to remove the default 'WHERE' syntax so you can add your own.
                 Ex: $r->selectOne('<ORDER BY myfield'); Translates to 'select * from table ORDER BY myfield' instead of default 'WHERE ORDER BY myfield'
+                Ex: $row = $r->selectOne('`field`=100','COUNT(`field`) as c'); echo( $row->c ); // Count rows where field = 100 example.
 
     $r = new t_mytable($id,$this->_odb);
         Send an ID to automatically pull a record, or null for a blank table.
@@ -643,6 +644,18 @@ PHP, MySQL, Javascript, and CSS framework
             Use this in combination with dmsg if you are printing fsset() binary data if you are using the debug_server. It will replace 
             a lot of control and unprintable characters for you. 
         $this->_tool->chr_control_noprint - An array of chr() values that chr_c will remove. 
+        // Some simple CURL functionality - Must have CURL installed to use
+        $this->_tool->curl($url=null,$headers=false,$postvars=array(),$sendtype=null,$fp=null) - Returns curl response
+             - $url: The endpoint url
+             - $headers: An array of headers, array('header1: value2','header2: value2');
+             - $postvars: An array of post variables array('key1'=>'val1','key2','val2');
+             - $sendtype: POST | PUT | GET | DELETE | PATCH
+             - $fp: File URL, passing this in a POST will overwrite your postdata, you can send in your postvars array instead array('myfile'=>'@/file/path')
+        $this->_tool->curl_post($u=null,$h=false,$p=array(),$fp=null)  - curl wrapper for POST
+        $this->_tool->curl_put($u=null,$h=false,$p=array(),$fp=null)   - curl wrapper for PUT
+        $this->_tool->curl_get($u=null)                                - curl wrapper for GET
+        $this->_tool->curl_delete($u=null,$h=false,$p=array())         - curl wrapper for DELETE
+        $this->_tool->curl_patch($u=null,$h=false,$p=array())          - curl wrapper for PATCH
     $this->_uri
         Note: sw_error_permission is returned from the framework to the default controller as a pass_var if a permission lock for a modual or a controller was tripped.
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly
@@ -695,7 +708,8 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_odb->close() - Close the database connection.
         $this->_odb->c(string) - Clean your mysql string, General escaping
         $this->_odb->p($sql, $values) - prepaired statments - (SQL,Value Array) like this: ('INSERT INTO table (first_name) VALUES (?)', ['Frost'])
-        $this->_odb->q($sql=false) - Run a query ('DELETE FROM table WHERE id=5')
+        $this->_odb->query($sql=false) - wrapper for $this->_odb->q($sql), note you can use $this->_dbo['default']->query($sql) too
+        $this->_odb->q($sql=false) - Run a query from the database obejct ('DELETE FROM table WHERE id=5')
         $this->_odb->getInsertID($result) - Gets the last insert id from a result.
         $this->_odb->getAffectedRows($result) - Return the number of effected rows for the result
         $this->_odb->numRows($result) - Number of rows in the result

@@ -317,6 +317,61 @@ class siteworks_tools
   // Clean special control and non-printing characters, specifically for binary encrypted sql
   public function chr_c($s,$s2="*"){ return str_replace($this->chr_control_noprint, $s2, $s); }
 
+  // Some Curl
+  public function curl_post($u=null,$h=false,$p=array(),$fp=null){return $this->curl($u,$h,$p,'POST',$fp);}
+  public function curl_put($u=null,$h=false,$p=array(),$fp=null){return $this->curl($u,$h,$p,'PUT',$fp);}
+  public function curl_get($u=null){return $this->curl($u,false,array(),'GET');}
+  public function curl_delete($u=null,$h=false,$p=array()){return $this->curl($u,$h,$p,'DELETE');}
+  public function curl_patch($u=null,$h=false,$p=array()){return $this->curl($u,$h,$p,'PATCH');}
+  public function curl($url=null,$headers=false,$postvars=array(),$sendtype=null,$fp=null){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    // Headers should be array('X-Header1: value','Header2: value2');
+    if( $headers !== false ){ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
+    // Postvars should be array('key1'=>'value1','key2'='value2');
+    if( count($postvars) > 0 ){ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postvars)); }
+    switch (strtoupper($sendtype)) {
+      case 'POST': // Create a resourse
+          if(!is_null($fp)){ $postvars=array('file_contents'=>'@'.$fp); }
+          curl_setopt($ch, CURLOPT_POST, count($postvars));
+          break;
+      case 'PUT': // Update a resourse
+          curl_setopt($ch, CURLOPT_PUT, 1);
+          if(!is_null($fp)){ curl_setopt($ch, CURLOPT_INFILE, fopen($fp, 'r')); curl_setopt($ch, CURLOPT_INFILESIZE, filesize($fp)); }
+          break;
+      case 'GET': // Retrieve information from a resourse
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+          curl_setopt($ch, CURLOPT_HTTPGET, 1);
+          break;
+      case 'DELETE': // Delete a resourse
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE'); 
+          break;
+      case 'PATCH': // Update part of a resoruse
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PATCH');
+          break;
+      default:
+          curl_setopt($ch, CURLOPT_POST, 1);
+          break;
+    }
+    $response = curl_exec ($ch); curl_close ($ch); return $response;
+    /*
+      200 (OK) - all good
+      201 (Created) - resourse created
+      202 (Accepted) - action processed
+      204 (No Content) - processed but no entity
+      400 (BAD REQUEST) - bad url
+      404 (NOT FOUND) - resource not found
+
+      // Some typical headers
+      header("Access-Control-Allow-Origin: *");
+      header("Content-Type: application/json; charset=UTF-8");
+      header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
+      header("Access-Control-Max-Age: 3600");
+      header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+    */
+  }
+
 
 }
 ?>
