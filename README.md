@@ -645,17 +645,17 @@ PHP, MySQL, Javascript, and CSS framework
             a lot of control and unprintable characters for you. 
         $this->_tool->chr_control_noprint - An array of chr() values that chr_c will remove. 
         // Some simple CURL functionality - Must have CURL installed to use
-        $this->_tool->curl($url=null,$headers=false,$postvars=array(),$sendtype=null,$fp=null) - Returns curl response
+        $this->_tool->curl($url=null,$postvars=array(),$headers=false,$sendtype=null,$fp=null) - Returns curl response
              - $url: The endpoint url
-             - $headers: An array of headers, array('header1: value2','header2: value2');
              - $postvars: An array of post variables array('key1'=>'val1','key2','val2');
+             - $headers: An array of headers, array('header1: value2','header2: value2');
              - $sendtype: POST | PUT | GET | DELETE | PATCH
              - $fp: File URL, passing this in a POST will overwrite your postdata, you can send in your postvars array instead array('myfile'=>'@/file/path')
-        $this->_tool->curl_post($u=null,$h=false,$p=array(),$fp=null)  - curl wrapper for POST
-        $this->_tool->curl_put($u=null,$h=false,$p=array(),$fp=null)   - curl wrapper for PUT
-        $this->_tool->curl_get($u=null)                                - curl wrapper for GET
-        $this->_tool->curl_delete($u=null,$h=false,$p=array())         - curl wrapper for DELETE
-        $this->_tool->curl_patch($u=null,$h=false,$p=array())          - curl wrapper for PATCH
+        $this->_tool->curl_post($u=null,$p=array(),$h=false,$fp=null)  - curl wrapper for POST
+        $this->_tool->curl_put($u=null,$p=array(),$h=false,$fp=null)   - curl wrapper for PUT
+        $this->_tool->curl_get($u=null,$p=array())                     - curl wrapper for GET
+        $this->_tool->curl_delete($u=null,$p=array(),$h=false)         - curl wrapper for DELETE
+        $this->_tool->curl_patch($u=null,$p=array(),$h=false)          - curl wrapper for PATCH
     $this->_uri
         Note: sw_error_permission is returned from the framework to the default controller as a pass_var if a permission lock for a modual or a controller was tripped.
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly

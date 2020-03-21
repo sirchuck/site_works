@@ -318,12 +318,12 @@ class siteworks_tools
   public function chr_c($s,$s2="*"){ return str_replace($this->chr_control_noprint, $s2, $s); }
 
   // Some Curl
-  public function curl_post($u=null,$h=false,$p=array(),$fp=null){return $this->curl($u,$h,$p,'POST',$fp);}
-  public function curl_put($u=null,$h=false,$p=array(),$fp=null){return $this->curl($u,$h,$p,'PUT',$fp);}
-  public function curl_get($u=null){return $this->curl($u,false,array(),'GET');}
-  public function curl_delete($u=null,$h=false,$p=array()){return $this->curl($u,$h,$p,'DELETE');}
-  public function curl_patch($u=null,$h=false,$p=array()){return $this->curl($u,$h,$p,'PATCH');}
-  public function curl($url=null,$headers=false,$postvars=array(),$sendtype=null,$fp=null){
+  public function curl_post($u=null,$p=array(),$h=false,$fp=null){return $this->curl($u,$p,$h,'POST',$fp);}
+  public function curl_put($u=null,$p=array(),$h=false,$fp=null){return $this->curl($u,$p,$h,'PUT',$fp);}
+  public function curl_get($u=null,$p=array()){return $this->curl($u,$p,false,'GET');}
+  public function curl_delete($u=null,$p=array(),$h=false){return $this->curl($u,$p,$h,'DELETE');}
+  public function curl_patch($u=null,$p=array(),$h=false){return $this->curl($u,$p,$h,'PATCH');}
+  public function curl($url=null,$postvars=array(),$headers=false,$sendtype=null,$fp=null){
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
