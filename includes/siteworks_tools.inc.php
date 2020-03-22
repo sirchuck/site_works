@@ -324,14 +324,14 @@ class siteworks_tools
   public function curl_delete($u=null,$p=array(),$h=false){return $this->curl($u,$p,$h,'DELETE');}
   public function curl_patch($u=null,$p=array(),$h=false){return $this->curl($u,$p,$h,'PATCH');}
   public function curl($url=null,$postvars=array(),$headers=false,$sendtype=null,$fp=null){
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL,$url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    // Headers should be array('X-Header1: value','Header2: value2');
-    if( $headers !== false ){ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
-    // Postvars should be array('key1'=>'value1','key2'='value2');
-    if( count($postvars) > 0 ){ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postvars)); }
-    switch (strtoupper($sendtype)) {
+    $ch = curl_init(); $sendtype = strtoupper($sendtype);
+    if($sendtype != 'GET'){
+      // Headers should be array('X-Header1: value','Header2: value2');
+      if( $headers !== false ){ curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); }
+      // Postvars should be array('key1'=>'value1','key2'='value2');
+      if( count($postvars) > 0 ){ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postvars)); }
+    }
+    switch ($sendtype) {
       case 'POST': // Create a resourse
           if(!is_null($fp)){ $postvars=array('file_contents'=>'@'.$fp); }
           curl_setopt($ch, CURLOPT_POST, count($postvars));
@@ -341,6 +341,7 @@ class siteworks_tools
           if(!is_null($fp)){ curl_setopt($ch, CURLOPT_INFILE, fopen($fp, 'r')); curl_setopt($ch, CURLOPT_INFILESIZE, filesize($fp)); }
           break;
       case 'GET': // Retrieve information from a resourse
+          if( count($postvars) > 0 ){ $url .= '?' . http_build_query($postvars); }
           curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
           curl_setopt($ch, CURLOPT_HTTPGET, 1);
           break;
@@ -354,6 +355,8 @@ class siteworks_tools
           curl_setopt($ch, CURLOPT_POST, 1);
           break;
     }
+    curl_setopt($ch, CURLOPT_URL,$url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec ($ch); curl_close ($ch); return $response;
     /*
       200 (OK) - all good
