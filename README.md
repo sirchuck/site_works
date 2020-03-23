@@ -656,6 +656,33 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_tool->curl_get($u=null,$p=array())                     - curl wrapper for GET
         $this->_tool->curl_delete($u=null,$p=array(),$h=false)         - curl wrapper for DELETE
         $this->_tool->curl_patch($u=null,$p=array(),$h=false)          - curl wrapper for PATCH
+        $this->_tool->enable_cors($allow_methods=false,$allow_headers=false,$origin=false,$content_type=false,$max_age=false)
+            Defaults:
+            - $allow_methods   OPTIONS,GET,POST,PUT,DELETE,PATCH
+                To set only POST method, 'OPTIONS,POST' - you still need to check if they used POST in your code (Shown in Example)
+            - $allow_headers   DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
+                I default to some typical ones, but just send a string for what you want 'User-Agent,X-Requested-With'
+                PHP Read an incoming header:    $User-Agent = getallheaders()['User-Agent'];
+            - $origin          $_SERVER['HTTP_ORIGIN'] or * if HTTP_ORIGIN not set.
+                Set this to the origin you want to allow 'https://MySite.com'
+            - $content_type    application/json; charset=UTF-8
+                Set this to your desired content type string 'application/json; charset=UTF-8'
+            - $max_age         3600
+                Send the number of seconds to cache in a string. '3600'
+            Example Usage:
+                I would put your script in a script controller. https://MySite.com/script_general/my_method
+                // In your general.script.php
+                public function my_method(){
+                    $this->_tool->enable_cors(); // This will enable CORS with all default values, probably all you ever need.
+                    if($_SERVER['REQUEST_METHOD'] != 'POST'){ $this->_tool->respond(405, ['SWStatus: Bad Method'], {"status":"405","Error":"Must use POST"}); return; }
+                    // Your code here
+                }
+        $this->_tool->respond($code=404, $output='', $headers=array())
+            Use this to respond to RESTful connections with less mess.
+            HTTP Status Code: 1xx (Info Response), 2xx (Successful), 3xx (Redirection), 4xx (Client Error), 5xx (Server Errors)
+            - https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+            Send your output to echo, maybe some JSON. '{"key":"val","key2":"val2"}'
+            Add an array of your own headers if you want: ['Header1: Value1','Header2: Value2']
     $this->_uri
         Note: sw_error_permission is returned from the framework to the default controller as a pass_var if a permission lock for a modual or a controller was tripped.
         $this->_uri->calltype & $this->_uri->calltypes - The URI call type - ajax/ajaxs iframe/iframes script/scripts controller/controllers respectivly

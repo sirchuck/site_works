@@ -358,21 +358,96 @@ class siteworks_tools
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $response = curl_exec ($ch); curl_close ($ch); return $response;
-    /*
-      200 (OK) - all good
-      201 (Created) - resourse created
-      202 (Accepted) - action processed
-      204 (No Content) - processed but no entity
-      400 (BAD REQUEST) - bad url
-      404 (NOT FOUND) - resource not found
+  }
+  public function enable_cors($allow_methods=false,$allow_headers=false,$origin=false,$content_type=false,$max_age=false){
+    $origin = ($origin === false) ? (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*') : $origin;
+    $allow_methods = ($allow_methods === false) ? 'OPTIONS,GET,POST,PUT,DELETE,PATCH' : $allow_methods;
+    $allow_headers = ($allow_headers === false) ? 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range' : $allow_headers;
+    $content_type = ($content_type === false) ? 'application/json; charset=UTF-8' : $content_type;
+    $max_age = ($max_age === false) ? '3600' : $max_age;
+    header('Access-Control-Allow-Origin: '       . $origin);
+    header('Content-Type: '                      . $content_type);
+    header('Access-Control-Allow-Methods: '      . $allow_methods);
+    header('Access-Control-Max-Age: '            . $max_age);
+    header('Access-Control-Allow-Headers: '      . $allow_headers);
+  }
+  public function respond($hn=404,$ec='',$hm=array()){
+    switch ($hn) {
+        case 100: header('HTTP/1.1 100 Continue'); break;
+        case 101: header('HTTP/1.1 101 Switching Protocols'); break;
+        case 102: header('HTTP/1.1 102 Processing'); break;
+        case 103: header('HTTP/1.1 103 Early Hints'); break;
 
-      // Some typical headers
-      header("Access-Control-Allow-Origin: *");
-      header("Content-Type: application/json; charset=UTF-8");
-      header("Access-Control-Allow-Methods: OPTIONS,GET,POST,PUT,DELETE");
-      header("Access-Control-Max-Age: 3600");
-      header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    */
+        case 200: header('HTTP/1.1 200 OK'); break;
+        case 201: header('HTTP/1.1 201 Created'); break;
+        case 202: header('HTTP/1.1 202 Accepted'); break;
+        case 203: header('HTTP/1.1 203 Non-Authoritative Information'); break;
+        case 204: header('HTTP/1.1 204 No Content'); break;
+        case 205: header('HTTP/1.1 205 Reset Content'); break;
+        case 206: header('HTTP/1.1 206 Partial Content'); break;
+        case 207: header('HTTP/1.1 207 Multi-Status'); break;
+        case 208: header('HTTP/1.1 208 Already Reported'); break;
+        case 226: header('HTTP/1.1 226 IM Used'); break;
+
+        case 300: header("HTTP/1.1 300 Multiple Choices"); break;
+        case 301: header('HTTP/1.1 301 Moved Permanently'); break;
+        case 302: header('HTTP/1.1 302 Found'); break;
+        case 303: header('HTTP/1.1 303 See Other'); break;
+        case 304: header('HTTP/1.1 304 Not Modified'); break;
+        case 305: header('HTTP/1.1 305 Use Proxy'); break;
+        case 306: header('HTTP/1.1 306 Switch Proxy'); break;
+        case 307: header('HTTP/1.1 307 Temporary Redirect'); break;
+        case 308: header('HTTP/1.1 308 Permanent Redirect'); break;
+
+        case 400: header('HTTP/1.1 400 Bad Request'); break;
+        case 401: header('HTTP/1.1 401 Unauthorized'); break;
+        case 402: header('HTTP/1.1 402 Payment Required'); break;
+        case 403: header('HTTP/1.1 403 Forbidden'); break;
+        case 404: header('HTTP/1.1 404 Not Found'); break;
+        case 405: header('HTTP/1.1 405 Method Not Allowed'); break;
+        case 406: header('HTTP/1.1 406 Not Acceptable'); break;
+        case 407: header('HTTP/1.1 407 Proxy Authentication Required'); break;
+        case 408: header('HTTP/1.1 408 Request Timeout'); break;
+        case 409: header('HTTP/1.1 409 Conflict'); break;
+        case 410: header('HTTP/1.1 410 Gone'); break;
+        case 411: header('HTTP/1.1 411 Length Required'); break;
+        case 412: header('HTTP/1.1 412 Precondition Failed'); break;
+        case 413: header('HTTP/1.1 413 Payload Too Large'); break;
+        case 414: header('HTTP/1.1 414 URI Too Long'); break;
+        case 415: header('HTTP/1.1 415 Unsupported Media Type'); break;
+        case 416: header('HTTP/1.1 416 Range Not Satisfiable'); break;
+        case 417: header('HTTP/1.1 417 Expectation Failed'); break;
+        case 418: header("HTTP/1.1 418 I'm a teapot"); break;
+
+        case 421: header('HTTP/1.1 421 Misdirected Request'); break;
+        case 422: header('HTTP/1.1 422 Unprocessable Entity'); break;
+        case 423: header('HTTP/1.1 423 Locked'); break;
+        case 424: header('HTTP/1.1 424 Failed Dependency'); break;
+        case 425: header('HTTP/1.1 425 Too Early'); break;
+        case 426: header('HTTP/1.1 426 Upgrade Required'); break;
+
+        case 428: header('HTTP/1.1 428 Precondition Required'); break;
+        case 429: header('HTTP/1.1 429 Too Many Requests'); break;
+
+        case 431: header('HTTP/1.1 431 Request Header Fields Too Large'); break;
+        case 451: header('HTTP/1.1 451 Unavailable For Legal Reasons'); break;
+
+        case 500: header('HTTP/1.1 500 Internal Server Error'); break;
+        case 501: header('HTTP/1.1 501 Not Implemented'); break;
+        case 502: header('HTTP/1.1 502 Bad Gateway'); break;
+        case 503: header('HTTP/1.1 503 Service Unavailable'); break;
+        case 504: header('HTTP/1.1 504 Gateway Timeout'); break;
+        case 505: header('HTTP/1.1 505 HTTP Version Not Supported'); break;
+        case 506: header('HTTP/1.1 506 Variant Also Negotiates'); break;
+        case 507: header('HTTP/1.1 507 Insufficient Storage'); break;
+        case 508: header('HTTP/1.1 508 Loop Detected'); break;
+        case 510: header('HTTP/1.1 510 Not Extended'); break;
+        case 511: header('HTTP/1.1 511 Network Authentication Required'); break;
+
+        default: header("HTTP/1.0 404 Not Found");
+    }
+    foreach($hm as $v){ header($v); }
+    echo $ec;
   }
 
 
