@@ -1,11 +1,13 @@
 <?php
 namespace SiteWorks;
 class siteworks_dbc{
-    public $dbt = '';       // Database type mysqli | postgres
-    private $c = null;      // Database Connection
-    private $last_result;   // Last Result run.
-    public $_s;
+    public $_tool;                  // SiteWorks Object tools
+    public $_debugMode;             // Site_Works debug mode setting 
+    public $_printSQL;              // Site_Works printSQL setting
 
+    public $dbt = '';               // Database type mysqli | postgres
+    private $c = null;              // Database Connection
+    private $last_result;           // Last Result run.
     private $connected = false;
     private $hostname  = null;
     private $username  = null;
@@ -14,10 +16,12 @@ class siteworks_dbc{
     private $port      = null;
 
     public function __construct($dbc,$s) {
-        $this->_s =& $s;
-        $this->c = null;
-        $this->dbt = $dbc->dbtype;
+        $this->_tool          =& $s->tool;
+        $this->_debugMode     =& $s->debugMode;
+        $this->_printSQL      =& $s->printSQL;
 
+        $this->c        = null;
+        $this->dbt      = $dbc->dbtype;
         $this->hostname = $dbc->hostname;
         $this->username = $dbc->username;
         $this->password = $dbc->password;
@@ -192,21 +196,21 @@ class siteworks_dbc{
     // DB Query
     public function query($sql=false){ return $this->q($sql); } // Alias of q($sql)
     public function q($sql=false){
-        if($this->_s->debugMode && $this->_s->printSQL){
-            $this->_s->tool->dmsg("[c_gray]" .  $this->_s->tool->sw_tracesql() ."\n-> [c_yellow]". $this->_s->tool->chr_c($sql) ."[c_gray]",false,true);
+        if($this->_debugMode && $this->_printSQL){
+            $this->_tool->dmsg("[c_gray]" .  $this->_tool->sw_tracesql() ."\n-> [c_yellow]". $this->_tool->chr_c($sql) ."[c_gray]",false,true);
         }
         switch ($this->dbt) {
             case "mysqli":
                 $this->last_result = $this->c->query($sql);
-                if ($this->_s->debugMode && $this->c->error) {
-                    $this->_s->tool->dmsg('MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$this->_s->tool->chr_c($sql) );
+                if ($this->_debugMode && $this->c->error) {
+                    $this->_tool->dmsg('MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$this->_tool->chr_c($sql) );
                 }
                 return $this->last_result;
             break;
             case "postgres":
                 if(false === pg_send_query($this->c, $sql)) {
                     if ($this->debugMode && $this->c->error) {
-                        $this->_s->tool->dmsg(__CLASS__.'::'.__FUNCTION__ . ' MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$this->_s->tool->chr_c($sql) );
+                        $this->_tool->dmsg(__CLASS__.'::'.__FUNCTION__ . ' MySQL Error: ['.$this->c->errno.'] '.$this->c->error."\n".'SQL: '.$this->_tool->chr_c($sql) );
                     }
                 }
                 $this->last_result = pg_get_result($this->c);
@@ -228,7 +232,7 @@ class siteworks_dbc{
                             // ,'SOURCE_FUNCTION'    => pg_result_error_field($this->result, PGSQL_DIAG_SOURCE_FUNCTION)
                             ,'SQL'                => $sql
                         );
-                        $this->_s->tool->dmsg($errorDetails);
+                        $this->_tool->dmsg($errorDetails);
                     }
                 }
                 return $this->last_result;

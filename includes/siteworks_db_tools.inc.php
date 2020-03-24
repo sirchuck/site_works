@@ -40,8 +40,8 @@ abstract class siteworks_db_tools
     public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $v; }
     public function fget($f=null){ if($f==null){return;} return $this->f[$f]['value']; }
 
-    public function fsset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $this->c->_s->tool->sodium_encrypt($v); }
-    public function fsget($f=null){ if($f==null){return;} return $this->c->_s->tool->sodium_decrypt($this->f[$f]['value']); }
+    public function fsset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $this->c->_tool->sodium_encrypt($v); }
+    public function fsget($f=null){ if($f==null){return;} return $this->c->_tool->sodium_decrypt($this->f[$f]['value']); }
 
     public function query($sqlFn=NULL){
         if( substr_count(trim($sqlFn), ' ') < 1){
