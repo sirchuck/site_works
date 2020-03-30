@@ -21,8 +21,7 @@ abstract class siteworks_db_tools
 
     abstract protected function buildQueryArray(); // Command Name => SQL (Use: $this->site->d['user']->query('CheckEmail') )
     
-    public     $f = array();                       // Database field names
-    public     $p = array();                       // Pass values here to run conditional buildQueryArrays
+    public     $f  = array();                       // Database field names
 
     protected   $autoInc = false;                  // If true it will not use first field in insert or update commands
     protected   $tableName = '';                   // Name of your database table
@@ -37,11 +36,11 @@ abstract class siteworks_db_tools
         return $this->c->connect();
     }
 
-    public function fset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $v; }
+    public function fset($f=null,$v=null){ if($f==null){return;} if( $this->f[$f]['value'] != $v ){ $this->f[$f]['changed']++; }else{return;} $this->f[$f]['value'] = $v; }
     public function fget($f=null){ if($f==null){return;} return $this->f[$f]['value']; }
 
-    public function fsset($f=null,$v=null){ if($f==null){return;} $this->f[$f]['value'] = $this->c->_tool->sodium_encrypt($v); }
-    public function fsget($f=null){ if($f==null){return;} return $this->c->_tool->sodium_decrypt($this->f[$f]['value']); }
+    public function fsset($f=null,$v=null){ if($f==null){return;} if( $this->c->_tool->sodium_decrypt($this->f[$f]['value']) != $v ){ $this->f[$f]['changed']++; }else{return;} $this->f[$f]['value'] = $this->c($this->c->_tool->sodium_encrypt($v)); }
+    public function fsget($f=null){ if($f==null){return;} return $this->c->_tool->sodium_decrypt( $this->f[$f]['value'] ); }
 
     public function query($sqlFn=NULL){
         if( substr_count(trim($sqlFn), ' ') < 1){
@@ -87,7 +86,11 @@ abstract class siteworks_db_tools
                         $this->insertValueList  .= ' NULL ';
                     }
                     else{
-                        $this->insertValueList  .= '"'.$this->c->c($fVal['value']).'"';
+                        if($fVal['sw_hold'] === 0){
+                            $this->insertValueList  .= $this->c->c($fVal['value']);
+                        }else{
+                            $this->insertValueList  .= '\''.$this->c->c($fVal['value']).'\'';
+                        }
                     }
 
                     if($fCount > $iCount ){
@@ -100,7 +103,11 @@ abstract class siteworks_db_tools
                         $this->updateFieldValue .= '`'.$fKey.'` = NULL ';
                     }
                     else{
-                        $this->updateFieldValue .= '`'.$fKey.'` = "'.$this->c->c($fVal['value']).'"';
+                        if($fVal['sw_hold'] === 0){
+                            $this->updateFieldValue .= '`'.$fKey.'` = '.$this->c->c($fVal['value']);
+                        }else{
+                            $this->updateFieldValue .= '`'.$fKey.'` = \''.$this->c->c($fVal['value']).'\'';
+                        }
                     }
                     if($fCount > $iCount ){ $this->updateFieldValue .= ','; }
                 }
@@ -116,10 +123,15 @@ abstract class siteworks_db_tools
 
     public function c($s){ return $this->c->c($s); }
     public function clean($s){ return $this->c->c($s); }
-    public function cleanAll(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = $this->clean($v['value']);} foreach($this->p as $k => $v){ $this->p[$k] = $this->clean($v);} }
-    public function clearFields(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = ( gettype($this->f[$k]['value']) == 'integer' || gettype($this->f[$k]['value']) == 'double' ) ? 0 : null;} unset($this->p); }
-    
+    public function cleanAll(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = $this->clean($v['value']);} }
+
+    // foreach($this->f as $k => $v){ $this->f[$k]['value'] = ( gettype($this->f[$k]['value']) == 'integer' || gettype($this->f[$k]['value']) == 'double' ) ? 0 : null;} 
+    public function clearFields(){ $this->clearChanged(); foreach( $this->f as $k ){ $this->f[$k]['value'] = $this->f[$k]['sw_hold']; } }
+    public function clearChanged(){ foreach( $this->f as $k => $v ){ $this->f[$k]['changed'] = 0; } }
+
     public function fillData($id=NULL){
+        foreach( $this->f as $k => $v){ $this->f[$k]['sw_hold'] = ( isset($this->f[$k]['sw_hold']) ) ? $this->f[$k]['sw_hold']: $this->f[$k]['value']; }
+        $this->clearChanged();
         $what = '*';
         if(is_array($id)){
             // Dangerous if you run an update, as you will have empty values for fields you didn't pull
@@ -207,6 +219,7 @@ abstract class siteworks_db_tools
         $this->getFieldNames(1);
         $insertFieldNames=($insertFieldNames==null)? $this->insertFieldNames : $insertFieldNames;
         $insertValueList=($insertValueList==null)? $this->insertValueList : $insertValueList;
+        $this->clearChanged();
         $sql = 'INSERT INTO `'.$this->tableName.'` ('.$insertFieldNames.') VALUES ('.$insertValueList.')';
         $result = $this->c->q($sql);
         if($result === false)
@@ -219,6 +232,7 @@ abstract class siteworks_db_tools
         $insertFieldNames=($insertFieldNames==null)? $this->insertFieldNames : $insertFieldNames;
         $insertValueList=($insertValueList==null)? $this->insertValueList : $insertValueList;
         $updateFieldValues=($updateFieldValues==null)? $this->updateFieldValue : $updateFieldValues;
+        $this->clearChanged();
         $sql = 'INSERT INTO `'.$this->tableName.'` ('.$insertFieldNames.') VALUES ('.$insertValueList.') ON DUPLICATE KEY UPDATE '.$updateFieldValues;
         $result = $this->c->q($sql);
         if($result === false)
@@ -243,7 +257,40 @@ abstract class siteworks_db_tools
                 }
             }
         }
-        if( is_null($values) ){$this->getFieldNames(2); $values = $this->updateFieldValue;}
+        if( is_null($values) ){
+            // Pull the field list automatically
+            $this->getFieldNames(2); $values = $this->updateFieldValue;
+        } elseif( $values === true ) {
+            // Pull only the changed field list
+            $values = '';
+            foreach($this->f as $k => $v){
+                if( $v['changed'] > 0 ){
+                    if( $v['sw_hold'] === 0 ){
+                        $values .= ',`'.$k.'`=' . $this->f[$k]['value'] . ' ';
+                    }else{
+                        $values .= ',`'.$k.'`=\'' . $this->f[$k]['value'] . '\' ';
+                    }
+                }
+            }
+            $values = ltrim($values,',');
+        } else if( strrpos($values,'=')===false ){
+            // We passed something like field1,field2,field3 to pull automatically
+            $vlist = explode(',', $values);
+            $values = '';
+            foreach($vlist as $k => $v){
+                if( $this->f[$v]['sw_hold'] === 0 ){
+                    $values .= ', `'.$v.'`=' . $this->f[$v]['value'] . ' ';
+                }else{
+                    $values .= ', `'.$v.'`=\'' . $this->f[$v]['value'] . '\' ';
+                }
+            }
+            $values = ltrim($values,',');
+        } else {
+            // Directly use whatever we passed in values field1='that', remove first = for odd value list statemnts
+            $values = ltrim($values,'=');
+        }
+        $this->clearChanged();
+        if(trim($values) == ''){return;}
         $sql = 'UPDATE `'.$this->tableName.'` SET '.$values.' '.$where;
         $result = $this->c->q($sql);
         if($result === false)
@@ -270,6 +317,7 @@ abstract class siteworks_db_tools
                 $where = ' WHERE '.ltrim($where,'=');
             }
         }
+        $this->clearChanged();
         $sql = 'DELETE FROM `'.$this->tableName.'` '.$where.';';
         $result = $this->c->q($sql);
         return true;

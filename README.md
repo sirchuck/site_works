@@ -425,7 +425,7 @@ PHP, MySQL, Javascript, and CSS framework
         'sw_admin_key'      => array( 'value' => 0    , 'error' => null) // Set value to either 0 or null based on field type
         ,'sw_version'       => array( 'value' => null , 'error' => null) // Set value to either 0 or null based on field type
     );
-    If your field type is a number, 0, if not use null.
+    If your field type is a number, 0, if not use null. Do not set this to a default value, 0 or null only.
     I have not done anything with the 'error' element of the array, but it may be useful to you.
     At the bottom of your table object class you will notice the bulidQueryArray
     case 'pullByVersion':                           // This is the name you will use to refer to the query
@@ -485,10 +485,12 @@ PHP, MySQL, Javascript, and CSS framework
             of the database user record. 
     $r->fset($field,$value)
         Use this to set a field value, same as $r->f['field']['value'] = 'value';
+        fset & fsset will record the count of times this field changed in $r->f['field']['changed'] if > 0 updateData(key,true) will only update values that changed for supplied key
     $r->fget($field=null)
         Use to get a field value from a field name.
     $r->fsset($field,$value)
         Use this to set a sodium encrypted field value, same as $r->f['field']['value'] = 'value'; - must set sodium key and nonce or sodium files config to use
+        fset & fsset will record the count of times this field changed in $r->f['field']['changed'] if > 0 updateData(key,true) will only update values that changed for supplied key
     $r->fsget($field=null)
         Use to get a sodium decrypted field value from a field name. - must set sodium key and nonce or sodium files config to use
     $r->query($sqlFn=false)
@@ -526,8 +528,11 @@ PHP, MySQL, Javascript, and CSS framework
         $r->updateData(false); - Putting false in the where clause will update your data without a where clause.
         $r->updateData('x=y'); This will update using your field list, and apply the where clause x=y
         $r->updateData('x=y','x'); This will only update the x field where x=y
-        $r->updateData(4,'`x`') This will only update the x field where the id = 4
-        $r->updateData('bob','`x`') This will only update the x field where the id = 'bob'
+        $r->updateData(4,'x') This will only update the x field where the id = 4
+        $r->updateData('bob','x') This will only update the x field where the id = 'bob'
+        $r->updateData(4,'`x`=7') Update x to 7 where id = 4
+        $r->updateData(4,'`x`="seven"') Update x to seven where id = 4
+        $r->updateData(4,true) Update only fields that have been changed with fset or fsset where id = 4
         $r->updateData('=IN()') Adding an = sign as the first character will keep the WHERE clause but allow you to use things like user_id IN(1,2) statements if you don't have need of = > or < comparaison in your WHERE.
         $r->updateData('<ORDER BY xfield') Adding an < sign as the first character will remove the WHERE clause and you can put what you want in place of it, like ORDER BY
         # These examples should work anywhere there is a $where option, like selectAll, updateData, deleteData and fillData
@@ -546,7 +551,11 @@ PHP, MySQL, Javascript, and CSS framework
         // Get a field value - returns field value
             $r->fget('sw_admin_key');
     Need to access a field error?
-        $r->f['sw_admin_key']['error']
+        $r->f['sw_admin_key']['error'] - site_works doesn't use this so far.
+    Need to access the number of times you changed a value with fset or fsset since your last action like updateData()? (Only works after you instantiate the object or call fillData)
+        $r->f['sw_admin_key']['changed']
+    Need to access the origional 0 or null setting for $r->f['sw_admin_key']['value']? (Only works after you instantiate the object or call fillData)
+        $r->f['sw_admin_key']['sw_hold']
 
 
 # Scope: What can I access and How?
@@ -613,6 +622,7 @@ PHP, MySQL, Javascript, and CSS framework
             This decrypts your encryption. You use the same key and iv and method you did when you encrpted. 
         $this->_tool->sodium_encrypt($string, $nonce=false, $key=false)
             This will use sodium to encrypt your string. Leave $nonce or $key false to automaically use config value.
+            NOTE: I suggest you use Blob/medblob/tinyblob type field to store sodium in a DB. Binary & VarBinary field types can report incorrect data.
         $this->_tool->sodium_decrypt($string, $nonce=false, $key=false)
             This will use sodium to decrypt your string. Leave $nonce or $key false to automaically use config value.
         $this->_tool->sodium_check($encryted_string, $string, $nonce=false, $key=false)
