@@ -469,6 +469,8 @@ PHP, MySQL, Javascript, and CSS framework
             This can be dangerous if you run $r->updateData() because the empty fields in the record would overwrite your database. You would use this if you want to pull
             less data from  your database when you make a new table. Ex: you just want your user id, email, and password to match for a login, but you don't need the rest
             of the database user record. 
+    $r->clearChanged()
+        This will set your field array [counted] fields to zero. Meaning fset fsset counts will be zero so updateData(id,true) will not see any changes to your field array.
     $r->fillData(overloaded)
         $r->fillData(true)
             This will pull the last record data, you would only use this typically if you had no key field and just one record.

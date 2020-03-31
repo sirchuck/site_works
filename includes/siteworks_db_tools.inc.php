@@ -22,6 +22,7 @@ abstract class siteworks_db_tools
     abstract protected function buildQueryArray(); // Command Name => SQL (Use: $this->site->d['user']->query('CheckEmail') )
     
     public     $f  = array();                       // Database field names
+    private    $fchanged = false;                   // Instantiation set changed and sw_hold fields for f array.
 
     protected   $autoInc = false;                  // If true it will not use first field in insert or update commands
     protected   $tableName = '';                   // Name of your database table
@@ -130,8 +131,12 @@ abstract class siteworks_db_tools
     public function clearChanged(){ foreach( $this->f as $k => $v ){ $this->f[$k]['changed'] = 0; } }
 
     public function fillData($id=NULL){
-        foreach( $this->f as $k => $v){ $this->f[$k]['sw_hold'] = ( isset($this->f[$k]['sw_hold']) ) ? $this->f[$k]['sw_hold']: $this->f[$k]['value']; }
-        $this->clearChanged();
+        if($this->fchanged == false){
+            foreach( $this->f as $k => $v){ $this->f[$k]['sw_hold'] = $this->f[$k]['value']; $this->f[$k]['changed'] = 0; }
+            $this->fchanged = true;
+        }else{
+            $this->clearChanged();
+        }
         $what = '*';
         if(is_array($id)){
             // Dangerous if you run an update, as you will have empty values for fields you didn't pull

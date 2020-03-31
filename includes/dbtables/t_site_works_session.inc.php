@@ -16,8 +16,7 @@ class t_site_works_session extends siteworks_db_tools
 		    ,'sw_sess_ts'                     => array( 'value' => 0       , 'error' => null) // Session Time Last used
 	    );
 	
-        if($id != NULL)
-	    	$this->fillData($id);
+	   	$this->fillData($id);
 		return true;
     }
 

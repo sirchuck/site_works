@@ -13,8 +13,7 @@ class t_site_works_template_table extends SiteWorks\siteworks_db_tools
            ,'FIELD_NAME2'               => array( 'value' => null , 'error' => null)   // Notes on this field
         );
 
-        if($id != NULL)
-            $this->fillData($id);
+        $this->fillData($id);
         return true;
     }
 

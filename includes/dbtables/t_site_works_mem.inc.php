@@ -15,8 +15,7 @@ class t_site_works_mem extends siteworks_db_tools
 		    ,'sw_site_visits'                => array( 'value' => 0    , 'error' => null) // SiteWorks number of visitors
 	    );
 	
-        if($id != NULL)
-	    	$this->fillData($id);
+    	$this->fillData($id);
 		return true;
     }
 
