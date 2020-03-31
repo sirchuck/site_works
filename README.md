@@ -471,7 +471,8 @@ PHP, MySQL, Javascript, and CSS framework
             of the database user record. 
     $r->clearChanged()
         This will set your field array [counted] fields to zero. Meaning fset fsset counts will be zero so updateData(id,true) will not see any changes to your field array.
-    $r->fillData(overloaded)
+    $r->fillData(overloaded, $force=false)
+            If for some reason you want to pull a record with an id of 0, or '' you can set force to true.
         $r->fillData(true)
             This will pull the last record data, you would only use this typically if you had no key field and just one record.
         $r->fillData(1)

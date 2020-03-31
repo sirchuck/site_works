@@ -130,7 +130,7 @@ abstract class siteworks_db_tools
     public function clearFields(){ $this->clearChanged(); foreach( $this->f as $k ){ $this->f[$k]['value'] = $this->f[$k]['sw_hold']; } }
     public function clearChanged(){ foreach( $this->f as $k => $v ){ $this->f[$k]['changed'] = 0; } }
 
-    public function fillData($id=NULL){
+    public function fillData($id=NULL,$force=false){
         if($this->fchanged == false){
             foreach( $this->f as $k => $v){ $this->f[$k]['sw_hold'] = $this->f[$k]['value']; $this->f[$k]['changed'] = 0; }
             $this->fchanged = true;
@@ -138,7 +138,7 @@ abstract class siteworks_db_tools
             $this->clearChanged();
         }
         $what = '*';
-        if( is_null($id) || $id == '' || $id === 0){return false;}
+        if( $force !== true && (is_null($id) || $id == '' || $id === 0) ){return false;}
         if(is_array($id)){
             // Dangerous if you run an update, as you will have empty values for fields you didn't pull
             $what = ( count($id) > 1 ) ? $id[1] : '*';
