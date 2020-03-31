@@ -138,6 +138,7 @@ abstract class siteworks_db_tools
             $this->clearChanged();
         }
         $what = '*';
+        if( is_null($id) || $id == '' || $id === 0){return false;}
         if(is_array($id)){
             // Dangerous if you run an update, as you will have empty values for fields you didn't pull
             $what = ( count($id) > 1 ) ? $id[1] : '*';
