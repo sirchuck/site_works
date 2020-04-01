@@ -5,12 +5,12 @@ namespace SiteWorks;
 
 class siteworks_tools
 {
-	protected $_s;
+  protected $_s;
   public $chr_control_noprint = array();
 
-	function __construct($_s)
-	{
-		$this->_s =& $_s;
+  function __construct($_s)
+  {
+    $this->_s =& $_s;
 
     $this->chr_control_noprint = array(
       // control characters
@@ -23,7 +23,7 @@ class siteworks_tools
     );
 
 
-	}
+  }
 
   public function trace($af=0,$fullreport=false){
     if($fullreport){
@@ -76,8 +76,8 @@ class siteworks_tools
   }
 
 
-	public function dmsg($s,$showArray=true,$showline=true){
-		if($this->_s->debugMode){
+  public function dmsg($s,$showArray=true,$showline=true){
+    if($this->_s->debugMode){
       try{
         $fp=@fsockopen($this->_s->debug_server, $this->_s->debug_server_port, $errno, $errstr, 30);
         if(!$this->_s->allowDebugColors){
@@ -91,8 +91,8 @@ class siteworks_tools
          $this->_s->console[] = 'You are in debug mode, but your ./debug_server is not accessable. ' . $e->getMessage();
       }
 
-		}
-	}
+    }
+  }
 
   public function thread($path='',$Milliseconds=0,$vars=''){
     // This function works with php_threader
@@ -357,12 +357,20 @@ class siteworks_tools
     }
     curl_setopt($ch, CURLOPT_URL,$url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec ($ch); curl_close ($ch); return $response;
+    $response = ['body'=>'','header'=>array()];
+    curl_setopt($ch, CURLOPT_HEADERFUNCTION, function($curl, $header) use (&$response){
+        $len = strlen($header);
+        $header = explode(':', $header, 2);
+        if (count($header) < 2){ return $len; }
+        $response['header'][strtolower(trim($header[0]))] = trim($header[1]);
+        return $len;
+    });
+    $response['body'] = curl_exec ($ch); curl_close ($ch); return $response;
   }
   public function enable_cors($allow_methods=false,$allow_headers=false,$origin=false,$content_type=false,$max_age=false){
-    $origin = ($origin === false) ? (isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '*') : $origin;
+    $origin = ($origin === false) ? '*' : $origin;
     $allow_methods = ($allow_methods === false) ? 'OPTIONS,GET,POST,PUT,DELETE,PATCH' : $allow_methods;
-    $allow_headers = ($allow_headers === false) ? 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range' : $allow_headers;
+    $allow_headers = ($allow_headers === false) ? 'DNT,User-Agent,Origin,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range' : $allow_headers;
     $content_type = ($content_type === false) ? 'application/json; charset=UTF-8' : $content_type;
     $max_age = ($max_age === false) ? '3600' : $max_age;
     header('Access-Control-Allow-Origin: '       . $origin);

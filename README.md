@@ -670,13 +670,14 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_tool->curl_delete($u=null,$p=array(),$h=false)         - curl wrapper for DELETE
         $this->_tool->curl_patch($u=null,$p=array(),$h=false)          - curl wrapper for PATCH
         $this->_tool->enable_cors($allow_methods=false,$allow_headers=false,$origin=false,$content_type=false,$max_age=false)
+            Return: response['body','header'];
             Defaults:
             - $allow_methods   OPTIONS,GET,POST,PUT,DELETE,PATCH
                 To set only POST method, 'OPTIONS,POST' - you still need to check if they used POST in your code (Shown in Example)
             - $allow_headers   DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range
                 I default to some typical ones, but just send a string for what you want 'User-Agent,X-Requested-With'
                 PHP Read an incoming header:    $User-Agent = getallheaders()['User-Agent'];
-            - $origin          $_SERVER['HTTP_ORIGIN'] or * if HTTP_ORIGIN not set.
+            - $origin          * if HTTP_ORIGIN not set.
                 Set this to the origin you want to allow 'https://MySite.com'
             - $content_type    application/json; charset=UTF-8
                 Set this to your desired content type string 'application/json; charset=UTF-8'
