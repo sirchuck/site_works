@@ -158,7 +158,8 @@ class siteworks_dbc{
     }
 
 
-    // Clean String for db
+    // Clean String for _odb or _dbo[]
+    public function cse($s){ return $this->c( $this->_tool->sodium_encrypt($s) ); } // Clean Sodium Encrypt
     public function clean($s){ return $this->c($s); } // Alias of c($s)
     public function c($s)
     {
@@ -294,7 +295,8 @@ class siteworks_dbc{
         }
     }
 
-
+    public function getRow($_result=false,$returnArray=false){return $this->getRows($_result,$returnArray);}
+    public function getRows($_result=false,$returnArray=false){ if(!$returnArray){return $this->fetch_object($_result);}else{return $this->fetch_assoc($_result);} }
     public function fetch_assoc($_result=false)
     {
         if(!$_result){$_result=$this->last_result;}

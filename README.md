@@ -504,6 +504,8 @@ PHP, MySQL, Javascript, and CSS framework
     $r->getFieldNames($is_insert) - This is garbage to you, I use it to build INSERT and UPDATE queries from your database table object.
     $r->getRow($result,$returnArray=false) - This is an alias for getRows, but it may make it easier when debugging and reading your code when you are selecting 1 row only.
     $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
+    $r->cse(string) - this cleans your sodium encrypted string to make it ready for insertion to the database blob field. (clean sodium encrypt)
+        Normally you'll just use fsset for this, but in case you want to $r->f['thing']['value'] = $r->cse('my binary data');
     $r->c(string) - this cleans your string to make it ready for insertion to the database.
     $r->clean(string) - this cleans your string to make it ready for insertion to the database.
     $r->cleanAll() - This will traverse your table object fields and clean each value.
@@ -747,6 +749,9 @@ PHP, MySQL, Javascript, and CSS framework
         Generally you won't directly use the _odb or _dbo, you'll create a new object table shown below.
         $this->_odb->freeResult($result) - Basic Free result to save memory.
         $this->_odb->close() - Close the database connection.
+        $this->_odb->cse(string) - Clean your mysql sodium encrypted string, General escaping
+            You might use this to match an encrypted field when filling a table with $this->_odb or $this->_dbo['databaseid']
+            $r = new t_my_table('`email`="' . $this->_odb->cse($_POST['email']) . '"');
         $this->_odb->c(string) - Clean your mysql string, General escaping
         $this->_odb->p($sql, $values) - prepaired statments - (SQL,Value Array) like this: ('INSERT INTO table (first_name) VALUES (?)', ['Frost'])
         $this->_odb->query($sql=false) - wrapper for $this->_odb->q($sql), note you can use $this->_dbo['default']->query($sql) too
@@ -754,6 +759,8 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_odb->getInsertID($result) - Gets the last insert id from a result.
         $this->_odb->getAffectedRows($result) - Return the number of effected rows for the result
         $this->_odb->numRows($result) - Number of rows in the result
+        $this->_odb->getRow($result, $retrun_array) - wrapper for fetch_assoc [ $return_array = true ] / fetch_object [ $return_array = false Default ] single row
+        $this->_odb->getRows($result, $retrun_array) - wrapper for fetch_assoc [ $return_array = true ] / fetch_object [ $return_array = false Default ] all rows
         $this->_odb->fetch_assoc($result) - Return an associative array of rows for the result
         $this->_odb->fetch_object($result) - Return a row object for the result
 

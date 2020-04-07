@@ -122,6 +122,8 @@ abstract class siteworks_db_tools
         if(!$returnArray){return $this->c->fetch_object($_result);}else{return $this->c->fetch_assoc($_result);}
     }
 
+
+    public function cse($s){ return $this->c->c( $this->c->_tool->sodium_encrypt($s) ); } // Clean Sodium Encrypt
     public function c($s){ return $this->c->c($s); }
     public function clean($s){ return $this->c->c($s); }
     public function cleanAll(){ foreach($this->f as $k => $v){ $this->f[$k]['value'] = $this->clean($v['value']);} }
