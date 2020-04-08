@@ -506,6 +506,7 @@ PHP, MySQL, Javascript, and CSS framework
     $r->getRows($result,$returnArray=false) - This gets your rows from your result, you get an object for false (default), associative array for true.
     $r->cse(string) - this cleans your sodium encrypted string to make it ready for insertion to the database blob field. (clean sodium encrypt)
         Normally you'll just use fsset for this, but in case you want to $r->f['thing']['value'] = $r->cse('my binary data');
+        If you put this in SQL use single quotes as double quotes won't be cleaned.
     $r->c(string) - this cleans your string to make it ready for insertion to the database.
     $r->clean(string) - this cleans your string to make it ready for insertion to the database.
     $r->cleanAll() - This will traverse your table object fields and clean each value.
@@ -751,7 +752,8 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_odb->close() - Close the database connection.
         $this->_odb->cse(string) - Clean your mysql sodium encrypted string, General escaping
             You might use this to match an encrypted field when filling a table with $this->_odb or $this->_dbo['databaseid']
-            $r = new t_my_table('`email`="' . $this->_odb->cse($_POST['email']) . '"');
+            $r = new t_my_table('`email`=\'' . $this->_odb->cse($_POST['email']) . '\'');
+            If you put this in SQL use single quotes as double quotes won't be cleaned.
         $this->_odb->c(string) - Clean your mysql string, General escaping
         $this->_odb->p($sql, $values) - prepaired statments - (SQL,Value Array) like this: ('INSERT INTO table (first_name) VALUES (?)', ['Frost'])
         $this->_odb->query($sql=false) - wrapper for $this->_odb->q($sql), note you can use $this->_dbo['default']->query($sql) too

@@ -37,10 +37,10 @@ abstract class siteworks_db_tools
         return $this->c->connect();
     }
 
-    public function fset($f=null,$v=null){ if($f==null){return;} if( $this->f[$f]['value'] != $v ){ $this->f[$f]['changed']++; }else{return;} $this->f[$f]['value'] = $v; }
+    public function fset($f=null,$v=null){ if($f==null){return;} if( $this->f[$f]['value'] !== $v ){ $this->f[$f]['changed']++; }else{return;} $this->f[$f]['value'] = $v; }
     public function fget($f=null){ if($f==null){return;} return $this->f[$f]['value']; }
 
-    public function fsset($f=null,$v=null){ if($f==null){return;} if( $this->c->_tool->sodium_decrypt($this->f[$f]['value']) != $v ){ $this->f[$f]['changed']++; }else{return;} $this->f[$f]['value'] = $this->c($this->c->_tool->sodium_encrypt($v)); }
+    public function fsset($f=null,$v=null){ if($f==null){return;} if( $this->c->_tool->sodium_decrypt($this->f[$f]['value']) !== $v ){ $this->f[$f]['changed']++; }else{return;} $this->f[$f]['value'] = $this->c($this->c->_tool->sodium_encrypt($v)); }
     public function fsget($f=null){ if($f==null){return;} return $this->c->_tool->sodium_decrypt( $this->f[$f]['value'] ); }
 
     public function query($sqlFn=NULL){
