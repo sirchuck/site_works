@@ -1,2 +1,13 @@
 #!/bin/bash
-grep --color=always -rne "$1" ./* | awk '{print "----------------------------\n",$0,"\n-------------^^-------------\n"}'
+if [ "$1" == "-i" ]
+then
+    grep -i --color=always -rne "$2" ./* | awk '{print "----------------------------\n",$0,"\n-------------^^-------------\n"}'
+elif [ "$1" == "-man" ]
+then
+	printf "\n_____________________________________\n"
+	printf "ifind 'text' to find case sensitive\n"
+	printf "ifind -i 'text' to find case insensitive\n"
+	printf "_____________________________________\n\n"
+else
+    grep --color=always -rne "$1" ./* | awk '{print "----------------------------\n",$0,"\n-------------^^-------------\n"}'
+fi
