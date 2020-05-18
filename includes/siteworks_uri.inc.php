@@ -10,6 +10,8 @@ class siteworks_uri
 	public $method;
 	public $pass_var;
 	public $pass_vars;
+	public $pass_varz; // Hold url parts in their true form without lowercase
+	public $count_pass; // Hold number of passed variables pass_var + pass_vars
 	
 	// Root URL of the domain default auto, _n force not secure, _s force secure
 	public $root_url;
@@ -152,6 +154,11 @@ class siteworks_uri
 		$this->pass_var   = (isset($params[3]) && $params[3]) ? $params[3]      : '';
 		$this->pass_vars  = (count($params) > 4)              ? array_slice($params, 4) : array();
 
+		$this->pass_varz = [];
+		$this->count_pass      = (($this->pass_var == '') ? 0: 1) + count($this->pass_vars);
+		if($this->count_pass > 0){ $this->pass_varz = array_slice(explode('/',trim($uri,'/')), -1 * abs($this->count_pass) ); }
+
+
 		// If you have a model with the same name as your controller/ajax/iframe/script we'll autoload it for you here.
 		$this->load_the_model = $this->load_path( $this->sw_module_path . '/models/' . $this->controller . '.model.php' );
 
@@ -166,6 +173,8 @@ class siteworks_uri
 			if( ( $v[0] == $this->module && $v[1] == $_s->uri->controller ) && ( ( $_SESSION['admin_level'] < $_s->admin_level_options[$v[2]] ) || ( !$_SESSION['is_loggedin'] ) ) ){ $sw_err = 'sw_error_permission'; }
 		}
 		if($sw_err != ''){ header('Location: ' . $this->base_url . '/' . $sw_err); exit;}
+
+
 
 
 	}

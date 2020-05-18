@@ -720,6 +720,8 @@ PHP, MySQL, Javascript, and CSS framework
         $this->_uri->method - This is the method segment of the URI
         $this->_uri->pass_var - This is the pass_var segment of the URI
         $this->_uri->pass_vars - This is the pass_vars segment of the URI
+        $this->_uri->pass_varz - This is an array of the unajusted pass_var + pass_vars. Example: Capitoliation is preserved.
+        $this->_uri->count_pass - This is the totoal number of passed URI segment variralbes (does not include ?param=value)
         $this->_uri->root_url - http(s)://subdomain.your_site.tld
         $this->_uri->base_url - http(s)://subdomain.your_site.tld/site_works
         For root and base you can add a _n or a _s to the property to pull the secure or non_secure versions
