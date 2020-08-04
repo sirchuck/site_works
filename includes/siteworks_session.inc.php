@@ -41,7 +41,7 @@ class siteworks_session
     private function gc($expire) : bool {
         if( $this->_s->gc_probability == 0 ){ return true; }
         $r = new t_site_works_session(null,$this->_s->odb);
-        return $r->deleteData('sw_sess_ts < ' . time() - (int) $expire);
+        return $r->deleteData('sw_sess_ts < ' . (time() - (int) $expire) );
     }
     
 }
