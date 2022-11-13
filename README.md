@@ -122,16 +122,16 @@ PHP, MySQL, Javascript, and CSS framework
     The framework needs to be able to write to certain folders
 
     sudo chmod -R 775 conf
-    sudo chgrp -R $USER:www-data conf
+    sudo chown -R $USER:www-data conf
 
     sudo chmod -R 775 private
-    sudo chgrp -R $USER:www-data private
+    sudo chown -R $USER:www-data private
 
     sudo chmod -R 775 public
-    sudo chgrp -R $USER:www-data public
+    sudo chown -R $USER:www-data public
 
     sudo chmod -R 775 dev
-    sudo chgrp -R $USER:www-data dev
+    sudo chown -R $USER:www-data dev
 
     // One Line
     sudo chmod -R 775 conf && sudo chmod -R 775 private && sudo chmod -R 775 public && sudo chmod -R 775 dev && sudo chown -R $USER:www-data conf && sudo chown -R $USER:www-data private && sudo chown -R $USER:www-data public && sudo chown -R $USER:www-data dev
