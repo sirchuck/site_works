@@ -20,6 +20,7 @@ class siteworks_config extends siteworks_startup
     /*********************************************************************************************************
     **                            T O G G L E S    A N D    D E F A L T S                                   **
     *********************************************************************************************************/
+    public $project_name         = 'MY PROJECT NAME'; // $this->project_name, suggest less than 23 chars 
     public $theme                = 'default';  // Use $_SESSION['theme'] to handle theme choice for users
     public $language             = 'english';  // Use $_SESSION['language'] to handle lang choice for users
     public $debugMode            = true;       // Enable Debugger $this->_tool->dmsg("debug_server output");

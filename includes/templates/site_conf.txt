@@ -21,6 +21,7 @@ class siteworks_override extends siteworks_config
     /*********************************************************************************************************
     **                            T O G G L E S    A N D    D E F A L T S                                   **
     *********************************************************************************************************/
+    $this->project_name         = 'YOUR PROJECT NAME';  // Use $_SESSION['project_name'] to call the project name
     $this->theme                = 'default';  // Use $_SESSION['theme'] to handle theme choice for users
     $this->language             = 'english';  // Use $_SESSION['language'] to handle lang choice for users
     $this->debugMode            = true;       // Enable Debugger $this->_tool->dmsg("debug_server output");
