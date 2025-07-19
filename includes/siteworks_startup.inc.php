@@ -84,7 +84,13 @@ class siteworks_startup
 			if( strlen($projectname) < 41 ){
 				$projectname = str_repeat(' ', ((42 - strlen($projectname) )/2)) . $projectname; 
 			}
-			$debug_out = "\n\n\n\n\n\n\n\n\n******************************************\n*********** S I T E W O R K S ************\n".$projectname."\n******************************************
+
+			$conf_used = (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '') ? filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL) : (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] != '') ? filter_var($_SERVER['SERVER_NAME'], FILTER_SANITIZE_URL) : '';
+			if( strlen($conf_used) < 41 ){
+				$conf_used = str_repeat(' ', ((42 - strlen($conf_used) )/2)) . $conf_used; 
+			}
+
+			$debug_out = "\n\n\n\n\n\n\n\n\n******************************************\n*********** S I T E W O R K S ************\n".$projectname."\n".$conf_used."\n******************************************
 Start Time: " . date('Y-m-d H:i:s') . "
 ";
 		}
