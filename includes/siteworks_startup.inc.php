@@ -80,7 +80,7 @@ class siteworks_startup
 		// Start-up output for debug
 		$debug_out = '';
 		if($this->debugMode){
-			$projectname = $this->project_name . ' : ' . gethostbyname($_SERVER['REMOTE_ADDR']);
+			$projectname = $this->project_name . ' : ' . (isset($_SERVER['REMOTE_ADDR']) ? gethostbyname($_SERVER['REMOTE_ADDR']) : '');
 			if( strlen($projectname) < 41 ){
 				$projectname = str_repeat(' ', ((42 - strlen($projectname) )/2)) . $projectname; 
 			}
