@@ -167,6 +167,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 
 
 		// Handle Database setup and management
+		$dbs_connected = false;
 		if($this->debugMode && $this->debugBuild){
 			if(strrpos($_SERVER['DOCUMENT_URI'], 'ajax_') !== false || strrpos($_SERVER['DOCUMENT_URI'], 'iframe_') !== false || strrpos($_SERVER['DOCUMENT_URI'], 'script_') !== false){$this->css_js_minify = false;}
 
@@ -503,6 +504,7 @@ class _sw_unit_test {
 
 
 		} // End if debug mode
+		if(!$dbs_connected){ foreach($this->dbo as $k => $c){$c->connect();} }
 		$this->uri->uri_finish($this);
 
 
