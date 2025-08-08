@@ -241,6 +241,7 @@ Start Time: " . date('Y-m-d H:i:s') . "
 					$c->freeResult($result2);
 				}
 				$c->freeResult($result);
+				$dbs_connected = true;
 			}
 
 			// Now We match the databases responce with our php db classes
