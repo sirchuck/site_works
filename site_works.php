@@ -14,7 +14,7 @@ namespace SiteWorks{
 	    // Configuartion for everyone
 		require_once SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.conf.php';
 		// Configuration per server
-		$tmp = SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.' . str_replace('.', '', (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '')? filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL) : filter_var($_SERVER['SERVER_NAME'], FILTER_SANITIZE_URL) ) . '.pconf.php';
+		$tmp = SITEWORKS_DOCUMENT_ROOT.'/conf/siteworks.' . strtolower(str_replace('.', '', (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST'] != '')? filter_var($_SERVER['HTTP_HOST'], FILTER_SANITIZE_URL) : filter_var($_SERVER['SERVER_NAME'], FILTER_SANITIZE_URL) ) ) . '.pconf.php';
 		$tmpu = posix_getpwuid(fileowner(SITEWORKS_DOCUMENT_ROOT . '/index.php'))['name'];
 		if(file_exists($tmp)){
 			require_once $tmp;
